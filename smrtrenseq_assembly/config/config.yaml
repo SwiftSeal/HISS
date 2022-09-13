@@ -1,0 +1,13 @@
+samples: "/path/to/sample/sheet"
+
+
+fiveprime: "sequence_to_be_trimmed_from_fiveprime_end"
+
+
+threeprime: "sequence_to_be_trimmed_from_threeprime_end"
+
+
+Genome_Size: "estimated_genome_size_in_base_pairs"
+
+
+flanking: "number_of_basepairs_flanking_nlr_annotator_hits_to_extract_for_fastas"

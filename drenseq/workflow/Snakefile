@@ -1,0 +1,502 @@
+import pandas as pd
+
+configfile: "config.yaml"
+
+samples=pd.read_table(config["samples"], header=0).set_index(["sample"], drop=False)
+
+
+def get_F_Reads(wildcards):
+    return samples["FRead"][wildcards.sample]
+
+
+def get_R_Reads(wildcards):
+    return samples["RRead"][wildcards.sample]
+
+
+def get_samples(wildcards):
+    return samples["sample"][wildcards.sample]
+
+
+rule all:
+    input:
+        "final_outputs/SNPsForAssay_manifests.fa",
+        "final_outputs/SNPsForAssay_manifests.txt"
+
+
+rule extract_reference_headers:
+    input:
+        config["Reference_Fasta"]
+    output:
+        "resources/reference_headers.txt"
+    log:
+        "logs/initial_grep/log.txt"
+    resources:
+        mem_mb=2000
+    run:
+        shell("""echo "gene" > {output}""")
+        shell("""(cat {input} | grep '>' | sed 's/>//g' >> {output}) 2> {log}""")
+
+
+rule trim_read_remove_adaptor:
+    input:
+        fastqF=get_F_Reads,
+        fastqR=get_R_Reads,
+        adaptor_1=config["adaptor_path_1"],
+        adaptor_2=config["adaptor_path_2"]
+    output:
+        trimF=temp("trimmed_reads/{sample}/R1.fq"),
+        trimR=temp("trimmed_reads/{sample}/R2.fq")
+    log:
+        "logs/cutadapt/{sample}.log"
+    threads:
+        8
+    resources:
+        mem_mb=4000
+    conda:
+        "envs/cutadapt.yaml"
+    shell:
+        "cutadapt --cores {threads} --minimum-length 50 -q 20,20 -a "
+        "file:{input.adaptor_1} -A file:{input.adaptor_2} -o "
+        "{output.trimF} -p {output.trimR} {input.fastqF} "
+        "{input.fastqR} > {log}"
+
+
+rule bowtie_build:
+    input:
+        ref=config["Reference_Fasta"]
+    output:
+        index=config["Reference_Fasta"] + ".1.bt2"
+    conda:
+        "envs/bowtie2.yaml"
+    log:
+        "logs/bowtie2/indexing.log"
+    resources:
+        mem_mb=4000
+    shell:
+        "(bowtie2-build {input} {input}) 2> {log}"
+
+
+rule bowtie_align:
+    input:
+        ref=config["Reference_Fasta"],
+        FRead="trimmed_reads/{sample}/R1.fq",
+        RRead="trimmed_reads/{sample}/R2.fq",
+        index=config["Reference_Fasta"] + ".1.bt2"
+    params:
+        rg_id="{sample}",
+        rg="SM:{sample}",
+        score=config["scoreMinRelaxed"]
+    threads:
+        8
+    resources:
+        mem_mb=4000
+    conda:
+        "envs/bowtie2.yaml"
+    output:
+        temp("tmp_mappings/{sample}.bam")
+    log:
+        "logs/bowtie2/{sample}.log"
+    shell:
+        "(bowtie2 -x {input.ref} -1 {input.FRead} -2 {input.RRead} --rg-id "
+        "{params.rg_id} --rg {params.rg} -p {threads} --score-min "
+        "{params.score} --phred33 --fr --maxins 1000 --very-sensitive "
+        "--no-unal --no-discordant -k 10 | samtools view --threads {threads} "
+        "-S -b > {output}) 2> {log}"
+
+
+rule samtools_sort:
+    input:
+        "tmp_mappings/{sample}.bam"
+    threads:
+        8
+    resources:
+        mem_mb=8000
+    output:
+        "mappings/{sample}_sorted.bam"
+    conda:
+        "envs/bowtie2.yaml"
+    log:
+        "logs/samtools_sort/{sample}.log"
+    shell:
+        "(samtools sort --threads {threads} -l 9 {input} -o {output}) "
+        "> {log}"
+
+
+rule samtools_index_relaxed:
+    input:
+        "mappings/{sample}_sorted.bam"
+    output:
+        "mappings/{sample}_sorted.bam.bai"
+    conda:
+        "envs/bowtie2.yaml"
+    log:
+        "logs/samtools_index_relaxed/{sample}.log"
+    resources:
+        mem_mb=4000
+    shell:
+        "(samtools index {input} {output}) > {log}"
+
+
+rule sambamba_filter:
+    input:
+        bam="mappings/{sample}_sorted.bam",
+        bai="mappings/{sample}_sorted.bam.bai"
+    output:
+        "mappings/{sample}_strict.bam"
+    conda:
+        "envs/sambamba.yaml"
+    log:
+        "logs/sambamba/{sample}.log"
+    resources:
+        mem_mb=4000
+    shell:
+        """(sambamba view --format=bam -l 9 --filter='[NM] == 0' -o {output} {input.bam}) > {log}"""
+
+
+rule samtools_index_strict:
+    input:
+        "mappings/{sample}_strict.bam"
+    output:
+        "mappings/{sample}_strict.bam.bai"
+    conda:
+        "envs/bowtie2.yaml"
+    log:
+        "logs/samtools_index_strict/{sample}.log"
+    resources:
+        mem_mb=4000
+    shell:
+        "(samtools index {input} {output}) > {log}"
+
+
+rule coverage_strict:
+    input:
+        bam="mappings/{sample}_strict.bam",
+        bed=config["CDS_Bed"],
+        bai="mappings/{sample}_strict.bam.bai"
+    output:
+        "coverage/{sample}_coverage.txt"
+    conda:
+        "envs/bedtools.yaml"
+    log:
+        "logs/bedtools/{sample}.log"
+    resources:
+        mem_mb=4000
+    shell:
+        "(coverageBed -d -a {input.bed} -b {input.bam} > {output}) 2> {log}"
+
+
+rule per_gene_coverage:
+    input:
+        referenceGenes="resources/reference_headers.txt",
+        sample_coverage="coverage/{sample}_coverage.txt"
+    output:
+        gene_coverage="coverage/{sample}_geneCoverage.txt"
+    log:
+        "logs/coverage_gathering/{sample}_per_gene_coverage.log"
+    resources:
+        mem_mb=2000
+    shell:
+        """(cat {input.referenceGenes} | tail -n +2 | while read gene; do numPosWithCoverage=`grep -w "$gene" {input.sample_coverage} | awk '$5>0' | wc -l`; numPosTotal=`grep -w "$gene" {input.sample_coverage} | wc -l`; if [ $numPosTotal -eq 0 ]; then echo "ERROR: gene $gene has CDS region of length zero. Check your input data (e.g. gene spelling in FASTA and CDS BED file) and retry.\nAborting pipeline run."; exit; fi; pctCov=`awk "BEGIN {{print ($numPosWithCoverage/$numPosTotal)*100 }}"`; echo -e "\n# covered positions for sample {wildcards.sample} in gene $gene: $numPosWithCoverage\n# CDS positions for gene $gene: $numPosTotal\npctCov: $pctCov"; echo -e "$gene\t$pctCov" >> {output.gene_coverage}; done) 2> {log}"""
+
+
+rule combine_gene_coverage:
+    input:
+        "coverage/{sample}_geneCoverage.txt"
+    output:
+        "coverage/{sample}_coverageValues.txt"
+    log:
+        "logs/coverage_gathering/{sample}_combine_gene_coverage.log"
+    resources:
+        mem_mb=2000
+    run:
+        shell("(echo {wildcards.sample} > {output}) 2> {log}")
+        shell("(cat {input} | cut -f2 >> {output}) 2>> {log}")
+
+
+rule combine_coverage_values:
+    input:
+        gene_names="resources/reference_headers.txt",
+        coverage=expand("coverage/{sample}_coverageValues.txt", sample=samples["sample"])
+    output:
+        "coverage/all_coverage_values.txt"
+    log:
+        "logs/coverage_gathering/combine_coverage_values.log"
+    params:
+        ulimit=config["ulimit"]
+    resources:
+        mem_mb=2000
+    shell:
+        """ulimit -n {params.ulimit}
+        (paste {input.gene_names} {input.coverage} > {output}) 2> {log}"""
+
+
+rule transpose_combined_coverage:
+    input:
+        "coverage/all_coverage_values.txt"
+    output:
+        "coverage/all_coverage_values_transposed.txt"
+    log:
+        "logs/coverage_gathering/transposing.log"
+    resources:
+        mem_mb=2000
+    params:
+        size=config["ulimit"]
+    shell:
+        "(transpose -l {params.size}x{params.size} -t {input} > "
+        "{output}) 2> {log}"
+
+
+rule gene_group_analysis:
+    input:
+        groups=config["gene_groups"],
+        coverage="coverage/all_coverage_values_transposed.txt"
+    output:
+        passed=expand("{sample}/{sample}.genesPassed.txt", sample=samples["sample"]),
+        failed="gene_groups/failed_groups.txt"
+    log:
+        "logs/gene_groups/gene_groups.log"
+    resources:
+        mem_mb=2000
+    params:
+        ulimit=config["ulimit"]
+    shell:
+        """ulimit -n {params.ulimit}
+        (java utils.oneoffs.RGeneGroupAnalysis {input.groups} {input.coverage} {output.failed}) 2> {log}"""
+
+
+rule filter_bam_file:
+    input:
+        passed=ancient("{sample}/{sample}.genesPassed.txt"),
+        bed=config["CDS_Bed"]
+    output:
+        bed=temp("bam_filter/{sample}/tmp.bed"),
+        ref_bed="bam_filter/{sample}/refGeneCoords.bed"
+    log:
+        "logs/bam_filter/filter_bam_file_{sample}.log"
+    resources:
+        mem_mb=2000
+    run:
+        shell("java utils.various.Extractor {input.passed} {input.bed} "
+        "{output.bed} 0 0 > {log}")
+        shell("(cut -f 2-4 {output.bed} > {output.ref_bed}) 2>> {log}")
+
+
+rule extract_reads_from_bam:
+    input:
+        bam="mappings/{sample}_sorted.bam",
+        bed="bam_filter/{sample}/refGeneCoords.bed"
+    output:
+        "bam_filter/{sample}_filtered.bam"
+    log:
+        "logs/bam_filter/{sample}_extract_from_bam.log"
+    conda:
+        "envs/bowtie2.yaml"
+    resources:
+        mem_mb=4000
+    shell:
+        "(samtools view -b -o {output} -L {input.bed} {input.bam}) 2> {log}"
+
+
+rule index_extracted_bam:
+    input:
+        "bam_filter/{sample}_filtered.bam"
+    output:
+        "bam_filter/{sample}_filtered.bam.bai"
+    log:
+        "logs/bam_filter/{sample}_sort_extracted_bam.log"
+    conda:
+        "envs/bowtie2.yaml"
+    resources:
+        mem_mb=4000
+    shell:
+        "(samtools index {input}) 2> {log}"
+
+
+rule recode_flags:
+    input:
+        bam="bam_filter/{sample}_filtered.bam",
+        bai="bam_filter/{sample}_filtered.bam.bai"
+    output:
+        header="bam_filter/{sample}_header.txt",
+        recoded=temp("bam_filter/{sample}_recode_tmp.sam")
+    log:
+        "logs/bam_filter/{sample}_recode.log"
+    conda:
+        "envs/bioawk.yaml"
+    resources:
+        mem_mb=4000
+    shell:
+        """
+        (samtools view -H {input.bam} > {output.header}) 2> {log}
+        (samtools view {input.bam} | bioawk -c sam '{{ $flag=0 ; print $0 }}' | cat {output.header} - > {output.recoded}) 2>> {log}
+        """
+
+
+rule convert_sam_to_bam:
+    input:
+        "bam_filter/{sample}_recode_tmp.sam"
+    output:
+        "bam_filter/{sample}_recode.bam"
+    log:
+        "logs/bam_filter/{sample}_recode_convert.log"
+    conda:
+        "envs/bowtie2.yaml"
+    resources:
+        mem_mb=4000
+    shell:
+        "(samtools view -o {output} -O BAM {input}) 2> {log}"
+
+
+rule index_converted_bam:
+    input:
+        "bam_filter/{sample}_recode.bam"
+    output:
+        "bam_filter/{sample}_recode.bam.bai"
+    log:
+        "logs/bam_filter/{sample}_recode_index.log"
+    conda:
+        "envs/bowtie2.yaml"
+    resources:
+        mem_mb=4000
+    shell:
+        "(samtools index {input}) 2> {log}"
+
+
+rule FreeBayes_call:
+    input:
+        bam="bam_filter/{sample}_recode.bam",
+        bai="bam_filter/{sample}_recode.bam.bai",
+        fasta=config["Reference_Fasta"]
+    output:
+        "variant_calls/{sample}_SNPs_relaxed_mappings.vcf"
+    params:
+        ploidy=config["ploidy"]
+    log:
+        "logs/variant_call/{sample}_freebayes.log"
+    resources:
+        partition="medium",
+        mem_mb=4000
+    conda:
+        "envs/freebayes.yaml"
+    shell:
+        "(freebayes -f {input.fasta} --min-alternate-count 2 "
+        "--min-alternate-fraction 0.05 --ploidy {params.ploidy} "
+        "--throw-away-indel-obs --throw-away-mnps-obs --throw-away-complex-obs "
+        "-m 0 -v {output} --legacy-gls {input.bam})"
+
+
+rule compress_index_VCF:
+    input:
+        "variant_calls/{sample}_SNPs_relaxed_mappings.vcf"
+    output:
+        compressed="variant_calls/{sample}_SNPs_relaxed_mappings.vcf.gz",
+        index="variant_calls/{sample}_SNPs_relaxed_mappings.vcf.gz.tbi"
+    log:
+        "logs/variant_call/{sample}_compress_index.log"
+    conda:
+        "envs/bowtie2.yaml"
+    resources:
+        mem_mb=2000
+    shell:
+        """
+        (bgzip {input}) 2> {log}
+        (tabix {output.compressed}) 2>> {log}
+        """
+
+
+rule merge_vcfs:
+    input:
+        expand("variant_calls/{sample}_SNPs_relaxed_mappings.vcf.gz", sample=samples["sample"])
+    output:
+        "variant_calls/dRenSeq_mergedVariants.vcf"
+    threads:
+        8
+    resources:
+        partition="medium",
+        mem_mb=8000
+    log:
+        "logs/variant_call/merge_vcfs.log"
+    conda:
+        "envs/bcftools.yaml"
+    params:
+        ulimit=config["ulimit"]
+    shell:
+        """(find . -name "*_SNPs_relaxed_mappings.vcf.gz" | sort > sampleSNPs_list2.txt) 2> {log}
+        ulimit -n {params.ulimit}
+        (bcftools merge --force-samples --merge all --threads {threads} --file-list sampleSNPs_list2.txt --output-type v --output {output}) 2>> {log}"""
+
+
+rule extract_counts_alt_ref:
+    input:
+        vcf="variant_calls/dRenSeq_mergedVariants.vcf",
+        coverage="coverage/all_coverage_values.txt"
+    output:
+        "dRenseq_globalStats.txt"
+    log:
+        "logs/allele_counts/extract_counts_alt_ref.log"
+    resources:
+        partition="medium",
+        mem_mb=2000
+    shell:
+        "(java utils.oneoffs.Reformat_dRenseqVCF {input.vcf} {input.coverage} "
+        "dRenseq) 2> {log}"
+
+
+rule filter_allele_counts:
+    input:
+        "dRenseq_globalStats.txt"
+    output:
+        "allele_counts/dRenseq_globalStats_filtered.txt"
+    log:
+        "logs/allele_counts/filter_allele_counts.log"
+    resources:
+        mem_mb=2000
+    run:
+        shell("(head -1 {input} > {output}) 2> {log}")
+        shell("""(awk '$6<=0.02 && $8<=0.01 && $25>0.94' OFS='\t' {input} >> {output}) 2> {log}""")
+
+
+rule create_filtered_SNP_bed:
+    input:
+        "allele_counts/dRenseq_globalStats_filtered.txt"
+    output:
+        "allele_counts/filtered_SNPs.bed"
+    log:
+        "logs/allele_counts/create_filtered_SNP_bed.log"
+    resources:
+        mem_mb=2000
+    shell:
+        "(cut -f1,2 {input} | tail -n +2 > {output}) 2> {log}"
+
+
+rule subset_vcf:
+    input:
+        vcf="variant_calls/dRenSeq_mergedVariants.vcf",
+        bed="allele_counts/filtered_SNPs.bed"
+    output:
+        "final_outputs/SNPsForAssay.vcf"
+    log:
+        "logs/final_outputs/snps_for_assay.log"
+    resources:
+        partition="medium",
+        mem_mb=4000
+    shell:
+        "(java utils.snps.vcf.SubsetVCFFromBEDFile {input.vcf} {input.bed} "
+        "{output}) 2> {log}"
+
+
+rule prepare_SNP_manifest:
+    input:
+        fasta=config["Reference_Fasta"],
+        SNPs="final_outputs/SNPsForAssay.vcf"
+    output:
+        text="final_outputs/SNPsForAssay_manifests.txt",
+        fasta="final_outputs/SNPsForAssay_manifests.fa"
+    resources:
+        partition="medium",
+        mem_mb=4000
+    log:
+        "logs/final_outputs/manifests.log"
+    shell:
+        "java utils.snps.SNPExtractorIUPACCodes 120 {input.fasta} {input.SNPs} "
+        "{output.text} {output.fasta} 2> {log}"

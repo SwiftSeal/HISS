@@ -1,0 +1,27 @@
+import pandas as pd
+
+configfile: "config/config.yaml"
+
+read_scores = pd.read_table(config["read_scores"], header=0).set_index(["sample"], drop=False)
+
+def get_reads(wildcards):
+    return [read_scores["R1"][wildcards.sample], read_scores["R2"][wildcards.sample]]
+
+def get_samples(wildcards):
+    return read_scores["sample"][wildcards.sample]
+
+include: "rules/jellyfish.smk"
+include: "rules/accessions.smk"
+include: "rules/matrix.smk"
+include: "rules/phenotype.smk"
+include: "rules/nlr_parser.smk"
+include: "rules/run_association.smk"
+include: "rules/plot.smk"
+include: "rules/fastp.smk"
+include: "rules/blast.smk"
+include: "rules/blast_plot.smk"
+
+rule all:
+    input:
+        "results/filtered_contigs.txt",
+        "images/blast_plot.png"

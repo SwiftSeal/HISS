@@ -1,0 +1,17 @@
+name: minimap2
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+  - r
+dependencies:
+  - _libgcc_mutex=0.1=conda_forge
+  - _openmp_mutex=4.5=1_gnu
+  - k8=0.2.5=h9a82719_1
+  - libgcc-ng=11.2.0=h1d223b6_11
+  - libgomp=11.2.0=h1d223b6_11
+  - libstdcxx-ng=11.2.0=he4da1e4_11
+  - libzlib=1.2.11=h36c2ea0_1013
+  - minimap2=2.24=h5bf99c6_0
+  - zlib=1.2.11=h36c2ea0_1013
+prefix: /mnt/shared/scratch/mbayer/apps/conda/envs/minimap2

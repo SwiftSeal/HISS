@@ -1,0 +1,5 @@
+read_scores: "config/read_scores.txt"
+assembly: "config/pacbio_contigs.fasta"
+assembly_title: "contigs_name"
+reference: "config/DM_1-3_516_R44_potato_genome_assembly.v6.1.fasta"
+assoc_threshold: 25

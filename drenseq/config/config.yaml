@@ -1,0 +1,25 @@
+Reference_Fasta: "/path/to/reference/fasta"
+
+
+CDS_Bed: "/path/to/CDS/bed/file"
+
+
+scoreMinRelaxed: "L,0,-0.24"
+
+
+samples: "/path/to/sample/sheet"
+
+
+adaptor_path_1: "/path/to/adaptors/Index2varN"
+
+
+adaptor_path_2: "/path/to/adaptors/Universal_var"
+
+
+gene_groups: "/path/to/gene/groups"
+
+
+ploidy: "ploidy"
+
+
+ulimit: "max_number_of_open_files_allowed"
