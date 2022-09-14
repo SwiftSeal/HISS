@@ -8,7 +8,7 @@ rule nlr_parser:
     threads:
         4
     resources:
-        mem_mb=4000,
+        mem_mb=8000,
         partition="short"
     conda:
         "../envs/meme.yaml"

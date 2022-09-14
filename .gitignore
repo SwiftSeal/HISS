@@ -1,8 +1,9 @@
+temp_mast1/
 logs/
 results/
 images/
-config/read_scores.txt
-config/*.fasta
+**/config/read_scores.txt
+**/config/*.fasta
 .snakemake/
 slurm*
 smrtrenseq_assembly/mapping
