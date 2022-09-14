@@ -1,0 +1,12 @@
+logs/
+results/
+images/
+config/read_scores.txt
+config/*.fasta
+.snakemake/
+slurm*
+smrtrenseq_assembly/mapping
+smrtrenseq_assembly/assembly
+smrtrenseq_assembly/NLR_Annotator
+smrtrenseq_assembly/NLR_coverage
+smrtrenseq_assembly/config/*.txt

@@ -1,13 +1,13 @@
-samples: "/path/to/sample/sheet"
+samples: "config/sample.txt"
 
 
-fiveprime: "sequence_to_be_trimmed_from_fiveprime_end"
+fiveprime: "GGTAGT"
 
 
-threeprime: "sequence_to_be_trimmed_from_threeprime_end"
+threeprime: "ACTACC"
 
 
-Genome_Size: "estimated_genome_size_in_base_pairs"
+Genome_Size: "2000000"
 
 
-flanking: "number_of_basepairs_flanking_nlr_annotator_hits_to_extract_for_fastas"
+flanking: "1000"
