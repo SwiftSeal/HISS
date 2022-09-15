@@ -107,7 +107,7 @@ rule summarise_NLRs:
         mem_mb=2000
     run:
         with open(output[0], "w") as o:
-            header_list = ["Sample", "NLR Contigs", "NLR Count", "Pseudogenous NLRs", "NLR Genes", "Complete NLRs", "Complete Pseudogenous NLRs"]
+            header_list = ["Sample", "NLR Contigs", "NLR Count", "NBARC", "NBARC-LRR", "CC", "CC-NBARC", "CC-NBARC-LRR", "CC-LRR", "CC-TIR-NBARC-LRR", "TIR", "TIR-NBARC", "TIR-NBARC-LRR", "TIR-LRR", "TIR-CC-NBARC-LRR"]
             header_string = "\t".join(header_list)
             o.write(header_string)
             o.write("\n")
@@ -119,10 +119,18 @@ rule summarise_NLRs:
             lines = open(file).readlines()
             contig_set = set()
             count = 0
-            pseudogenes = 0
-            genes = 0
-            complete = 0
-            complete_pseudogenes = 0
+            NBARC = 0
+            NBARC_LRR = 0
+            CC = 0
+            CC_NBARC = 0
+            CC_NBARC_LRR = 0
+            CC_LRR = 0
+            CC_TIR_NBARC_LRR = 0
+            TIR = 0
+            TIR_NBARC = 0
+            TIR_NBARC_LRR = 0
+            TIR_LRR = 0
+            TIR_CC_NBARC_LRR = 0
             for line in lines:
                 count += 1
                 line = line.rstrip()
@@ -130,17 +138,33 @@ rule summarise_NLRs:
                 nlr_type = split_line[2]
                 contig = split_line[0]
                 contig_set.add(contig)
-                if nlr_type == "complete (pseudogene)" or nlr_type == "partial (pseudogene)":
-                    pseudogenes += 1
-                if nlr_type == "complete" or nlr_type == "partial":
-                    genes += 1
-                if nlr_type == "complete":
-                    complete += 1
-                if nlr_type == "complete (pseudogene)":
-                    complete_pseudogenes += 1
+                if nlr_type == "NBARC":
+                    NBARC += 1
+                if nlr_type == "NBARC-LRR":
+                    NBARC_LRR += 1
+                if nlr_type == "CC":
+                    CC += 1
+                if nlr_type == "CC-NBARC":
+                    CC_NBARC += 1
+                if nlr_type == "CC-NBARC-LRR":
+                    CC_NBARC_LRR += 1
+                if nlr_type == "CC-LRR":
+                    CC_LRR += 1
+                if nlr_type == "CC-TIR-NBARC-LRR":
+                    CC_TIR_NBARC_LRR += 1
+                if nlr_type == "TIR":
+                    TIR += 1
+                if nlr_type == "TIR-NBARC":
+                    TIR_NBARC += 1
+                if nlr_type == "TIR-NBARC-LRR":
+                    TIR_NBARC_LRR += 1
+                if nlr_type == "TIR-LRR":
+                    TIR_LRR += 1
+                if nlr_type == "TIR-CC-NBARC-LRR":
+                    TIR_CC_NBARC_LRR += 1
             contig_count = len(contig_set)
             with open(output[0], 'a') as o:
-                list_to_write = [str(sample), str(contig_count), str(count), str(pseudogenes), str(genes), str(complete), str(complete_pseudogenes)]
+                list_to_write = [str(sample), str(contig_count), str(count), str(NBARC), str(NBARC_LRR), str(CC), str(CC_NBARC), str(CC_NBARC_LRR), str(CC_LRR), str(CC_TIR_NBARC_LRR), str(TIR), str(TIR_NBARC), str(TIR_NBARC_LRR), str(TIR_LRR), str(TIR_CC_NBARC_LRR)]
                 string_to_write = "\t".join(list_to_write)
                 o.write(string_to_write)
                 o.write("\n")
