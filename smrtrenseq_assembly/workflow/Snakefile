@@ -245,7 +245,7 @@ rule convert_sam_to_bam:
     log:
         "logs/nlr_coverage/{sample}_convert_to_bam.log"
     conda:
-        "envs/samtools_new.yaml"
+        "envs/samtools.yaml"
     resources:
         mem_mb=4000
     shell:
@@ -260,7 +260,7 @@ rule sort_bam:
     log:
         "logs/nlr_coverage/{sample}_sort_bam.log"
     conda:
-        "envs/samtools_new.yaml"
+        "envs/samtools.yaml"
     resources:
         mem_mb=4000
     shell:
@@ -275,7 +275,7 @@ rule index_sorted_bam:
     log:
         "logs/nlr_coverage/{sample}_index_sorted_bam.log"
     conda:
-        "envs/samtools_new.yaml"
+        "envs/samtools.yaml"
     resources:
         mem_mb=4000
     shell:
@@ -292,7 +292,7 @@ rule calculate_coverage:
     log:
         "logs/nlr_coverage/{sample}_calculate_coverage.log"
     conda:
-        "envs/samtools_new.yaml"
+        "envs/samtools.yaml"
     resources:
         mem_mb=4000
     shell:

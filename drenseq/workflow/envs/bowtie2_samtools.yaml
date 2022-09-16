@@ -1,0 +1,6 @@
+name: bowtie2_samtools
+channels:
+  - bioconda
+dependencies:
+  - bowtie2=2.4.5=py38he5f0661_1
+  - samtools=1.14=hb421002_0

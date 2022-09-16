@@ -67,7 +67,7 @@ rule bowtie_build:
     output:
         index=config["Reference_Fasta"] + ".1.bt2"
     conda:
-        "envs/bowtie2.yaml"
+        "envs/bowtie2_samtools.yaml"
     log:
         "logs/bowtie2/indexing.log"
     resources:
@@ -91,7 +91,7 @@ rule bowtie_align:
     resources:
         mem_mb=4000
     conda:
-        "envs/bowtie2.yaml"
+        "envs/bowtie2_samtools.yaml"
     output:
         temp("tmp_mappings/{sample}.bam")
     log:
@@ -114,7 +114,7 @@ rule samtools_sort:
     output:
         "mappings/{sample}_sorted.bam"
     conda:
-        "envs/bowtie2.yaml"
+        "envs/bowtie2_samtools.yaml"
     log:
         "logs/samtools_sort/{sample}.log"
     shell:
@@ -128,7 +128,7 @@ rule samtools_index_relaxed:
     output:
         "mappings/{sample}_sorted.bam.bai"
     conda:
-        "envs/bowtie2.yaml"
+        "envs/bowtie2_samtools.yaml"
     log:
         "logs/samtools_index_relaxed/{sample}.log"
     resources:
@@ -159,7 +159,7 @@ rule samtools_index_strict:
     output:
         "mappings/{sample}_strict.bam.bai"
     conda:
-        "envs/bowtie2.yaml"
+        "envs/bowtie2_samtools.yaml"
     log:
         "logs/samtools_index_strict/{sample}.log"
     resources:
@@ -290,7 +290,7 @@ rule extract_reads_from_bam:
     log:
         "logs/bam_filter/{sample}_extract_from_bam.log"
     conda:
-        "envs/bowtie2.yaml"
+        "envs/bowtie2_samtools.yaml"
     resources:
         mem_mb=4000
     shell:
@@ -305,7 +305,7 @@ rule index_extracted_bam:
     log:
         "logs/bam_filter/{sample}_sort_extracted_bam.log"
     conda:
-        "envs/bowtie2.yaml"
+        "envs/bowtie2_samtools.yaml"
     resources:
         mem_mb=4000
     shell:
@@ -322,7 +322,7 @@ rule recode_flags:
     log:
         "logs/bam_filter/{sample}_recode.log"
     conda:
-        "envs/bioawk.yaml"
+        "envs/bioawk_samtools.yaml"
     resources:
         mem_mb=4000
     shell:
@@ -340,7 +340,7 @@ rule convert_sam_to_bam:
     log:
         "logs/bam_filter/{sample}_recode_convert.log"
     conda:
-        "envs/bowtie2.yaml"
+        "envs/bowtie2_samtools.yaml"
     resources:
         mem_mb=4000
     shell:
@@ -355,7 +355,7 @@ rule index_converted_bam:
     log:
         "logs/bam_filter/{sample}_recode_index.log"
     conda:
-        "envs/bowtie2.yaml"
+        "envs/bowtie2_samtools.yaml"
     resources:
         mem_mb=4000
     shell:
@@ -394,7 +394,7 @@ rule compress_index_VCF:
     log:
         "logs/variant_call/{sample}_compress_index.log"
     conda:
-        "envs/bowtie2.yaml"
+        "envs/bowtie2_samtools.yaml"
     resources:
         mem_mb=2000
     shell:
