@@ -1,8 +1,7 @@
 # Assembly of SMRT-RenSeq HiFi data
 
 **NOTE This workflow assumes that the only trimming needed is from the 5' and 3' end. Always check that your trimming results look sensible and keep in mind you may need to remove reverse complements of your adaptors.
-This workflow DOES NOT do this and should only be regarded as providing minimal trimming.
-Please also note the NLR coverage values reported by the workflow are only calculated for those marked as complete to avoid possible bias in enrichment across gene lengths**
+This workflow DOES NOT do this and should only be regarded as providing minimal trimming.**
 
 ## Usage
 
