@@ -38,3 +38,30 @@ In results, `AgRenSeqResult.txt` is the final output of AgRenSeq, `output.nlr.tx
 `images/` will contain a basic plot of the AgRenSeq results, as well as a plot of best blast hits against a reference genome (I recommend DM).
 
 A `logs/` directory will be created and populated with logs of certain processes.
+
+## Graphical summary of workflow
+
+```mermaid
+Box1["Reference genome fasta file"]
+Box2["Contigs used as a reference for the association"]
+Box3["BLAST contigs against reference fasta<br />(Altschul <i> et al</i>., 1990)"]
+Box1-->Box3
+Box2-->Box3
+Box4["Input RenSeq Illumina reads"]
+Box5["Trim reads with fastp<br />(Chen <i>et al</i>., 2018)"]
+Box4-->Box5
+Box6["Count Kmers in trimmed reads with Jellyfish<br />(Marcais and Kingsford, 2011)"]
+Box5-->Box6
+Box7["Create a Kmer presence matrix"]
+Box6-->Box7
+Box8["Run NLR Parser over the assembled contigs to identify contigs with putative R genes<br />(Steuernagel <i>et al</i>., 2015)"]
+Box2-->Box8
+Box9["Perform association analysis<br />(Arora <i>et al</i>., 2019)"]
+Box7-->Box9
+Box10["Read scores input file"]
+Box10-->Box9
+Box8-->Box9
+Box2-->Box9
+Box11["Plot AgRenSeq results and output filtered contigs"]
+Box9-->Box11
+```
