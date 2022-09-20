@@ -84,11 +84,11 @@ Box12-->Box13
 Box14["Input Bed file of regions of interest from reference fasta"]
 Box11-->Box14
 Box13-->Box14
-Box15["Extract reads covering the regions of interest to a BAM file with samtools and index it<br />(Langmead and Salzberg, 2012)"]
+Box15["Extract reads covering the regions of interest to a BAM file with samtools and index it<br />(Danecek <i>et al</i>., 2021)"]
 Box14-->Box15
-Box16["Recode flags to aid Freebayes in handling multimapped reads with samtools and bioawk<br />(Langmead and Salzberg, 2012; Li, 2017)"]
+Box16["Recode flags to aid Freebayes in handling multimapped reads with samtools and bioawk<br />(Danecek <i>et al</i>., 2021; Li, 2017)"]
 Box15-->Box16
-Box17["Convert recoded SAM file to BAM and index with samtools<br />(Langmead and Salzberg, 2012)"]
+Box17["Convert recoded SAM file to BAM and index with samtools<br />(Danecek <i>et al</i>., 2021)"]
 Box16-->Box17
 Box18["Call variant sites with Freebayes, create a compressed and indexed VCF<br />(Garrison and Marth, 2012)"]
 Box17-->Box18
