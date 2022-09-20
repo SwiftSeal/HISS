@@ -2,5 +2,4 @@ channels:
  - bioconda
  - conda-forge
 dependencies:
- - meme=4.8.1
  - openjdk=11.0.1

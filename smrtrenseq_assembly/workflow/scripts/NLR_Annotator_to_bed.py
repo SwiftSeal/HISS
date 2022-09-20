@@ -27,19 +27,16 @@ def load_file(input: list):
     for line in input:
         line = line.rstrip()
         split_line = line.split('\t')
-        nlr_type = split_line[2]
-        match nlr_type:
-            case "complete (pseudogene)" | "complete":
-                contig = split_line[0]
-                start = int(split_line[3]) - 1
-                end = split_line[4]
-                gene_ID = split_line[1]
-                score = 0
-                strand = split_line[5]
-                list_to_write = [contig, str(start), str(end), gene_ID,
-                                 str(score), str(strand)]
-                string_to_write = "\t".join(list_to_write)
-                output_dict[gene_ID] = string_to_write
+        contig = split_line[0]
+        start = int(split_line[3]) - 1
+        end = split_line[4]
+        gene_ID = split_line[1]
+        score = 0
+        strand = split_line[5]
+        list_to_write = [contig, str(start), str(end), gene_ID,
+                         str(score), str(strand)]
+        string_to_write = "\t".join(list_to_write)
+        output_dict[gene_ID] = string_to_write
     return output_dict
 
 # Prepare function to write output to bed file

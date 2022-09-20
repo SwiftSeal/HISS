@@ -14,6 +14,6 @@ rule run_association:
         mem_mb=16000,
         partition="short"
     conda:
-        "../envs/meme.yaml"
+        "../envs/java.yaml"
     shell:
         "java -jar ../utils/AgRenSeq_RunAssociation.jar -i {input.matrix} -n {input.nlr} -p {input.phenotype} -a {input.assembly} -o {output} 2> {log}"
