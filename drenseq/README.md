@@ -82,7 +82,7 @@ Box11-->Box12
 Box13["Remove gene groups with 100% coverage of at least one member of the group"]
 Box12-->Box13
 Box14["Input Bed file of regions of interest from reference fasta"]
-Box14-->Box11
+Box11-->Box14
 Box13-->Box14
 Box15["Extract reads covering the regions of interest to a BAM file with samtools and index it<br />(Langmead and Salzberg, 2012)"]
 Box14-->Box15
