@@ -11,7 +11,7 @@ rule nlr_parser:
         mem_mb=8000,
         partition="short"
     conda:
-        "../envs/meme.yaml"
+        "../envs/java.yaml"
     shell:
-        "java -jar ../utils/NLR-Parser.jar -t 4 -y $(which mast) -x ../utils/meme.xml -i {input} -o {output} 2> {log}"
+        "java -jar ../utils/NLR-Annotator-v2.1.jar -t 4 -x ../utils/mot.txt -y ../utils/store.txt -i {input} -o {output} 2> {log}"
 

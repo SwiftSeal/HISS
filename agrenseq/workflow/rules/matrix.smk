@@ -11,6 +11,6 @@ rule matrix:
         mem_mb=64000,
         partition="short"
     conda:
-        "../envs/meme.yaml"
+        "../envs/java.yaml"
     shell:
         "java -jar ../utils/AgRenSeq_CreatePresenceMatrix.jar -i {input} -o {output} -t 3 -n 10 2> {log}"
