@@ -42,6 +42,7 @@ A `logs/` directory will be created and populated with logs of certain processes
 ## Graphical summary of workflow
 
 ```mermaid
+Graph TD
 Box1["Reference genome fasta file"]
 Box2["Contigs used as a reference for the association"]
 Box3["BLAST contigs against reference fasta<br />(Altschul <i> et al</i>., 1990)"]
