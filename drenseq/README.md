@@ -51,3 +51,53 @@ Finally, in some cases you may need to only run one round of analysis and so you
 ```bash
 rm -rf .snakemake/conda
 ```
+
+## Graphical summary of workflow
+
+```mermaid
+graph TD
+Box1["Reference fasta file"]
+Box2["Extract gene IDs from reference file"]
+Box1-->Box2
+Box3["Raw Illumina RenSeq reads"]
+Box4["Illumina sequencing adaptor sequences"]
+Box5["Trim reads for adaptors, quality and length with cutadapt<br />(Martin, 2011)"]
+Box3-->Box5
+Box4-->Box5
+Box6["Index with bowtie2<br />(Langmead and Salzberg, 2012)"]
+Box1-->Box6
+Box7["Align reads to references with bowtie2<br />(Langmead and Salzberg, 2012)"]
+Box6-->Box7
+Box5-->Box7
+Box8["Sort and index BAM file with samtools<br />(Danecek <i>et al</i>., 2021)"]
+Box7-->Box8
+Box9["Create BAM file containing no mismatches with sambamba<br />(Tarasov <i>et al</i>., 2015)"]
+Box8-->Box9
+Box10["Sort and index filtered BAM file with samtools<br />(Danecek <i>et al</i>., 2021)"]
+Box9-->Box10
+Box11["Assess coverage of filtered BAM file across reference genes with bedtools<br />(Quinlan and Hall, 2010)"]
+Box10-->Box11
+Box12["Assess per-gene coverage and combine to a single, transposed file"]
+Box11-->Box12
+Box13["Remove gene groups with 100% coverage of at least one member of the group"]
+Box12-->Box13
+Box14["Input Bed file of regions of interest from reference fasta"]
+Box11-->Box14
+Box13-->Box14
+Box15["Extract reads covering the regions of interest to a BAM file with samtools and index it<br />(Danecek <i>et al</i>., 2021)"]
+Box14-->Box15
+Box16["Recode flags to aid Freebayes in handling multimapped reads with samtools and bioawk<br />(Danecek <i>et al</i>., 2021; Li, 2017)"]
+Box15-->Box16
+Box17["Convert recoded SAM file to BAM and index with samtools<br />(Danecek <i>et al</i>., 2021)"]
+Box16-->Box17
+Box18["Call variant sites with Freebayes, create a compressed and indexed VCF<br />(Garrison and Marth, 2012)"]
+Box17-->Box18
+Box1-->Box18
+Box19["Merge VCFs from each sample with BCFtools<br />(Narasimhan <i>et al</i>., 2016)"]
+Box18-->Box19
+Box20["Extract allele details and filter to strongly supported SNPs"]
+Box19-->Box20
+Box12-->Box20
+Box21["Prepare final SNP files for marker design"]
+Box20-->Box21
+```

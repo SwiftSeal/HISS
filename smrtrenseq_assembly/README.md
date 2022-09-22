@@ -32,3 +32,34 @@ Don't worry about being too precise, it seems to only affect the coverage estima
 ## Results
 
 TODO
+
+## Graphical summary of workflow
+
+```mermaid
+graph TD
+Box1["Input HiFi reads"]
+Box2["Sequences to be trimmed"]
+Box3["Trim reads with cutadapt<br />(Martin, 2011)"]
+Box1-->Box3
+Box2-->Box3
+Box4["Assemble reads with HiCanu<br />(Nurk <i>et al</i>., 2020)"]
+Box3-->Box4
+Box5["Summarise basic assembly statistics"]
+Box4-->Box5
+Box6["Identify putative R genes with NLR Annotator<br />(Steuernagel <i> et al</i>., 2020)"]
+Box4-->Box6
+Box7["Summarise NLR statistics"]
+Box6-->Box7
+Box8["Summarise statistics of inputs used by HiCanu"]
+Box4-->Box8
+Box9["Prepare Bed file of NLR genes for coverage analysis"]
+Box6-->Box9
+Box10["Map HiFi reads back to assembled contigs with minimap2<br />(Li, 2021)"]
+Box3-->Box10
+Box4-->Box10
+Box11["Convert SAM to BAM, index and sort with samtools<br />(Danecek <i>et al</i>., 2021)"]
+Box10-->Box11
+Box12["Calculate coverage of NLR genes using samtools<br />(Danecek <i>et al</i>., 2021)"]
+Box11-->Box12
+Box9-->Box12
+```
