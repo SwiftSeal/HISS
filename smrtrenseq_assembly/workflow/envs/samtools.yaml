@@ -1,0 +1,5 @@
+name: samtools
+channels:
+  - bioconda
+dependencies:
+  - samtools=1.13=h8c37831_0
