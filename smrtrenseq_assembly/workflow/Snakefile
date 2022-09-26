@@ -95,7 +95,7 @@ rule NLR_Annotator:
     conda:
         "envs/openjdk.yaml"
     shell:
-        "(java -jar ../utils/NLR-Annotator-v2.1.jar -i {input.parser_xml} -o {output.text} -f {input.assembly} {output.fasta} {params.flanking} -x ../utils/mot.txt -y ../utils/store.txt) 2> {log}"
+        "(java -jar ../utils/NLR-Annotator-v2.1.jar -x ../utils/mot.txt -y ../utils/store.txt -i {input.assembly} -o {output.text} -f {input.assembly} {output.fasta} {params.flanking}) 2> {log}"
 
 
 rule summarise_NLRs:
