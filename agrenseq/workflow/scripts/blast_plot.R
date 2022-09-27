@@ -39,8 +39,8 @@ bins["filtered"][bins["filtered"] == 0] <- NA
 
 p <- ggplot(bins, aes(x = x, y = n, group = chromosome)) +
   facet_grid(~chromosome, scales = "free_x", space = "free_x") +
-  geom_ribbon(aes(ymin = 0, ymax = n, fill = "grey"), alpha = 0.5) +
-  geom_point(aes(x = x, y = filtered, colour = "#f44336")) +
+  geom_ribbon(aes(ymin = 0, ymax = n), fill = "black", alpha = 0.3) +
+  geom_point(aes(x = x, y = filtered), colour = "#f44336") +
   labs(title = args[4]) +
   theme(panel.grid.minor = element_line(colour="white"),
         panel.grid.major = element_line(colour="white"),
