@@ -1,0 +1,13 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+description: Schema for the references dataset
+properties:
+  reference:
+    type: string
+    description: Cultivar name of reference assembly, used for file and plot names
+  assembly:
+    type: string
+    description: Path to assembly
+
+required:
+  - reference
+  - assembly

@@ -1,16 +1,16 @@
 import pandas as pd
+from snakemake.utils import validate
 
 configfile: "config/config.yaml"
 
 read_scores = pd.read_table(config["read_scores"], header=0).set_index(["sample"], drop=False)
+validate(read_scores, "read_scores_schema.yaml")
 
 references = pd.read_table(config["references"], header=0).set_index(["reference"], drop=False)
+validate(references, "references_schema.yaml")
 
 def get_reads(wildcards):
     return [read_scores["R1"][wildcards.sample], read_scores["R2"][wildcards.sample]]
-
-def get_samples(wildcards):
-    return read_scores["sample"][wildcards.sample]
 
 def get_reference(wildcards):
     return references["assembly"][wildcards.reference]
