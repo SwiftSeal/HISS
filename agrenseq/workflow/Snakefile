@@ -4,11 +4,16 @@ configfile: "config/config.yaml"
 
 read_scores = pd.read_table(config["read_scores"], header=0).set_index(["sample"], drop=False)
 
+references = pd.read_table(config["references"], header=0).set_index(["reference"], drop=False)
+
 def get_reads(wildcards):
     return [read_scores["R1"][wildcards.sample], read_scores["R2"][wildcards.sample]]
 
 def get_samples(wildcards):
     return read_scores["sample"][wildcards.sample]
+
+def get_reference(wildcards):
+    return references["assembly"][wildcards.reference]
 
 include: "rules/jellyfish.smk"
 include: "rules/accessions.smk"
@@ -16,12 +21,11 @@ include: "rules/matrix.smk"
 include: "rules/phenotype.smk"
 include: "rules/nlr_annotator.smk"
 include: "rules/run_association.smk"
-include: "rules/plot.smk"
+include: "rules/plotting.smk"
 include: "rules/fastp.smk"
 include: "rules/blast.smk"
-include: "rules/blast_plot.smk"
 
 rule all:
     input:
-        "results/filtered_contigs.txt",
-        "images/blast_plot.png"
+        expand("results/{reference}_filtered_contigs.txt", reference=references["reference"]),
+        expand("images/{reference}_blast_plot.png", reference=references["reference"])
