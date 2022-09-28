@@ -223,7 +223,7 @@ rule add_flank_to_bed:
     conda:
         "envs/bioawk.yaml"
     params:
-        flank=config["flank"]
+        flank=config["flanking"]
     shell:
         """(bioawk -c fastx '{ print $name, length($seq) }' < {input.fasta} > {output.lengths}) 2> {log}
         (python workflow/scripts/add_flanking_to_bed.py --input_bed {input.bed} --input_lengths {output.lengths} --output {output.bed} --flank {params.flank}) 2>> {log}"""
