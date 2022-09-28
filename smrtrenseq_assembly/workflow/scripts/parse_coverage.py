@@ -1,4 +1,4 @@
-#!/mnt/shared/scratch/tadams/apps/conda/bin/python
+#!/usr/bin/env python3
 
 # Script to get useful values from output of samtools bedcov
 

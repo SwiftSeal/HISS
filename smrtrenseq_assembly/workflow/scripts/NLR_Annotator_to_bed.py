@@ -1,4 +1,4 @@
-#!/mnt/shared/scratch/tadams/apps/conda/bin/python
+#!/usr/bin/env python3
 
 # Script to convert NLR Annotator output to bed file to assess coverage
 # Ensure you are running python3.10 as this uses a case statement
