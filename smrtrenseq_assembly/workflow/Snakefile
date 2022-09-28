@@ -85,7 +85,6 @@ rule NLR_Annotator:
         assembly="assembly/{sample}/{sample}.contigs.fasta"
     output:
         text="NLR_Annotator/{sample}_NLR_Annotator.txt",
-        fasta="NLR_Annotator/{sample}_NLR_Annotator.fa"
     params:
         flanking=config["flanking"]
     log:
@@ -95,7 +94,7 @@ rule NLR_Annotator:
     conda:
         "envs/openjdk.yaml"
     shell:
-        "(java -jar ../utils/NLR-Annotator-v2.1.jar -x ../utils/mot.txt -y ../utils/store.txt -i {input.assembly} -o {output.text} -f {input.assembly} {output.fasta} {params.flanking}) 2> {log}"
+        "(java -jar ../utils/NLR-Annotator-v2.1.jar -x ../utils/mot.txt -y ../utils/store.txt -i {input.assembly} -o {output.text}) 2> {log}"
 
 
 rule summarise_NLRs:
@@ -208,6 +207,18 @@ rule sort_nlr_bed:
         mem_mb=2000
     shell:
         "(sort -k1,1V -k2,2n -k3,3n {input} > {output}) 2> {log}"
+
+
+rule create_NLR_fasta:
+    input:
+        bed="NLR_Annotator/{sample}_NLR_Annotator_sorted.bed",
+        assembly="assembly/{sample}/{sample}.contigs.fasta"
+    output:
+        fasta="NLR_Annotator/{sample}_NLR_Annotator.fa"
+    logs:
+        "logs/nlr_extract/{sample}_extract_fasta.log"
+    resources:
+        mem_mb=2000
 
 
 rule map_hifi:
