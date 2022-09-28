@@ -1,0 +1,5 @@
+name: bioawk
+channels:
+  - bioconda
+dependencies:
+  - bioawk=1.0=h5bf99c6_6
