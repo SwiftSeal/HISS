@@ -209,6 +209,19 @@ rule sort_nlr_bed:
         "(sort -k1,1V -k2,2n -k3,3n {input} > {output}) 2> {log}"
 
 
+rule add_flank_to_bed:
+    input:
+        bed="NLR_Annotator/{sample}_NLR_Annotator_sorted.bed",
+        fasta="assembly/{sample}/{sample}.contigs.fasta"
+    output:
+        "NLR_Annotator/{sample}_NLR_Annotator_sorted_plus_flank.bed"
+    log:
+        "logs/nlr_extract/{sample}_add_flank.log"
+    resources:
+        mem_mb=2000
+    shell:
+
+
 rule create_NLR_fasta:
     input:
         bed="NLR_Annotator/{sample}_NLR_Annotator_sorted_plus_flank.bed",
