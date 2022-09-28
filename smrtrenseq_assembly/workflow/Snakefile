@@ -211,7 +211,7 @@ rule sort_nlr_bed:
 
 rule create_NLR_fasta:
     input:
-        bed="NLR_Annotator/{sample}_NLR_Annotator_sorted.bed",
+        bed="NLR_Annotator/{sample}_NLR_Annotator_sorted_plus_flank.bed",
         assembly="assembly/{sample}/{sample}.contigs.fasta"
     output:
         fasta="NLR_Annotator/{sample}_NLR_Annotator.fa"
@@ -221,6 +221,8 @@ rule create_NLR_fasta:
         mem_mb=2000
     conda:
         "envs/bedtools.yaml"
+    shell:
+        "(bedtools getfasta -fi {input.assembly} -bed {input.bed} > {output.fasta}) 2> {log}"
 
 
 rule map_hifi:
