@@ -61,3 +61,15 @@ def get_positions(bed: list, lengths: list, flank: int):
                          str(score), str(strand)]
         bed_dict[str(nlr)] = list_to_write
     return bed_dict
+
+# Prepare function to write out file
+
+
+def output(bed: list, lengths: list, flank: int, output):
+    bed_dict = get_positions(bed, lengths, flank)
+    for nlr in bed_dict.keys():
+        list_to_write = bed_dict[str(nlr)]
+        string_to_write = '\t'.join(list_to_write)
+        output.write(string_to_write)
+        output.write('\n')
+    output.close()
