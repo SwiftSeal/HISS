@@ -214,12 +214,19 @@ rule add_flank_to_bed:
         bed="NLR_Annotator/{sample}_NLR_Annotator_sorted.bed",
         fasta="assembly/{sample}/{sample}.contigs.fasta"
     output:
-        "NLR_Annotator/{sample}_NLR_Annotator_sorted_plus_flank.bed"
+        bed="NLR_Annotator/{sample}_NLR_Annotator_sorted_plus_flank.bed",
+        lengths=temp("{sample}_lengths.txt")
     log:
         "logs/nlr_extract/{sample}_add_flank.log"
     resources:
         mem_mb=2000
+    conda:
+        "envs/bioawk.yaml"
+    params:
+        flank=config["flank"]
     shell:
+        """(bioawk -c fastx '{ print $name, length($seq) }' < {input.fasta} > {output.lengths}) 2> {log}
+        (python workflow/scripts/add_flanking_to_bed.py --input_bed {input.bed} --input_lengths {output.lengths} --output {output.bed} --flank {params.flank}) 2>> {log}"""
 
 
 rule create_NLR_fasta:
