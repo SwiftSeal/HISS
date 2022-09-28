@@ -65,11 +65,26 @@ def get_positions(bed: list, lengths: list, flank: int):
 # Prepare function to write out file
 
 
-def output(bed: list, lengths: list, flank: int, output):
+def output(bed: list, lengths: list, flank: int, out_file):
     bed_dict = get_positions(bed, lengths, flank)
     for nlr in bed_dict.keys():
         list_to_write = bed_dict[str(nlr)]
         string_to_write = '\t'.join(list_to_write)
-        output.write(string_to_write)
-        output.write('\n')
-    output.close()
+        out_file.write(string_to_write)
+        out_file.write('\n')
+    out_file.close()
+
+# Prepare main function
+
+
+def main():
+    args = parse_args()
+    bed = open(args.input_bed).readlines()
+    lengths = open(args.input_lengths).readlines()
+    flank = args.flank
+    out_file = open(args.output, 'w')
+    output(bed, lengths, flank, out_file)
+
+
+if __name__ == '__main__':
+    main()
