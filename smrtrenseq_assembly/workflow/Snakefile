@@ -219,6 +219,8 @@ rule create_NLR_fasta:
         "logs/nlr_extract/{sample}_extract_fasta.log"
     resources:
         mem_mb=2000
+    conda:
+        "envs/bedtools.yaml"
 
 
 rule map_hifi:
