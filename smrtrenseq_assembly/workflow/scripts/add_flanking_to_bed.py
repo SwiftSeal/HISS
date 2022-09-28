@@ -18,8 +18,9 @@ def parse_args():
                         help='Input file of contig lengths')
     parser.add_argument('--output', required=True,
                         help='Output file in bed format with flanking added')
+    parser.add_argument('--flank', required=True,
+                        help='Number of bases for flanking regions')
     return parser.parse_args()
-
 
 # Prepare function to get contig lengths:
 
@@ -33,3 +34,30 @@ def get_lengths(lengths: list):
         length = split_line[1]
         contig_dict[contig] = length
     return contig_dict
+
+# Prepare function to get new start & end of genes
+
+
+def get_positions(bed: list, lengths: list, flank: int):
+    contig_dict = get_lengths(lengths)
+    bed_dict = defaultdict(list)
+    for line in bed:
+        line = line.rstrip()
+        split_line = line.split('\t')
+        contig = split_line[0]
+        start = split_line[1]
+        end = split_line[2]
+        nlr = split_line[3]
+        score = split_line[4]
+        strand = split_line[5]
+        lower = start - flank
+        upper = end + flank
+        length = contig_dict[contig]
+        if lower <= 0:
+            lower = 1
+        if upper > length:
+            upper = length
+        list_to_write = [str(contig), str(lower), str(upper), str(nlr),
+                         str(score), str(strand)]
+        bed_dict[str(nlr)] = list_to_write
+    return bed_dict
