@@ -235,7 +235,7 @@ rule create_NLR_fasta:
         assembly="assembly/{sample}/{sample}.contigs.fasta"
     output:
         fasta="NLR_Annotator/{sample}_NLR_Annotator.fa"
-    logs:
+    log:
         "logs/nlr_extract/{sample}_extract_fasta.log"
     resources:
         mem_mb=2000
