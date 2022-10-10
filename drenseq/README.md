@@ -6,6 +6,7 @@
     *   A BED file of the CDS regions of your targets  
     *   A tab delimited text file with one line per sample and the header line (use absolute file paths): sample FRead RRead  
     *   FASTA files with your adaptor sequences, the current workflow uses two files, though it should be easy to modify this if needed.  
+    *   A tab delimited file with one line per gene, consisting of the gene name in the first column and the name of a group in the second. This allows filtering based on coverage of the genes within these groups.
 
 Make modifications to the config.yaml file.
 This follows the yaml format of key-value pairs.
