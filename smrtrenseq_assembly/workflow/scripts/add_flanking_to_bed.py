@@ -55,8 +55,8 @@ def get_positions(bed: list, lengths: list, flank: int):
         length = contig_dict[contig]
         if lower <= 0:
             lower = 1
-        if upper > length:
-            upper = length
+        if upper > int(length):
+            upper = int(length)
         list_to_write = [str(contig), str(lower), str(upper), str(nlr),
                          str(score), str(strand)]
         bed_dict[str(nlr)] = list_to_write
