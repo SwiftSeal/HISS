@@ -18,7 +18,8 @@ rule all:
         expand("NLR_coverage/{sample}_coverage_parsed.txt", sample=samples["sample"]),
         expand("assembly/{sample}_input_stats.txt", sample=samples["sample"]),
         "NLR_Annotator/NLR_summary.txt",
-        "assembly/assembly_statistics.txt"
+        "assembly/assembly_statistics.txt",
+        expand("NLR_Annotator/{sample}_NLR_Annotator.fa", sample=samples["sample"])
 
 
 rule trim_reads:
