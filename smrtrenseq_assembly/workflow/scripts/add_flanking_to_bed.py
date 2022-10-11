@@ -50,8 +50,8 @@ def get_positions(bed: list, lengths: list, flank: int):
         nlr = split_line[3]
         score = split_line[4]
         strand = split_line[5]
-        lower = start - flank
-        upper = end + flank
+        lower = int(start) - int(flank)
+        upper = int(end) + int(flank)
         length = contig_dict[contig]
         if lower <= 0:
             lower = 1
