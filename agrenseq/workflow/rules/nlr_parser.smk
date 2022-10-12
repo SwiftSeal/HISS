@@ -13,5 +13,4 @@ rule nlr_parser:
     conda:
         "../envs/meme.yaml"
     shell:
-        "java -jar workflow/scripts/NLR-Parser.jar -t 4 -y $(which mast) -x workflow/scripts/meme.xml -i {input} -o {output} 2> {log}"
-
+        "java -jar ../utils/NLR-Parser3.jar -t 4 -y $(which mast) -x ../utils/meme.xml -i {input} -o {output} 2> {log}"
