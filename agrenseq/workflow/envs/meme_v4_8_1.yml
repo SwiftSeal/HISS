@@ -1,0 +1,8 @@
+name: meme_v4_8_1
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - meme=4.8.1
+  - openjdk=8.0.312
+prefix: /mnt/shared/scratch/tadams/apps/conda/envs/meme_v4_8_1
