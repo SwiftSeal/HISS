@@ -86,16 +86,14 @@ rule chop_sequences:
         "assembly/{sample}/{sample}.contigs.fasta"
     output:
         temp("NLR_Annotator/{sample}_chopped.fa")
-    params:
-        path_to_chopsequence_jar=config["path_to_chopsequence_jar"]
     log:
         "logs/NLR_Annotator/{sample}_chop.log"
     conda:
-        "envs/meme_v4_8_1.yaml"
+        "envs/meme.yaml"
     resources:
         mem_mb=2000
     shell:
-        "(java -jar {params.path_to_chopsequence_jar} -i {input} -o {output}) 2> {log}"
+        "(java -jar ../utils/ChopSequence.jar -i {input} -o {output}) 2> {log}"
 
 
 rule NLR_parser:
@@ -103,9 +101,6 @@ rule NLR_parser:
         "NLR_Annotator/{sample}_chopped.fa"
     output:
         temp("NLR_Annotator/{sample}_nlr_parser.xml")
-    params:
-        path_to_NLR_Parser_jar=config["path_to_NLR_Parser_jar"],
-        path_to_meme_xml=config["path_to_meme_xml"]
     log:
         "logs/NLR_Annotator/{sample}_parser.log"
     threads:
@@ -113,10 +108,9 @@ rule NLR_parser:
     resources:
         mem_mb=6000
     conda:
-        "envs/meme_v4_8_1.yaml"
+        "envs/meme.yaml"
     shell:
-        """path_to_mast=$(which mast)
-        (java -jar {params.path_to_NLR_Parser_jar} -t {threads} -y $path_to_mast -x {params.path_to_meme_xml} -i {input} -c {output}) 2> {log}"""
+        "(java -jar ../utils/NLR-Parser3.jar -t {threads} -y $(which mast) -x ../utils/meme.xml -i {input} -c {output}) 2> {log}"
 
 
 rule run_NLR_Annotator:
@@ -127,16 +121,15 @@ rule run_NLR_Annotator:
         text="NLR_Annotator/{sample}_NLR_Annotator.txt",
         fasta="NLR_Annotator/{sample}_NLR_Annotator.fa"
     params:
-        path_to_NLR_Annotator_jar=config["path_to_NLR_Annotator_jar"],
         flanking=config["flanking"]
     log:
         "logs/NLR_Annotator/{sample}_annotator.log"
     resources:
         mem_mb=6000
     conda:
-        "envs/meme_v4_8_1.yaml"
+        "envs/meme.yaml"
     shell:
-        "(java -jar {params.path_to_NLR_Annotator_jar} -i {input.parser_xml} -o {output.text} -f {input.assembly} {output.fasta} {params.flanking}) 2> {log}"
+        "(java -jar ../utils/NLR-Annotator.jar -i {input.parser_xml} -o {output.text} -f {input.assembly} {output.fasta} {params.flanking}) 2> {log}"
 
 
 rule summarise_NLRs:
