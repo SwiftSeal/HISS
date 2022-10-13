@@ -3,7 +3,7 @@ rule run_association:
         matrix="results/output_matrix.txt",
         phenotype="results/phenotype.txt",
         nlr="results/{reference}_output.nlr.txt",
-	assembly=get_reference
+	    assembly=get_reference
     output:
         "results/{reference}_AgRenSeqResult.txt"
     log:
