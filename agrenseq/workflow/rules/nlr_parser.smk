@@ -4,7 +4,7 @@ rule nlr_parser:
     output:
         "results/{reference}_output.nlr.txt"
     log:
-        "logs/nlr_parser/nlr_parser.log"
+        "logs/nlr_parser/{reference}_nlr_parser.log"
     threads:
         4
     resources:
