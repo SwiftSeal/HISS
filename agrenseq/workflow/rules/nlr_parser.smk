@@ -1,8 +1,8 @@
 rule nlr_parser:
     input:
-        config["assembly"]
+        assembly=get_reference
     output:
-        "results/output.nlr.txt"
+        "results/{reference}_output.nlr.txt"
     log:
         "logs/nlr_parser/nlr_parser.log"
     threads:
