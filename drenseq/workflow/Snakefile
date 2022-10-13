@@ -1,6 +1,6 @@
 import pandas as pd
 
-configfile: "config.yaml"
+configfile: "config/config.yaml"
 
 samples=pd.read_table(config["samples"], header=0).set_index(["sample"], drop=False)
 
