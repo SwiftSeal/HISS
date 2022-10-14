@@ -65,7 +65,7 @@ rule bowtie_build:
     input:
         ref=config["Reference_Fasta"]
     output:
-        index=config["Reference_Fasta"] + ".1.bt2"
+        index=multiext(config["Reference_Fasta"], ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2", ".rev.1.bt2", ".rev.2.bt2")
     conda:
         "envs/bowtie2_samtools.yaml"
     log:
