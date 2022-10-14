@@ -368,7 +368,8 @@ rule FreeBayes_call:
         bai="bam_filter/{sample}_recode.bam.bai",
         fasta=config["Reference_Fasta"]
     output:
-        "variant_calls/{sample}_SNPs_relaxed_mappings.vcf"
+        vcf="variant_calls/{sample}_SNPs_relaxed_mappings.vcf",
+        fai=config["Reference_Fasta"] + ".fai"
     params:
         ploidy=config["ploidy"]
     log:
@@ -382,7 +383,7 @@ rule FreeBayes_call:
         "(freebayes -f {input.fasta} --min-alternate-count 2 "
         "--min-alternate-fraction 0.05 --ploidy {params.ploidy} "
         "--throw-away-indel-obs --throw-away-mnps-obs --throw-away-complex-obs "
-        "-m 0 -v {output} --legacy-gls {input.bam})"
+        "-m 0 -v {output.vcf} --legacy-gls {input.bam})"
 
 
 rule compress_index_VCF:
