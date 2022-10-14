@@ -362,6 +362,21 @@ rule index_converted_bam:
         "(samtools index {input}) 2> {log}"
 
 
+rule faidx:
+    input:
+        config["Reference_Fasta"]
+    output:
+        index=config["Reference_Fasta"] + ".fai"
+    log:
+        "logs/faidx/index.log"
+    resources:
+        mem_mb=4000
+    conda:
+        "envs/bioawk_samtools.yaml"
+    shell:
+        "samtools faidx {input}"
+
+
 rule FreeBayes_call:
     input:
         bam="bam_filter/{sample}_recode.bam",
