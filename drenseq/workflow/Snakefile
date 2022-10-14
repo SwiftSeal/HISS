@@ -381,7 +381,8 @@ rule FreeBayes_call:
     input:
         bam="bam_filter/{sample}_recode.bam",
         bai="bam_filter/{sample}_recode.bam.bai",
-        fasta=config["Reference_Fasta"]
+        fasta=config["Reference_Fasta"],
+        fai=config["Reference_Fasta"] + ".fai"
     output:
         "variant_calls/{sample}_SNPs_relaxed_mappings.vcf"
     params:
