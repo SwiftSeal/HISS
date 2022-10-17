@@ -68,4 +68,7 @@ cat ../smrtrenseq_assembly/NLR_Annotator/HR02_Gemson_NLR_Annotator.txt | grep -f
 nano config/HR02_Gemson_candidates.fa
 
 cat ../smrtrenseq_assembly/NLR_Annotator/HR02_Gemson_NLR_Annotator.txt | grep -f ../agrenseq/results/HR02_Gemson_filtered_contigs.txt | cut -f2,4-5 > config/HR02_Gemson_candidates.bed # Make a bed file
+
+# Copy files to dRenSeq directory
+cp ../example_inputs/drenseq/* config/.
 ```
