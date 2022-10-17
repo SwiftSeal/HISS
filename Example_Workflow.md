@@ -19,7 +19,7 @@ unzip PGSC_DM_v4.03_pseudomolecules.fasta.zip
 
 ## Perform SMRT-RenSeq assembly
 
-Depending on your system, you may be able to wrap these commands into a job with eg. sbatch
+Depending on your system, you may be able to wrap these commands into a job with eg. sbatch. In case you are not able to capture the stdout and stderr from the core snakemake process, log files will be written to .snakemake/log/*.snakemake.log
 
 ```bash
 # Copy files to SMRT-RenSeq assembly directory
