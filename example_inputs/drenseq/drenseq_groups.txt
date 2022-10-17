@@ -1,0 +1,10 @@
+tig00001423_nlr_1	group_Rx_candidates
+tig00002055_nlr_1	group_Rx_candidates
+tig00002590_nlr_1	group_Rx_candidates
+tig00001343_nlr_1	group_Rx_candidates
+Rpi_R9a	group_R9a
+Rpi_R8	group_R8
+Rpi_R3b	group_R3b
+Rpi_R3a	group_R3a
+Rpi_R2-like	group_R2-like
+Rpi_R1	group_R1
