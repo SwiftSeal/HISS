@@ -33,3 +33,18 @@ snakemake --profile /path/to/cluster/profile
 # If running locally
 snakemake --use-conda --cores=/number/of/CPU/cores
 ```
+
+## Perform Ag-RenSeq
+
+```bash
+# Copy files to Ag-RenSeq directory
+cd ../agrenseq
+cp ../example_inputs/agrenseq/* config/.
+
+# Run workflow
+# If using a cluster profile
+snakemake --profile /path/to/cluster/profile
+
+# If running locally
+snakemake --use-conda --cores=/number/of/CPU/cores
+```
