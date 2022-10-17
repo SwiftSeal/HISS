@@ -1,1 +1,1 @@
-# Finding **Rx** in Potato - an example workflow
+# Finding *Rx* in Potato - an example workflow
