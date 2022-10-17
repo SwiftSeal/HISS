@@ -1,5 +1,7 @@
 # Finding *Rx* in Potato - an example workflow
 
+**TODO: Update file paths to reads once they're uploaded to ENA. Also add commands to pull down from ENA**
+
 ## Download required files
 
 All files, except for the reference DM potato genome are available in this repository, simply clone down the repository to your local machine. All commands in this workflow will assume you are based in this repository, you may need to change commands if you change the structure.
