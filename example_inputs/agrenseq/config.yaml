@@ -1,7 +1,7 @@
 read_scores: "config/read_scores.txt"
 assembly: "../smrtrenseq_assembly/assembly/HR02_Gemson/HR02_Gemson.contigs.fasta"
 assembly_title: "Gemson"
-reference: "config/DM_1-3_516_R44_potato_genome_assembly.v6.1.fasta"
+reference: "config/PGSC_DM_v4.03_pseudomolecules.fasta"
 assoc_threshold: 26
 references: "config/references.txt"
-blast_genome: "config/DM_1-3_516_R44_potato_genome_assembly.v6.1.fasta"
+blast_genome: "config/PGSC_DM_v4.03_pseudomolecules.fasta"
