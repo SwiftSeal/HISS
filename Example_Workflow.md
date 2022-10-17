@@ -71,4 +71,11 @@ cat ../smrtrenseq_assembly/NLR_Annotator/HR02_Gemson_NLR_Annotator.txt | grep -f
 
 # Copy files to dRenSeq directory
 cp ../example_inputs/drenseq/* config/.
+
+# Run workflow
+# If using a cluster profile
+snakemake --profile /path/to/cluster/profile
+
+# If running locally
+snakemake --use-conda --cores=/number/of/CPU/cores
 ```
