@@ -80,4 +80,4 @@ snakemake --profile /path/to/cluster/profile
 snakemake --use-conda --cores=/number/of/CPU/cores
 ```
 
-This should show tig00001343_nlr_1 as the only candidate with 100% coverage in all samples scored as 1 in the read scores file used for AgRenSeq. The nucleotide sequence for this can be found in the NLR Annotator output fasta in the SMRT-RenSeq assembly directory. When BLASTed against the NCBI nr/nt database, the top hit is the reference **Rx** sequence.
+This should show tig00001343_nlr_1 as the only candidate with 100% coverage in all samples scored as 1 in the read scores file used for AgRenSeq. The nucleotide sequence for this can be found in the NLR Annotator output fasta in the SMRT-RenSeq assembly directory. When BLASTed against the NCBI nr/nt database, the top hit is the reference *Rx* sequence.
