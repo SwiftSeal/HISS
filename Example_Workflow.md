@@ -23,4 +23,11 @@ Depending on your system, you may be able to wrap these commands into a job with
 # Copy files to SMRT-RenSeq assembly directory
 cd ../../smrtrenseq_assembly
 cp ../example_inputs/smrtrenseq_assembly/* config/.
+
+# Run workflow
+# If using a cluster profile
+snakemake --profile /path/to/cluster/profile
+
+# If running locally
+snakemake --use-conda --cores=/number/of/CPU/cores
 ```
