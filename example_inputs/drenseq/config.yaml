@@ -1,7 +1,7 @@
-Reference_Fasta: "config/HR02_Gemson_candidates.fa"
+Reference_Fasta: "config/Gemson_candidates.fa"
 
 
-CDS_Bed: "config/HR02_Gemson_candidates.bed"
+CDS_Bed: "config/Gemson_candidates.bed"
 
 
 scoreMinRelaxed: "L,0,-0.24"

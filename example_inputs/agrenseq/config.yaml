@@ -1,5 +1,5 @@
 read_scores: "config/read_scores.txt"
-assembly: "../smrtrenseq_assembly/assembly/HR02_Gemson/HR02_Gemson.contigs.fasta"
+assembly: "../smrtrenseq_assembly/assembly/Gemson/Gemson.contigs.fasta"
 assembly_title: "Gemson"
 reference: "config/PGSC_DM_v4.03_pseudomolecules.fasta"
 assoc_threshold: 26
