@@ -1,4 +1,4 @@
-rule nlr_annotator:
+rule nlr_parser:
     input:
         assembly=get_reference
     output:
@@ -8,10 +8,9 @@ rule nlr_annotator:
     threads:
         4
     resources:
-        mem_mb=8000,
+        mem_mb=4000,
         partition="short"
     conda:
-        "../envs/java.yaml"
+        "../envs/meme.yaml"
     shell:
-        "java -jar ../utils/NLR-Annotator-v2.1.jar -t 4 -x ../utils/mot.txt -y ../utils/store.txt -i {input.assembly} -o {output} 2> {log}"
-
+        "java -jar ../utils/NLR-Parser3.jar -t 4 -y $(which mast) -x ../utils/meme.xml -i {input} -o {output} 2> {log}"

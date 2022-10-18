@@ -1,6 +1,6 @@
 import pandas as pd
 
-configfile: "config.yaml"
+configfile: "config/config.yaml"
 
 samples=pd.read_table(config["samples"], header=0).set_index(["sample"], drop=False)
 
@@ -65,7 +65,7 @@ rule bowtie_build:
     input:
         ref=config["Reference_Fasta"]
     output:
-        index=config["Reference_Fasta"] + ".1.bt2"
+        index=multiext(config["Reference_Fasta"], ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2", ".rev.1.bt2", ".rev.2.bt2")
     conda:
         "envs/bowtie2_samtools.yaml"
     log:
@@ -257,6 +257,8 @@ rule gene_group_analysis:
         "logs/gene_groups/gene_groups.log"
     resources:
         mem_mb=2000
+    conda:
+        "envs/openjdk.yaml"
     params:
         ulimit=config["ulimit"]
     shell:
@@ -275,6 +277,8 @@ rule filter_bam_file:
         "logs/bam_filter/filter_bam_file_{sample}.log"
     resources:
         mem_mb=2000
+    conda:
+        "envs/openjdk.yaml"
     run:
         shell("java utils.various.Extractor {input.passed} {input.bed} "
         "{output.bed} 0 0 > {log}")
@@ -362,11 +366,27 @@ rule index_converted_bam:
         "(samtools index {input}) 2> {log}"
 
 
+rule faidx:
+    input:
+        config["Reference_Fasta"]
+    output:
+        index=config["Reference_Fasta"] + ".fai"
+    log:
+        "logs/faidx/index.log"
+    resources:
+        mem_mb=4000
+    conda:
+        "envs/bioawk_samtools.yaml"
+    shell:
+        "samtools faidx {input}"
+
+
 rule FreeBayes_call:
     input:
         bam="bam_filter/{sample}_recode.bam",
         bai="bam_filter/{sample}_recode.bam.bai",
-        fasta=config["Reference_Fasta"]
+        fasta=config["Reference_Fasta"],
+        fai=config["Reference_Fasta"] + ".fai"
     output:
         "variant_calls/{sample}_SNPs_relaxed_mappings.vcf"
     params:
@@ -437,6 +457,8 @@ rule extract_counts_alt_ref:
     resources:
         partition="medium",
         mem_mb=2000
+    conda:
+        "envs/openjdk.yaml"
     shell:
         "(java utils.oneoffs.Reformat_dRenseqVCF {input.vcf} {input.coverage} "
         "dRenseq) 2> {log}"
@@ -480,6 +502,8 @@ rule subset_vcf:
     resources:
         partition="medium",
         mem_mb=4000
+    conda:
+        "envs/openjdk.yaml"
     shell:
         "(java utils.snps.vcf.SubsetVCFFromBEDFile {input.vcf} {input.bed} "
         "{output}) 2> {log}"
@@ -497,6 +521,8 @@ rule prepare_SNP_manifest:
         mem_mb=4000
     log:
         "logs/final_outputs/manifests.log"
+    conda:
+        "envs/openjdk.yaml"
     shell:
         "java utils.snps.SNPExtractorIUPACCodes 120 {input.fasta} {input.SNPs} "
         "{output.text} {output.fasta} 2> {log}"

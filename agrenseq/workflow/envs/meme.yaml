@@ -1,0 +1,7 @@
+name: meme
+channels:
+  - bioconda
+  - conda-forge
+dependencies:
+  - meme=5.4.1=py310pl5321h9f004f7_2
+  - openjdk=8.0.312
