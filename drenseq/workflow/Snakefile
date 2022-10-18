@@ -257,6 +257,8 @@ rule gene_group_analysis:
         "logs/gene_groups/gene_groups.log"
     resources:
         mem_mb=2000
+    conda:
+        "envs/openjdk.yaml"
     params:
         ulimit=config["ulimit"]
     shell:
@@ -275,6 +277,8 @@ rule filter_bam_file:
         "logs/bam_filter/filter_bam_file_{sample}.log"
     resources:
         mem_mb=2000
+    conda:
+        "envs/openjdk.yaml"
     run:
         shell("java utils.various.Extractor {input.passed} {input.bed} "
         "{output.bed} 0 0 > {log}")
@@ -453,6 +457,8 @@ rule extract_counts_alt_ref:
     resources:
         partition="medium",
         mem_mb=2000
+    conda:
+        "envs/openjdk.yaml"
     shell:
         "(java utils.oneoffs.Reformat_dRenseqVCF {input.vcf} {input.coverage} "
         "dRenseq) 2> {log}"
@@ -496,6 +502,8 @@ rule subset_vcf:
     resources:
         partition="medium",
         mem_mb=4000
+    conda:
+        "envs/openjdk.yaml"
     shell:
         "(java utils.snps.vcf.SubsetVCFFromBEDFile {input.vcf} {input.bed} "
         "{output}) 2> {log}"
@@ -513,6 +521,8 @@ rule prepare_SNP_manifest:
         mem_mb=4000
     log:
         "logs/final_outputs/manifests.log"
+    conda:
+        "envs/openjdk.yaml"
     shell:
         "java utils.snps.SNPExtractorIUPACCodes 120 {input.fasta} {input.SNPs} "
         "{output.text} {output.fasta} 2> {log}"
