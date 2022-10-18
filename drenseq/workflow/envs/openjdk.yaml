@@ -1,5 +1,5 @@
+name: openjdk
 channels:
- - bioconda
  - conda-forge
 dependencies:
  - openjdk=8.0.312
