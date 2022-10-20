@@ -19,12 +19,12 @@ unzip PGSC_DM_v4.03_pseudomolecules.fasta.zip
 
 ## Obtain reads
 
-Reads have been submitted to ENA BioProjects PRJEB56823 and PRJEB56825. In this example we will use the python based enaBrowserTools, though you can use another method if you prefer. You may chose to use Aspera instead of FTP, we will not do that for this example. This is available here <https://github.com/enasequence/enaBrowserTools>
+Reads have been submitted to ENA BioProjects PRJEB56823 and PRJEB56825. In this example we will use the GNU parallel utility. Replace X in the parallel command with the number of jobs to run in parallel, this will depend on your system, based on CPU availability and networking bandwidth.
 
 ```bash
-mkdir -p Reads
-enaGroupGet -g read -f fastq -d Reads PRJEB56823
-enaGroupGet -g read -f fastq -d Reads PRJEB56825
+mkdir -p ../Reads
+cd ../Reads
+parallel -j X wget < ../reads.txt
 ```
 
 ## Perform SMRT-RenSeq assembly
