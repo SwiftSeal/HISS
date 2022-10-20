@@ -17,6 +17,16 @@ wget http://spuddb.uga.edu/data/PGSC_DM_v4.03_pseudomolecules.fasta.zip
 unzip PGSC_DM_v4.03_pseudomolecules.fasta.zip
 ```
 
+## Obtain reads
+
+Reads have been submitted to ENA BioProjects PRJEB56823 and PRJEB56825. In this example we will use the python based enaBrowserTools, though you can use another method if you prefer. You may chose to use Aspera instead of FTP, we will not do that for this example. This is available here <https://github.com/enasequence/enaBrowserTools>
+
+```bash
+mkdir -p Reads
+enaGroupGet -g read -f fastq -d Reads PRJEB56823
+enaGroupGet -g read -f fastq -d Reads PRJEB56825
+```
+
 ## Perform SMRT-RenSeq assembly
 
 Depending on your system, you may be able to wrap these commands into a job with eg. sbatch. In case you are not able to capture the stdout and stderr from the core snakemake process, log files will be written to .snakemake/log/*.snakemake.log
