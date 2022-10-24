@@ -19,7 +19,7 @@ unzip PGSC_DM_v4.03_pseudomolecules.fasta.zip
 
 ## Obtain reads
 
-Reads have been submitted to ENA BioProjects PRJEB56823 and PRJEB56825. In this example we will use the GNU parallel utility. Replace X in the parallel command with the number of jobs to run in parallel, this will depend on your system, based on CPU availability and networking bandwidth.
+Reads have been submitted to ENA BioProjects PRJEB56823 and PRJEB56825. In this example we will use the GNU parallel utility. Replace X in the parallel command with the number of jobs to run in parallel, this will depend on your system, based on CPU availability and networking bandwidth. If you prefer another method you may use this, though you may need to change file paths in later files.
 
 ```bash
 mkdir -p ../Reads
