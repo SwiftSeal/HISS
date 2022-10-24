@@ -1,2 +1,2 @@
 sample	Reads
-Gemson	/mnt/shared/projects/jhi/potato/202103_LHB_PhD/RawData/Arbor_HR02_Pacbio_040321/fastx_files/demultiplex.HR02_Gemson--HR02_Gemson.hifi_reads.fastq.gz	
+Gemson	../Reads/ERR10385989.fastq.gz
