@@ -5,42 +5,70 @@ Currently, this workflow uses the java AgRenSeq version, as the python GLM-appro
 
 ## Usage
 
-All inputs and parameters are handled in the config/ directory.
+All input files and parameters are handled in by `config/config.yaml`
 config.yaml currently takes four options:
 
-* `read_scores` which takes a string of the relative path of the read scores file to the base directory
-* `references` which takes a string of the relative path of references file to the base directory
-* `blast_genome` which should be the relative path to a reference genome  `.fasta` for BLAST plotting.
-* `assoc_threshold` which will set the threshold used to filter contigs by agrenseq association, and plot on the BLAST plot
+* `read_scores` - string of the path to the read scores file 
+* `references` - string of the path to the references file
+* `blast_genome` string of the path to the reference genome  `.fasta` for BLAST plotting.
+* `assoc_threshold` integer value of the threshold used to filter contigs by agrenseq association, and plot on the BLAST plot
 
-It's recommended to keep all files in the config directory to keep it tidy.
+Paths may be absolute or relative to the directory that `snakemake` is executed from.
+It is recommended to execute the workflow from the `agrenseq/` directory.
+It's recommended to keep all metadata files in the config directory to keep it tidy.
 
-The `read_scores` file is a tab separated file with four columns, `sample R1 R2 score`.
-Each row contains the name, *absolute path* to illumina .fastq.gz R1 and R2, and the phenotype score for each accession passed into the AgRenSeq pipeline.
+### Metadata formats
 
-The `references` file is a tab separated file with two columns, `reference assembly`.
-Each row should contain the name of the assembled reference contigs, and the *absolute path* to the assembly fasta.
+#### read_scores
+The `read_scores` file is a tab separated file.
+Each row contains the name, path to illumina `.fastq.gz` forward and reverse reads, and the phenotype score for each accession passed into the AgRenSeq pipeline.
+
+Format:
+
+| Sample | R1 | R2 | score |
+| --- | --- | --- | --- |
+| sample_name_1 | path/read.fq.gz | path/read.fq.gz | 1 |
+| sample_name_2 | path/read.fq.gz | path/read.fq.gz | -1 |
+| sample_name_3 | path/read.fq.gz | path/read.fq.gz | -0.5 |
+
+#### references
+
+The `references` file is a tab separated file.
+Each row should contain the name of the assembled reference contigs, and the path to the assembly `.fasta`.
+Assembly names will be used in output plots and files - whitespace or other non-standard chars are not advised.
+
+Format:
+
+| reference | assembly |
+| --- | --- |
+| reference_1 | path/contigs.fasta |
+| reference_2 | path/contigs.fasta |
 
 This pipeline uses fastp to trim and QC reads, it should be safe to pass through reads that have already been trimmed, but double check the `.json` outputs if uncertain.
-I find fastp fairly unaggressive and will only result in a minor loss of data.
-For the reference genome, I strongly recommend one with only the major chromosomes reported, and not 100+ scaffold sequences, as that will make the plot unreadable.
+fastp is fairly unaggressive on trimmed reads and will only result in a minor loss of data.
+For the reference genome, it is strongly recommend to use one with only chromosomes, and not 100+ unscaffold sequences, as that will make the final plot unreadable!
 
-### Example plots
 
-![AgRenSeq Rorschach plot](README_misc/AgRenSeq_plot.png)
-
-![BLAST plot](README_misc/blast_plot.png)
-
-Certain parameters specific to the crop diversity HPC SLURM system are hardcoded in the snakemake rules, these may need to be adjusted.
-Most steps will take under 30 minutes to run, so a short queue is sufficient.
-
-### Results
+## Results
 
 Results are contained with two directories, `images/` and `results/`.
 In results, `{reference}_AgRenSeqResult.txt` is the final output of AgRenSeq, `{reference}_output.nlr.txt` is a list of contigs associated with nlr motifs, and `jellyfish/` cotains the `.dump` files for each accession in `read_scores.txt`.
 `images/` will contain a basic plot of the AgRenSeq results, as well as a plot of best blast hits against a reference genome (I recommend DM).
 
 A `logs/` directory will be created and populated with logs of certain processes.
+
+### Example plots
+
+![AgRenSeq blot plot](../example_outputs/agrenseq/Gemson_AgRenSeq_plot.png)
+
+*This is the AgRenSeq plot of contig-mapped kmers and their association scores. Kmers with scores > the association threshold are highlighted in red*
+
+![BLAST plot](../example_outputs/agrenseq/Gemson_blast_plot.png)
+
+*Plot of all assembly contigs mapped to supplied reference genome via BLAST. Highly associated contigs are highlighted as red dots*
+
+Certain parameters specific to the crop diversity HPC SLURM system are hardcoded in the snakemake rules, these may need to be adjusted.
+Most steps will take under 30 minutes to run, so a short queue is sufficient.
 
 ## Graphical summary of workflow
 
