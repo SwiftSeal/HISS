@@ -29,7 +29,7 @@ p <- ggplot(data = agrenseq, aes(x = V2, y = V3, size = V4)) +
         panel.background = element_blank(),
         panel.border = element_rect(color = "black", fill = NA),
         axis.line = element_line(colour = "black"),
-        legend.key = element_blank())
+        legend.position = "none")
 
 write.table(filtered, file = args[4], quote = FALSE, sep = "\t", col.names = FALSE, row.names = FALSE)
-ggsave(args[5], width = 5, height = 2)
+ggsave(args[5], width = 4, height = 3)
