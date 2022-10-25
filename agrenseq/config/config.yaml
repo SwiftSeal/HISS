@@ -1,5 +1,4 @@
-read_scores: "config/read_scores.txt"
-assembly: "config/12601ab1.contigs.fasta"
-assembly_title: "12601ab1"
-reference: "config/DM_1-3_516_R44_potato_genome_assembly.v6.1.fasta"
+read_scores: "../example_inputs/agrenseq/read_scores.txt"
+references: "../example_inputs/agrenseq/references.txt"
+blast_genome: "config/PGSC_DM_v4.03_pseudomolecules.fasta"
 assoc_threshold: 25
