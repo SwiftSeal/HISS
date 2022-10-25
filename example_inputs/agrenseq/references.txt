@@ -1,0 +1,2 @@
+reference	assembly
+Gemson	../smrtrenseq_assembly/assembly/Gemson/Gemson.contigs.fasta

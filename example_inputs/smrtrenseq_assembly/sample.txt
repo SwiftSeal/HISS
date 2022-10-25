@@ -1,0 +1,2 @@
+sample	Reads
+Gemson	../Reads/ERR10385989.fastq.gz

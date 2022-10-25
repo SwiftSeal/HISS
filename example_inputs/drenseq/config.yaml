@@ -1,0 +1,25 @@
+Reference_Fasta: "config/Gemson_candidates.fa"
+
+
+CDS_Bed: "config/Gemson_candidates.bed"
+
+
+scoreMinRelaxed: "L,0,-0.24"
+
+
+samples: "config/samples.tsv"
+
+
+adaptor_path_1: "config/Index2varN.fasta"
+
+
+adaptor_path_2: "config/Universal_var.fasta"
+
+
+gene_groups: "drenseq_groups.txt"
+
+
+ploidy: "4"
+
+
+ulimit: "1024"

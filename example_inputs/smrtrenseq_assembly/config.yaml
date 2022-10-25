@@ -1,0 +1,13 @@
+samples: "config/sample.txt"
+
+
+fiveprime: "GGTAGT"
+
+
+threeprime: "ACTACC"
+
+
+Genome_Size: "2000000"
+
+
+flanking: "1000"
