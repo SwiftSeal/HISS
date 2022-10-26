@@ -1,6 +1,0 @@
-name: bioawk_samtools
-channels:
-  - bioconda
-dependencies:
-  - bioawk=1.0=h5bf99c6_6
-  - samtools=1.14=hb421002_0

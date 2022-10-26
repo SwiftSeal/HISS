@@ -1,5 +1,0 @@
-name: freebayes
-channels:
-  - bioconda
-dependencies:
-  - freebayes=1.3.5=py38h8367b0b_4
