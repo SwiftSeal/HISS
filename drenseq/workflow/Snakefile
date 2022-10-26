@@ -22,8 +22,7 @@ def get_samples(wildcards):
 
 rule all:
     input:
-        "final_outputs/SNPsForAssay_manifests.fa",
-        "final_outputs/SNPsForAssay_manifests.txt"
+        "coverage/all_coverage_values_transposed.txt"
 
 
 rule extract_reference_headers:
