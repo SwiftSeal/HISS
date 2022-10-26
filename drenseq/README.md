@@ -18,19 +18,7 @@ Keep the keys as they are, but change the value they are paired with as explaine
     *   samples - replace the quoted text with the path to your sample sheet.
     *   adaptor_path_1 - replace the quoted text with the path to one of your adaptor containing fasta files
     *   adaptor_path_2 - replace the quoted text with the path to the other of your adaptor containing fasta files  
-    *   gene_groups - replace the quoted text with the path to your gene groups text file.
-    *   ploidy - replace the quoted text with the ploidy of your organism eg. for our potato work we set ploidy to 4.
     *   ulimit - If you are using a large number of samples, you may exceed your systems soft limit for the maximum number of open files allowed (often 1,024). The workflow contains a ulimit -n command to change this for the one rule that needs it, simply set the value you want it setting to here. Keep in mind there is also a hard limit on most systems.
-
-Add java utilities to CLASSPATH, either in a profile to automatically add it on every login or manually on the command line before running snakemake if you prefer.
-
-```bash
-# In profile
-export CLASSPATH=$CLASSPATH:/path/to/utils.jar
-
-# Command line
-java -classpath $CLASSPATH:/path/to/utils.jar
-```
 
 NEED TO CHANGE ABOVE
 
