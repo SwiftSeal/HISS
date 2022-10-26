@@ -16,10 +16,4 @@ adaptor_path_1: "config/Index2varN.fasta"
 adaptor_path_2: "config/Universal_var.fasta"
 
 
-gene_groups: "drenseq_groups.txt"
-
-
-ploidy: "4"
-
-
 ulimit: "1024"
