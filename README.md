@@ -39,7 +39,7 @@ conda install snakemake
 ```
 6.  If running in a cluster environment, create a profile
 
-Snakemake is able to leverage your clusters job scheduler to submit and monitor the jobs it runs. This can be done manually, but many profiles are already available at <https://github.com/Snakemake-Profiles>. These require cookiecutter to be installed as described below.
+Snakemake is able to leverage your clusters job scheduler to submit and monitor the jobs it runs. This can be done manually, but many profiles are already available at <https://github.com/Snakemake-Profiles>. These require cookiecutter to be installed as described below. Ensure that your created profile defaults to use condato leverage the conda yamls provided by the workflow.
 
 ```bash
 # Using base conda
@@ -86,7 +86,7 @@ snakemake --dag  | dot -Tpdf > dag.pdf
 ### Perform your Snakemake run
 
 If everything passed above, you are ready to run your analysis.
-Keep in mind your Snakemake process MUST keep running whilst all your jobs run, for this reason if you are remote accessing a cluster system I recommend using a terminal multiplexer such as GNU Screen or tmux to keep your session active even if your connection goes down. 
+Keep in mind your Snakemake process MUST keep running whilst all your jobs run, for this reason if you are remote accessing a cluster system I recommend using a terminal multiplexer such as GNU Screen or tmux to keep your session active even if your connection goes down.
 The Snakemake process must also be able to run job submissions (such as sbatch in SLURM) and query job status (such as sacct in SLURM), some cluster implementations will allow this within a scheduled job, others will not, please test your system first.
 
 For cluster mode, replace /path/to/your/cluster/profile with the directory where your cluster specification you made above is.
