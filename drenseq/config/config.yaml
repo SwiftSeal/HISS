@@ -17,3 +17,6 @@ adaptor_path_2: "/path/to/adaptors/Universal_var"
 
 
 ulimit: "max_number_of_open_files_allowed"
+
+
+maximum_alignments: "maximal_alignments_per_read_for_bowtie2"

@@ -87,7 +87,8 @@ rule bowtie_align:
     params:
         rg_id="{sample}",
         rg="SM:{sample}",
-        score=config["scoreMinRelaxed"]
+        score=config["scoreMinRelaxed"],
+        max_align=config["maximum_alignments"]
     threads:
         8
     resources:
@@ -102,7 +103,7 @@ rule bowtie_align:
         "(bowtie2 -x {input.ref} -1 {input.FRead} -2 {input.RRead} --rg-id "
         "{params.rg_id} --rg {params.rg} -p {threads} --score-min "
         "{params.score} --phred33 --fr --maxins 1000 --very-sensitive "
-        "--no-unal --no-discordant -k 10 | samtools view --threads {threads} "
+        "--no-unal --no-discordant -k {params.max_align} | samtools view --threads {threads} "
         "-S -b > {output}) 2> {log}"
 
 

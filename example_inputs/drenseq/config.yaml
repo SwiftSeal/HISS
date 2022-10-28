@@ -17,3 +17,6 @@ adaptor_path_2: "config/Universal_var.fasta"
 
 
 ulimit: "1024"
+
+
+maximum_alignments: "10"
