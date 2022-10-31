@@ -18,6 +18,11 @@ def get_reads(wildcards):
 def get_reference(wildcards):
     return references["assembly"][wildcards.reference]
 
+if config["blast_plot"]:
+    blast_output = expand("images/{reference}_blast_plot.png", reference=references["reference"])
+else:
+    blast_output = list()
+
 include: "rules/jellyfish.smk"
 include: "rules/accessions.smk"
 include: "rules/matrix.smk"
@@ -31,4 +36,4 @@ include: "rules/blast.smk"
 rule all:
     input:
         expand("results/{reference}_filtered_contigs.txt", reference=references["reference"]),
-        expand("images/{reference}_blast_plot.png", reference=references["reference"])
+        blast_output
