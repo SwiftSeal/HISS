@@ -19,8 +19,7 @@ Keep the keys as they are, but change the value they are paired with as explaine
     *   adaptor_path_1 - replace the quoted text with the path to one of your adaptor containing fasta files
     *   adaptor_path_2 - replace the quoted text with the path to the other of your adaptor containing fasta files  
     *   ulimit - If you are using a large number of samples, you may exceed your systems soft limit for the maximum number of open files allowed (often 1,024). The workflow contains a ulimit -n command to change this for the one rule that needs it, simply set the value you want it setting to here. Keep in mind there is also a hard limit on most systems.
-
-NEED TO CHANGE ABOVE
+    *   maximum_alignments - Sets the maximum number of alignments allowed for read mapping with bowtie2. In development we have used 10 with success.
 
 When running with additional samples, you may find Snakemake does not compute that changes are required if the access date on your new reads is older than that of your outputs. This can be resolved by using the core GNU utility touch on one of your sets of reads. Snakemake will now assign jobs for all your new samples.
 
