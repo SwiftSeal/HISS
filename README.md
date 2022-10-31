@@ -12,9 +12,9 @@ Documentation on Snakemake is available here: <https://snakemake.readthedocs.io/
 
 There are a few things you need to set up prior to running the workflow with Snakemake.
 
-1.  Install either Anaconda or Miniconda, Miniconda is more lightweight so I recommend this option. <https://docs.conda.io/en/latest/miniconda.html>
+1.  Install either Anaconda or Miniconda, Miniconda is more lightweight so we recommend this option. <https://docs.conda.io/en/latest/miniconda.html>
 
-    I also recommend installing the alternative dependency resolver mamba, it's the default for Snakemake and is far quicker than base conda <https://anaconda.org/conda-forge/mamba>
+    We also recommend installing the alternative dependency resolver mamba, it's the default for Snakemake and is far quicker than base conda <https://anaconda.org/conda-forge/mamba>
 
 ```bash
 conda install mamba
