@@ -1,3 +1,5 @@
+# Automated RenSeq workflows with Snakemake
+
 ## Why Snakemake?
 
 Snakemake is a workflow manager that uses python syntax. In short, it allows for an entire workflow that traditionally would be separated into multiple bash scripts to be run with a single command.
