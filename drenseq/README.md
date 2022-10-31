@@ -28,18 +28,6 @@ touch Read_1.fq.gz
 touch Read_2.fq.gz
 ```
 
-Snakemake does have an option to remove all files created by a workflow, similar to make clean from GNU make. **This is a necessary step if you are adding new genes to your analysis.** It can also be useful if you hit an error and are concerned that it may have written an incorrect result file. Most of these will be caught by Snakemake, but this command is included below if needed. If you're running on a cluster, ensure all submitted jobs have finished before running this command.
-
-```bash
-snakemake --delete-all-output --cores 1
-```
-
-Finally, in some cases you may need to only run one round of analysis and so you may wish to remove the conda environments created by snakemake. This can be done with the following command. If you do rerun in this directory, snakemake will simply recreate the environment.
-
-```bash
-rm -rf .snakemake/conda
-```
-
 ## Graphical summary of workflow
 
 ```mermaid
