@@ -1,4 +1,5 @@
 read_scores: "../example_inputs/agrenseq/read_scores.txt"
 references: "../example_inputs/agrenseq/references.txt"
+blast_plot: True
 blast_genome: "config/PGSC_DM_v4.03_pseudomolecules.fasta"
 assoc_threshold: 25
