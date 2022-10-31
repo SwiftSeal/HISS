@@ -54,7 +54,7 @@ mamba install cookiecutter
 ```
 
 **NOTE: this Snakefile has some rules with explicitly specified queue names tailored for the cluster system it is devloped on.
-You will likely need to change this to keep your cluster admins happy.**
+You will likely need to change this for optimal resource usage and to comply with your local queue policies.**
 
 ### Recommended - Run checks that your configuration is correct
 
