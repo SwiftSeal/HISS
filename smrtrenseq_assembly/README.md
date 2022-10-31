@@ -9,7 +9,7 @@ This workflow supports parallel assembly of multiple samples.
 
 ### Inputs
 
-* A tab delimited `sample.txt` file with two columns, `sample` and `Reads`.
+*   A tab delimited `sample.txt` file with two columns, `sample` and `Reads`.
 Each sample is provided on a single line.
 `sample` refers to the sample name (no whitespace), `Reads` will contain the absolute file path to the associated `.fastq.gz`.
 
