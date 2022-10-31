@@ -1,4 +1,5 @@
 read_scores: "config/read_scores.txt"
 references: "config/references.txt"
+blast_plot: True
 blast_genome: "config/PGSC_DM_v4.03_pseudomolecules.fasta"
 assoc_threshold: 26
