@@ -114,7 +114,7 @@ snakemake --use-conda --cores number_of_cores
 
 If your Snakemake process does crash/fail/is killed, don't worry, it can resume partway through the workflow without any change to the execution command.
 
-The first run will take longer than future runs as the conda environments are created prior to running the workflow
+The first run will take longer than future runs as the conda environments are created prior to running the workflow.
 
 Snakemake does have an option to remove all files created by a workflow, similar to make clean from GNU make.
 This can be useful if you hit an error and are concerned that it may have written an incorrect result file.
