@@ -1,14 +1,14 @@
 # AgRenSeq Snakemake pipeline
 
 AgRenSeq requires several intermediate steps - this pipeline consolidates this into a single process allowing the user to quickly adjust input files or parameters.
-Currently, this workflow uses the java AgRenSeq version, as the python GLM-approach is unusable.
+Currently, this workflow uses the java AgRenSeq version.
 
 ## Usage
 
 All input files and parameters are handled in by `config/config.yaml`
 config.yaml currently takes five options:
 
-* `read_scores` - string of the path to the read scores file 
+* `read_scores` - string of the path to the read scores file
 * `references` - string of the path to the references file
 * `blast_plot` - boolean value to create optional blast-to-reference plot.
 * `blast_genome` string of the path to the reference genome  `.fasta` for optional BLAST plotting.
