@@ -29,10 +29,6 @@ Don't worry about being too precise, it seems to only affect the coverage estima
 *   flanking - replace the quoted text with the number of flanking bases to be used for extracting the fastas of NLR Annotator hits.
 At least 1,000 is recommended.
 
-## Results
-
-TODO
-
 ## Graphical summary of workflow
 
 ```mermaid
