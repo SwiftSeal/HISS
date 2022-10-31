@@ -102,10 +102,9 @@ Some rules have explicit memory limits set in the resources sections, you may ne
 
 For standalone mode, replace the number_of_cores with an integer value for the maximum number of threads Snakemake can use.
 
-```bash
-# Via sbatch, only if you can sbatch and sacct from worker nodes
-sbatch /path/to/submit_snakemake.sh /path/to/profile
+You may be able to wrap the snakemake command into a shell script if your system allows submission of jobs from within jobs.
 
+```bash
 # Cluster mode
 snakemake --profile /path/to/your/cluster/profile
 
