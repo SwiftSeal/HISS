@@ -6,11 +6,12 @@ Currently, this workflow uses the java AgRenSeq version, as the python GLM-appro
 ## Usage
 
 All input files and parameters are handled in by `config/config.yaml`
-config.yaml currently takes four options:
+config.yaml currently takes five options:
 
 * `read_scores` - string of the path to the read scores file 
 * `references` - string of the path to the references file
-* `blast_genome` string of the path to the reference genome  `.fasta` for BLAST plotting.
+* `blast_plot` - boolean value to create optional blast-to-reference plot.
+* `blast_genome` string of the path to the reference genome  `.fasta` for optional BLAST plotting.
 * `assoc_threshold` integer value of the threshold used to filter contigs by agrenseq association, and plot on the BLAST plot
 
 Paths may be absolute or relative to the directory that `snakemake` is executed from.
