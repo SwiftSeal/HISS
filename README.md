@@ -41,7 +41,7 @@ conda install snakemake
 ```
 6.  If running in a cluster environment, create a profile
 
-Snakemake is able to leverage your clusters job scheduler to submit and monitor the jobs it runs. This can be done manually, but many profiles are already available at <https://github.com/Snakemake-Profiles>. These require cookiecutter to be installed as described below. Ensure that your created profile defaults to use condato leverage the conda yamls provided by the workflow.
+Snakemake is able to leverage your clusters job scheduler to submit and monitor the jobs it runs. This can be done manually, but many profiles are already available at <https://github.com/Snakemake-Profiles>. These require cookiecutter to be installed as described below. Ensure that your created profile defaults to use conda to leverage the conda yamls provided by the workflow. Ensure you also set a sensible maximum number of simultaneous jobs. The specific value will depend on your clusters capacity.
 
 ```bash
 # Using base conda
