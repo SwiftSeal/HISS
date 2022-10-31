@@ -27,7 +27,7 @@ Keep the keys as they are, but change the value they are paired with as explaine
 *   Genome_Size - replace the quoted text with the estimated size of the assembly.
 Don't worry about being too precise, it seems to only affect the coverage estimate which is less important for HiCanu than in Canu.
 *   flanking - replace the quoted text with the number of flanking bases to be used for extracting the fastas of NLR Annotator hits.
-1000 is recommended.
+At least 1,000 is recommended.
 
 ## Results
 
