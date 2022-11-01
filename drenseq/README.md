@@ -64,6 +64,12 @@ touch Read_2.fq.gz
 
 ## Results
 
+Results are contained in the `coverage/` and `mappings/` directories.
+`coverage/` contains intermediate sample coverage files and the final dRenSeq gene-sample coverage matrix `all_coverage_values.txt`.
+`mappings/` contains read-mapping files for each sample.
+
+A `logs/` directory will be created and populated with logs of certain processes.
+
 ## Graphical summary of workflow
 
 ```mermaid
