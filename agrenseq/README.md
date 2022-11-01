@@ -5,8 +5,8 @@ Currently, this workflow uses the java AgRenSeq version.
 
 ## Usage
 
-All input files and parameters are handled in by `config/config.yaml`
-config.yaml currently takes five options:
+All input files and parameters are handled by the config file `config/config.yaml`
+`config.yaml` currently takes five options:
 
 *   `read_scores` - string of the path to the read scores file
 *   `references` - string of the path to the references file
