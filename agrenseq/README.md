@@ -18,7 +18,7 @@ Paths may be absolute or relative to the directory that `snakemake` is executed 
 It is recommended to execute the workflow from the `agrenseq/` directory.
 It's recommended to keep all metadata files in the config directory to keep it tidy.
 
-### Metadata formats
+### Input data
 
 #### read_scores
 The `read_scores` file is a tab separated file.
