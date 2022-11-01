@@ -1,8 +1,6 @@
 # dRenSeq workflow
 
 ## Usage
-   
-*   A tab delimited file with one line per gene, consisting of the gene name in the first column and the name of a group in the second. This allows filtering based on coverage of the genes within these groups.
 
 Make modifications to the `config.yaml` file.
 This follows the yaml format of key-value pairs.
