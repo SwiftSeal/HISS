@@ -17,7 +17,7 @@ unzip PGSC_DM_v4.03_pseudomolecules.fasta.zip
 
 ## Obtain reads
 
-Reads have been submitted to ENA BioProjects PRJEB56823 and PRJEB56825. In this example we will use the GNU parallel utility. Replace X in the parallel command with the number of jobs to run in parallel, this will depend on your system, based on CPU availability and networking bandwidth. If you prefer another method you may use this, though you may need to change file paths in later files.
+Reads have been submitted to ENA BioProjects PRJEB56823 and PRJEB56825. In this example we will use the GNU parallel utility to download reads. Replace X in the parallel command with the number of jobs to run in parallel, this will depend on your system, based on CPU availability and networking bandwidth. If you prefer another method you may use this, though you may need to change file paths in later files.
 
 ```bash
 mkdir -p ../Reads
@@ -70,7 +70,7 @@ cat ../smrtrenseq_assembly/assembly/HR02_Gemson/HR02_Gemson_unwrapped.contigs.fa
 
 cat ../smrtrenseq_assembly/NLR_Annotator/HR02_Gemson_NLR_Annotator.txt | grep -f ../agrenseq/results/HR02_Gemson_filtered_contigs.txt | less -S # See how many nlrs per contig
 
-# Manually fix file in your favourite text editor - I like nano
+# Manually fix file in your favourite text editor - this example uses nano
 # Lines can be cut with the shortcut Ctrl + K (copied with Alt + ^ ) and paste
 # with Ctrl + U . To cut or copy multiple lines press the shortcut multiple times.
 nano config/HR02_Gemson_candidates.fa

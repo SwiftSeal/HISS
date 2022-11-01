@@ -1,24 +1,24 @@
-# AgRenSeq Snakemake pipeline
+# AgRenSeq workflow
 
 AgRenSeq requires several intermediate steps - this pipeline consolidates this into a single process allowing the user to quickly adjust input files or parameters.
-Currently, this workflow uses the java AgRenSeq version, as the python GLM-approach is unusable.
+Currently, this workflow uses the java AgRenSeq version.
 
 ## Usage
 
-All input files and parameters are handled in by `config/config.yaml`
-config.yaml currently takes five options:
+All input files and parameters are handled by the config file `config/config.yaml`
+`config.yaml` currently takes five options:
 
-* `read_scores` - string of the path to the read scores file 
-* `references` - string of the path to the references file
-* `blast_plot` - boolean value to create optional blast-to-reference plot.
-* `blast_genome` string of the path to the reference genome  `.fasta` for optional BLAST plotting.
-* `assoc_threshold` integer value of the threshold used to filter contigs by agrenseq association, and plot on the BLAST plot
+*   `read_scores` - string of the path to the read scores file
+*   `references` - string of the path to the references file
+*   `blast_plot` - boolean value to create optional blast-to-reference plot.
+*   `blast_genome` string of the path to the reference genome  `.fasta` for optional BLAST plotting.
+*   `assoc_threshold` integer value of the threshold used to filter contigs by agrenseq association, and plot on the BLAST plot
 
 Paths may be absolute or relative to the directory that `snakemake` is executed from.
 It is recommended to execute the workflow from the `agrenseq/` directory.
 It's recommended to keep all metadata files in the config directory to keep it tidy.
 
-### Metadata formats
+### Input data
 
 #### read_scores
 The `read_scores` file is a tab separated file.
