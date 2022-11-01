@@ -1,4 +1,4 @@
-# AgRenSeq Snakemake pipeline
+# AgRenSeq workflow
 
 AgRenSeq requires several intermediate steps - this pipeline consolidates this into a single process allowing the user to quickly adjust input files or parameters.
 Currently, this workflow uses the java AgRenSeq version.
