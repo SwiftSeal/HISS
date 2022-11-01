@@ -1,6 +1,6 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/HISSlogo_light.png">
-  <img alt="Logo" src="assets/HISSlogo_light.png">
+  <img alt="Logo" src="assets/HISSlogo_dark.png">
 </picture>
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7271099.svg)](https://doi.org/10.5281/zenodo.7271099)
