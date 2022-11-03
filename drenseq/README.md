@@ -95,25 +95,4 @@ Box11["Assess coverage of filtered BAM file across reference genes with bedtools
 Box10-->Box11
 Box12["Assess per-gene coverage and combine to a single, transposed file"]
 Box11-->Box12
-Box13["Remove gene groups with 100% coverage of at least one member of the group"]
-Box12-->Box13
-Box14["Input Bed file of regions of interest from reference fasta"]
-Box11-->Box14
-Box13-->Box14
-Box15["Extract reads covering the regions of interest to a BAM file with samtools and index it<br />(Danecek <i>et al</i>., 2021)"]
-Box14-->Box15
-Box16["Recode flags to aid Freebayes in handling multimapped reads with samtools and bioawk<br />(Danecek <i>et al</i>., 2021; Li, 2017)"]
-Box15-->Box16
-Box17["Convert recoded SAM file to BAM and index with samtools<br />(Danecek <i>et al</i>., 2021)"]
-Box16-->Box17
-Box18["Call variant sites with Freebayes, create a compressed and indexed VCF<br />(Garrison and Marth, 2012)"]
-Box17-->Box18
-Box1-->Box18
-Box19["Merge VCFs from each sample with BCFtools<br />(Narasimhan <i>et al</i>., 2016)"]
-Box18-->Box19
-Box20["Extract allele details and filter to strongly supported SNPs"]
-Box19-->Box20
-Box12-->Box20
-Box21["Prepare final SNP files for marker design"]
-Box20-->Box21
 ```
