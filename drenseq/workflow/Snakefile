@@ -8,7 +8,18 @@ samples=pd.read_table(config["samples"], header=0).set_index(["sample"], drop=Fa
 if samples.duplicated(subset=["sample"]).any():
     sys.exit("Duplicate sample in samples file, check your inputs!")
 
-
+with open(config["CDS_Bed"]) as bed:
+    bed_lines = bed.readlines()
+    for gene in SeqIO.parse(config["Reference_Fasta"], "fasta"):
+        name = gene.id
+        fasta_length = len(gene.seq)
+        for bed_line in bed_lines:
+            bed_line = bed_line.rstrip()
+            split_bed_line = bed_line.split()
+            if split_bed_line[0] == name:
+                bed_length = split_bed_line[3]
+                if bed_length > fasta_length:
+                    sys.exit("Bed file co-ordinates are out of range of your fasta file, check your inputs!")
 
 
 def get_F_Reads(wildcards):
