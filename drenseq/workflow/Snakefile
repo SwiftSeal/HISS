@@ -11,13 +11,14 @@ if samples.duplicated(subset=["sample"]).any():
 with open(config["CDS_Bed"]) as bed:
     bed_lines = bed.readlines()
     for gene in SeqIO.parse(config["Reference_Fasta"], "fasta"):
-        name = gene.id
+        fasta_name = gene.id
         fasta_length = len(gene.seq)
         for bed_line in bed_lines:
             bed_line = bed_line.rstrip()
             split_bed_line = bed_line.split()
-            if split_bed_line[0] == name:
-                bed_length = split_bed_line[2]
+            bed_name = split_bed_line[0]
+            if bed_name == fasta_name:
+                bed_length = int(split_bed_line[2])
                 if bed_length > fasta_length:
                     sys.exit("Bed file co-ordinates are out of range of your fasta file, check your inputs!")
 
