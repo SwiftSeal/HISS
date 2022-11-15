@@ -17,7 +17,7 @@ with open(config["CDS_Bed"]) as bed:
             bed_line = bed_line.rstrip()
             split_bed_line = bed_line.split()
             if split_bed_line[0] == name:
-                bed_length = split_bed_line[3]
+                bed_length = split_bed_line[2]
                 if bed_length > fasta_length:
                     sys.exit("Bed file co-ordinates are out of range of your fasta file, check your inputs!")
 
