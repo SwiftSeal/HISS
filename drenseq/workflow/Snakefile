@@ -1,4 +1,5 @@
 import pandas as pd
+from Bio import SeqIO
 
 configfile: "config/config.yaml"
 
@@ -6,6 +7,8 @@ samples=pd.read_table(config["samples"], header=0).set_index(["sample"], drop=Fa
 
 if samples.duplicated(subset=["sample"]).any():
     sys.exit("Duplicate sample in samples file, check your inputs!")
+
+
 
 
 def get_F_Reads(wildcards):
