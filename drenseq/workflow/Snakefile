@@ -1,4 +1,5 @@
 import pandas as pd
+from Bio import SeqIO
 
 configfile: "config/config.yaml"
 
@@ -7,6 +8,16 @@ samples=pd.read_table(config["samples"], header=0).set_index(["sample"], drop=Fa
 if samples.duplicated(subset=["sample"]).any():
     sys.exit("Duplicate sample in samples file, check your inputs!")
 
+bed_dict = {}
+with open(config["CDS_Bed"]) as bed:
+    for line in bed.readlines():
+        line = line.rstrip()
+        line_split = line.split()
+        bed_dict[line_split[0]] = int(line_split[2])
+
+for gene in SeqIO.parse(config["Reference_Fasta"], "fasta"):
+    if bed_dict[gene.id] > len(gene.seq):
+        sys.exit("Bed file co-ordinates are out of range of your fasta file, check your inputs!")
 
 def get_F_Reads(wildcards):
     return samples["FRead"][wildcards.sample]

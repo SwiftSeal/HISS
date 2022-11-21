@@ -4,6 +4,7 @@
 </picture>
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7271099.svg)](https://doi.org/10.5281/zenodo.7271099)
+[![DOI:10.1101/2022.11.01.514708](http://img.shields.io/badge/DOI-10.1101/2022.11.01.514708-B31B1b.svg)](https://doi.org/10.1101/2022.11.01.514708)
 
 # Automated RenSeq workflows with Snakemake
 
@@ -27,14 +28,16 @@ There are a few things you need to set up prior to running the workflow with Sna
 conda install mamba
 ```
 
-You will also need to install pandas
+You will also need to install pandas and biopython
 
 ```bash
 # With mamba
 mamba install pandas
+mamba install biopython
 
 # With base conda
 conda install pandas
+conda install biopython
 ```
 
 2.  Install Snakemake into your base conda environment
