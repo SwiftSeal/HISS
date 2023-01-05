@@ -1,6 +1,6 @@
 rule phenotype:
     input:
-        "config/read_scores.txt"
+        config["read_scores"]
     output:
         temp("results/phenotype.txt")
     threads:
