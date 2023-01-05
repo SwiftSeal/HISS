@@ -15,8 +15,8 @@ All input files and parameters are handled by the config file `config/config.yam
 *   `assoc_threshold` integer value of the threshold used to filter contigs by agrenseq association, and plot on the BLAST plot
 
 Paths may be absolute or relative to the directory that `snakemake` is executed from.
-It is recommended to execute the workflow from the `agrenseq/` directory.
-It's recommended to keep all metadata files in the config directory to keep it tidy.
+This workflow MUST be executed from the base `agrenseq/` directory.
+It's recommended to keep all metadata files in the config directory to keep it tidy!
 
 ### Input data
 
