@@ -64,21 +64,23 @@ snakemake --use-conda --cores=/number/of/CPU/cores
 
 cd ../drenseq
 
-awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < ../smrtrenseq_assembly/assembly/HR02_Gemson/HR02_Gemson.contigs.fasta | tail -n +2 > ../smrtrenseq_assembly/assembly/HR02_Gemson/HR02_Gemson_unwrapped.contigs.fasta # unwrap fasta file so all the sequence is on one line
-
-cat ../smrtrenseq_assembly/assembly/HR02_Gemson/HR02_Gemson_unwrapped.contigs.fasta | grep -A1 -f ../agrenseq/results/HR02_Gemson_filtered_contigs.txt | sed 's/--//g' | sed '/^$/d' > config/HR02_Gemson_candidates.fa # get your sequences for contigs you want
-
-cat ../smrtrenseq_assembly/NLR_Annotator/HR02_Gemson_NLR_Annotator.txt | grep -f ../agrenseq/results/HR02_Gemson_filtered_contigs.txt | less -S # See how many nlrs per contig
-
-# Manually fix file in your favourite text editor - this example uses nano
-# Lines can be cut with the shortcut Ctrl + K (copied with Alt + ^ ) and paste
-# with Ctrl + U . To cut or copy multiple lines press the shortcut multiple times.
-nano config/HR02_Gemson_candidates.fa
-
-cat ../smrtrenseq_assembly/NLR_Annotator/HR02_Gemson_NLR_Annotator.txt | grep -f ../agrenseq/results/HR02_Gemson_filtered_contigs.txt | cut -f2,4-5 > config/HR02_Gemson_candidates.bed # Make a bed file
-
 # Copy files to dRenSeq directory
 cp ../example_inputs/drenseq/* config/.
+
+awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}' < ../smrtrenseq_assembly/assembly/Gemson/Gemson.contigs.fasta | tail -n +2 > ../smrtrenseq_assembly/assembly/Gemson/Gemson_unwrapped.contigs.fasta # unwrap fasta file so all the sequence is on one line
+
+cat ../smrtrenseq_assembly/assembly/Gemson/Gemson_unwrapped.contigs.fasta | grep -A1 -f ../agrenseq/results/Gemson_filtered_contigs.txt | sed 's/--//g' | sed '/^$/d' | sed '/^>/ s/ .*//' >> config/Gemson_candidates.fa # get your sequences for contigs you want, we have provided example sequences to aid in running the analysis
+
+cat ../smrtrenseq_assembly/NLR_Annotator/Gemson_NLR_Annotator.txt | grep -f ../agrenseq/results/Gemson_filtered_contigs.txt | less -S # See how many nlrs per contig
+
+# Manually fix file in your favourite text editor - this example uses nano
+# If you only have one NLR per contig, simply append the contig names with _nlr_1
+# If you have more than one NLR per contig, you will need to add the seqeuence multiple times, giving separate sequences for nlr_1, nlr_2 etc.
+# Lines can be cut with the shortcut Ctrl + K (copied with Alt + ^ ) and paste
+# with Ctrl + U . To cut or copy multiple lines press the shortcut multiple times.
+nano config/Gemson_candidates.fa
+
+cat ../smrtrenseq_assembly/NLR_Annotator/Gemson_NLR_Annotator.txt | grep -f ../agrenseq/results/Gemson_filtered_contigs.txt | cut -f2,4-5 >> config/Gemson_candidates.bed # Make a bed file, we have provided example sequences to aid in running the analysis
 
 # Run workflow
 # If using a cluster profile
