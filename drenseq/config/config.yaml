@@ -19,13 +19,13 @@ adaptor_path_2: "/path/to/adaptors/Universal_var"
 baits_sequences: "/path/to/adaptors/baits_sequences"
 
 
-BLAST_identity: "identity_for_baits_blast"
+BLAST_identity: "percentage_identity_threshold_for_baits_blast"
  
  
-BLAST_coverage: "coverage_for_baits_blast"
+BLAST_coverage: "coverage_threshold_for_baits_blast"
 
 
-Flanking_region: "flanking_region_in_baits_mapping_regions"
+Flanking_region: "flanking_region_for_extracting_bait_related_sequences"
 
 
 ulimit: "max_number_of_open_files_allowed"
