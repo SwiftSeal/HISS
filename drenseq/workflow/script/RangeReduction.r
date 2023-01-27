@@ -40,18 +40,15 @@ flank <- as.numeric(flanking_region)
 blastrangeplus <- blastrange + flank
 finalregions <- IRanges(reduce(blastrangeplus))
 
-##Extract all regions per contig, increase this by 200bp flanking region and reduce overlapping ranges
-bedfile=data.frame(IRanges())
+# Extract all regions with overlapping bait sequences and putative NLRs
 
-for (c in contigs)
-  {
+bedfile <- data.frame(IRanges())
 
-  
-  contigname <- rep(c,length(finalregions))
+for (c in contigs) {
+  contigname <- rep(c, length(finalregions))
   endregion <- finalregions@start + finalregions@width
-  extract <- data.frame(contigname,finalregions@start,endregion)
-  bedfile=rbind(bedfile,extract)
-  
+  extract <- data.frame(contigname, finalregions@start, endregion)
+  bedfile <- rbind(bedfile, extract)
 }
 
 ##create output
