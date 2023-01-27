@@ -30,19 +30,22 @@ swap_if <-  function(a, b, d, missing = NA) {
 
 swapped <- swap_if(infile$start, infile$end, infile$contig)
 
-## Create list of all contigs in the file
+# Create list of all contigs in the file and make any modifications for
+# flanking regions
+
 contigs <- as.list(unique(infile$contig))
+filtered <- swapped[swapped$contig == c, c(1, 2, 3)]
+blastrange <- IRanges(start = filtered$start, end = filtered$end)
+flank <- as.numeric(flanking_region)
+blastrangeplus <- blastrange + flank
+finalregions <- IRanges(reduce(blastrangeplus))
 
 ##Extract all regions per contig, increase this by 200bp flanking region and reduce overlapping ranges
 bedfile=data.frame(IRanges())
 
 for (c in contigs)
   {
-  filtered <- swapped[swapped$contig==c,c(1,2,3)]
-  blastrange <- IRanges (start=filtered$start, end=filtered$end)
-  flank <- as.numeric(flanking_region)
-  blastrangeplus <- blastrange + flank
-  finalregions <- IRanges(reduce(blastrangeplus))
+
   
   contigname <- rep(c,length(finalregions))
   endregion <- finalregions@start + finalregions@width
