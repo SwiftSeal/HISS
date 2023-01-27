@@ -234,7 +234,7 @@ rule baits_region:
     resources:
         mem_mb=4000
     shell:
-        "(Rscript workflow/script/RangeReduction.r {input.blast} {output} {params}) 2> {log}"
+        "(Rscript workflow/script/RangeReduction.R {input.blast} {output} {params}) 2> {log}"
 
 
 rule nlr_annotator_baits:
