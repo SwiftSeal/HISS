@@ -1,4 +1,4 @@
-
+#!/usr/bin/env Rscript
 ##setup
 library(IRanges)
 args <- commandArgs(TRUE)
