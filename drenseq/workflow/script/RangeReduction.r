@@ -17,15 +17,16 @@ infile <- read.csv(input, header = FALSE, sep = "\t")
 infile <- infile[, c(2, 9, 10)]
 colnames(infile) <- c("contig", "start", "end")
 
-##Swap range values so they all go from smallest to largest
-swap_if <-  function(a,b,d,missing=NA){
-  c <- a
-  end <- ifelse(b > a, b,a)
-  start <- ifelse(b <=a, b,c)
-  contig <- d
-  z <- data.frame(contig,start,end)
-  return(z)} 
+# Ensure all starts and stops are relative to the + strand
 
+swap_if <-  function(a, b, d, missing = NA) {
+  c <- a
+  end <- ifelse(b > a, b, a)
+  start <- ifelse(b <= a, b, c)
+  contig <- d
+  z <- data.frame(contig, start, end)
+  return(z)
+  }
 
 swapped <- swap_if(infile$start, infile$end, infile$contig)
 
