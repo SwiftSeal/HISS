@@ -1,6 +1,3 @@
-##Blast Range Reduction 
-#Lynn Brown 
-#12/11/2022
 
 ##setup
 library(IRanges)
