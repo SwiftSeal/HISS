@@ -183,10 +183,79 @@ rule samtools_index_strict:
         "(samtools index {input} {output}) > {log}"
 
 
+rule baits_mapping_db:
+    input:
+        ref=config["Reference_Fasta"]
+    output:
+        temp(multiext("baits_mapping/baits_mapping_db", ".ndb", ".nhr", ".nin", ".njs", ".not", ".nsq", ".ntf", ".nto"))
+    conda:
+        "envs/blast.yaml"
+    log:
+        "logs/baits_blast_db.log"
+    resources:
+        mem_mb=4000
+    shell:
+        """
+        (makeblastdb -in {input.ref} -out "baits_mapping/baits_mapping_db" -dbtype nucl) 2> {log}
+        """
+
+
+rule baits_mapping:
+    input:
+        baits=config["baits_sequences"],
+        db=multiext("baits_mapping/baits_mapping_db", ".ndb", ".nhr", ".nin", ".njs", ".not", ".nsq", ".ntf", ".nto")
+    output:
+        blast_result="baits_mapping/baits_blast.txt"
+    params:
+        identity=config["BLAST_identity"],
+        coverage=config["BLAST_coverage"]
+    conda:
+        "envs/blast.yaml"
+    log:
+        "logs/baits_blast.log"
+    resources:
+        mem_mb=4000
+    shell:
+        """
+        (blastn -db "baits_mapping/baits_mapping_db" -query {input.baits} -out {output} -perc_identity {params.identity} -qcov_hsp_perc {params.coverage} -evalue 1e-5 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen len qcovs qcovhsp' -num_threads 2) 2> {log}
+        """
+
+rule baits_region:
+    input:
+        blast="baits_mapping/baits_blast.txt"
+    params:
+        flank=config["Flanking_region"]
+    output:
+        "baits_mapping/baits_regions.bed"
+    conda:
+        "envs/bait_mapping.yaml"
+    log:
+        "logs/baits_regions_catching.log"
+    resources:
+        mem_mb=4000
+    shell:
+        "(Rscript workflow/script/RangeReduction.r {input.blast} {output} {params} 2> {log} )"
+
+
+rule nlr_annotator_baits:
+    input:
+        baits_region="baits_mapping/baits_regions.bed",
+        nlr_annotator_region=config["CDS_Bed"]
+    output:
+        "baits_mapping/nlr_baits_regions.bed"
+    conda:
+        "envs/bedtools.yaml"
+    log:
+        "logs/nlr_annotator_regions_catching.log"
+    resources:
+        mem_mb=4000
+    shell:
+        "(bedtools intersect -a {input.nlr_annotator_region} -b {input.baits_region} > {output}) 2> {log}"
+
 rule coverage_strict:
     input:
         bam="mappings/{sample}_strict.bam",
-        bed=config["CDS_Bed"],
+        bed="baits_mapping/nlr_baits_regions.bed",
         bai="mappings/{sample}_strict.bam.bai"
     output:
         "coverage/{sample}_coverage.txt"

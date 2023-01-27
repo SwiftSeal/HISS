@@ -1,0 +1,7 @@
+name: bait_mapping
+channels:
+ - conda-forge
+ - bioconda
+dependencies:
+ - r-base=4.2.2
+ - bioconductor-iranges=2.32.0
