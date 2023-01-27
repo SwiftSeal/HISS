@@ -11,10 +11,10 @@ input <- args[1]
 output <- args[2]
 flanking_region <- args[3]
 
-##create input
+# Read in input BLAST results
 
-infile <- read.csv(input, header=FALSE, sep="\t")
-infile <-infile[,c(2,9,10)]
+infile <- read.csv(input, header = FALSE, sep = "\t")
+infile <- infile[, c(2, 9, 10)]
 colnames(infile) <- c("contig", "start", "end")
 
 ##Swap range values so they all go from smallest to largest
