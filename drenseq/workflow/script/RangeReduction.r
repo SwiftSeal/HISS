@@ -51,5 +51,7 @@ for (c in contigs) {
   bedfile <- rbind(bedfile, extract)
 }
 
-##create output
-write.table(bedfile,output, sep = "\t", row.names = FALSE, col.names=FALSE, quote = FALSE)
+# Write out bed file
+
+write.table(bedfile, output, sep = "\t", row.names = FALSE, col.names = FALSE,
+quote = FALSE)
