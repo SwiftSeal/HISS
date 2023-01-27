@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
-##setup
+
+# Import required libraries
 library(IRanges)
+
 args <- commandArgs(TRUE)
 input <- args[1]
 output <- args[2]
