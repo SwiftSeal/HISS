@@ -1,12 +1,16 @@
 #!/usr/bin/env Rscript
 
 # Import required libraries
+
 library(IRanges)
+
+# Parse CLI arguments
 
 args <- commandArgs(TRUE)
 input <- args[1]
 output <- args[2]
 flanking_region <- args[3]
+
 ##create input
 
 infile <- read.csv(input, header=FALSE, sep="\t")
