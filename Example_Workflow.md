@@ -71,7 +71,7 @@ awk '/^>/ {printf("\n%s\n",$0);next; } { printf("%s",$0);}  END {printf("\n");}'
 
 cat ../smrtrenseq_assembly/assembly/Gemson/Gemson_unwrapped.contigs.fasta | grep -A1 -f ../agrenseq/results/Gemson_filtered_contigs.txt | sed 's/--//g' | sed '/^$/d' | sed '/^>/ s/ .*//' >> config/Gemson_candidates.fa # get your sequences for contigs you want, we have provided example sequences to aid in running the analysis
 
-cat ../smrtrenseq_assembly/NLR_Annotator/Gemson_NLR_Annotator.txt | grep -f ../agrenseq/results/Gemson_filtered_contigs.txt | cut -f2,4-5 >> config/Gemson_candidates.bed # Make a bed file, we have provided example sequences to aid in running the analysis
+cat ../smrtrenseq_assembly/NLR_Annotator/Gemson_NLR_Annotator_sorted.bed | grep -f ../agrenseq/results/Gemson_filtered_contigs.txt | cut -f1-4 >> config/Gemson_candidates.bed # Make a bed file, we have provided example sequences to aid in running the analysis
 
 # Run workflow
 # If using a cluster profile
