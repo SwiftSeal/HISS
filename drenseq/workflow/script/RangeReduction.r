@@ -34,17 +34,17 @@ swapped <- swap_if(infile$start, infile$end, infile$contig)
 # flanking regions
 
 contigs <- as.list(unique(infile$contig))
-filtered <- swapped[swapped$contig == c, c(1, 2, 3)]
-blastrange <- IRanges(start = filtered$start, end = filtered$end)
-flank <- as.numeric(flanking_region)
-blastrangeplus <- blastrange + flank
-finalregions <- IRanges(reduce(blastrangeplus))
 
 # Extract all regions with overlapping bait sequences and putative NLRs
 
 bedfile <- data.frame(IRanges())
 
 for (c in contigs) {
+    filtered <- swapped[swapped$contig == c, c(1, 2, 3)]
+    blastrange <- IRanges(start = filtered$start, end = filtered$end)
+    flank <- as.numeric(flanking_region)
+    blastrangeplus <- blastrange + flank
+    finalregions <- IRanges(reduce(blastrangeplus))
     contigname <- rep(c, length(finalregions))
     endregion <- finalregions@start + finalregions@width
     extract <- data.frame(contigname, finalregions@start, endregion)
