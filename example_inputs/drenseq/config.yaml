@@ -16,6 +16,18 @@ adaptor_path_1: "config/Index2varN.fasta"
 adaptor_path_2: "config/Universal_var.fasta"
 
 
+baits_sequences: "config/Solanum_baits.fasta"
+
+
+BLAST_identity: "90"
+
+
+BLAST_coverage: "90"
+
+
+Flanking_region: "0"
+
+
 ulimit: "1024"
 
 
