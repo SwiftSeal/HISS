@@ -282,7 +282,7 @@ rule per_gene_coverage:
     resources:
         mem_mb=2000
     shell:
-        """(cat {input.referenceGenes} | tail -n +2 | while read gene; do numPosWithCoverage=`grep -w "$gene" {input.sample_coverage} | awk '$5>0' | wc -l`; numPosTotal=`grep -w "$gene" {input.sample_coverage} | wc -l`; if [ $numPosTotal -eq 0 ]; then echo "ERROR: gene $gene has CDS region of length zero. Check your input data (e.g. gene spelling in FASTA and CDS BED file) and retry.\nAborting pipeline run." > {log}; exit; fi; pctCov=`awk "BEGIN {{print ($numPosWithCoverage/$numPosTotal)*100 }}"`; echo -e "\n# covered positions for sample {wildcards.sample} in gene $gene: $numPosWithCoverage\n# CDS positions for gene $gene: $numPosTotal\npctCov: $pctCov" >> {log}; echo -e "$gene\t$pctCov" >> {output.gene_coverage}; done) 2>> {log}"""
+        """(cat {input.referenceGenes} | tail -n +2 | while read gene; do numPosWithCoverage=`grep -w "$gene" {input.sample_coverage} | awk '$6>0' | wc -l`; numPosTotal=`grep -w "$gene" {input.sample_coverage} | wc -l`; if [ $numPosTotal -eq 0 ]; then echo "ERROR: gene $gene has CDS region of length zero. Check your input data (e.g. gene spelling in FASTA and CDS BED file) and retry.\nAborting pipeline run." > {log}; exit; fi; pctCov=`awk "BEGIN {{print ($numPosWithCoverage/$numPosTotal)*100 }}"`; echo -e "\n# covered positions for sample {wildcards.sample} in gene $gene: $numPosWithCoverage\n# CDS positions for gene $gene: $numPosTotal\npctCov: $pctCov" >> {log}; echo -e "$gene\t$pctCov" >> {output.gene_coverage}; done) 2>> {log}"""
 
 
 rule combine_gene_coverage:
