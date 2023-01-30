@@ -39,7 +39,7 @@ rule all:
 
 rule extract_reference_headers:
     input:
-        config["Reference_Fasta"]
+        config["CDS_Bed"]
     output:
         "resources/reference_headers.txt"
     log:
@@ -48,7 +48,7 @@ rule extract_reference_headers:
         mem_mb=2000
     run:
         shell("""echo "gene" > {output}""")
-        shell("""(cat {input} | grep '>' | sed 's/>//g' >> {output}) 2> {log}""")
+        shell("""(cat {input} | cut -f4 >> {output}) 2> {log}""")
 
 
 rule trim_read_remove_adaptor:
