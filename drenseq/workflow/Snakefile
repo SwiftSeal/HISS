@@ -252,6 +252,7 @@ rule nlr_annotator_baits:
     shell:
         "(bedtools intersect -a {input.nlr_annotator_region} -b {input.baits_region} > {output}) 2> {log}"
 
+
 rule coverage_strict:
     input:
         bam="mappings/{sample}_strict.bam",
