@@ -19,7 +19,7 @@ colnames(infile) <- c("contig", "start", "end")
 
 # Ensure all starts and stops are relative to the + strand
 
-swap_if <-  function(a, b, d, missing = NA) {
+swap_if <- function(a, b, d, missing = NA) {
   c <- a
   end <- ifelse(b > a, b, a)
   start <- ifelse(b <= a, b, c)
