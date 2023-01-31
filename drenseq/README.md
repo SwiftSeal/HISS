@@ -30,7 +30,7 @@ Ensure this contains regions outside the CDS too, this ensures alignments are pe
 
 #### CDS_Bed
 
-A BED file of the CDS regions of your targets.
+A BED file of the CDS regions of your targets. Consisting of field one of the contig name, the start of the CDS region in column 2, the end of the CDS region in column 3 and the nlr name in column 4. See the example workflow for how to easily parse this from your NLR Annotator bed file.
 
 #### samples
 
