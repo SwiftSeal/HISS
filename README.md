@@ -4,7 +4,6 @@
 </picture>
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7271098.svg)](https://doi.org/10.5281/zenodo.7271098)
-
 [![DOI:10.1101/2022.11.01.514708](http://img.shields.io/badge/DOI-10.1101/2022.11.01.514708-B31B1b.svg)](https://doi.org/10.1101/2022.11.01.514708)
 
 # Automated RenSeq workflows with Snakemake
