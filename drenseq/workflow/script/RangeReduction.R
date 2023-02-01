@@ -18,6 +18,8 @@ infile <- read.csv(input, header = FALSE, sep = "\t")
 infile <- infile[, c(2, 9, 10)]
 colnames(infile) <- c("contig", "start", "end")
 
+# Check all input genes have at least one blast hit from the baits
+
 # Ensure all starts and stops are relative to the + strand
 
 swap_if <- function(a, b, d, missing = NA) {
