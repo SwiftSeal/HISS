@@ -21,6 +21,7 @@ colnames(infile) <- c("contig", "start", "end")
 # Check all input genes have at least one blast hit from the baits
 
 contigs <- as.list(unique(infile$contig))
+targets_file <- read.csv(reference_headers, header = TRUE)
 
 # Ensure all starts and stops are relative to the + strand
 
