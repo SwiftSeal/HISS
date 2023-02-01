@@ -31,7 +31,7 @@ if (all(input_headers %in% contig_names)) {
     print("The workflow will fail if allowed to continue.")
     print("The workflow will now be ended.")
     print("Check the input sequences and remove those that have no bait hits")
-    quit(save = "no", status = 1)
+    quit(save = "no", status = 10)
 }
 
 # Ensure all starts and stops are relative to the + strand
