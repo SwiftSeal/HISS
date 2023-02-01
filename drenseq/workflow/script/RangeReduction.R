@@ -20,7 +20,7 @@ colnames(infile) <- c("contig", "start", "end")
 
 # Check all input genes have at least one blast hit from the baits
 
-contigs <- as.list(unique(infile$contig))
+contig_names <- unique(infile$contig)
 targets_file <- read.csv(reference_headers, header = TRUE)
 
 # Ensure all starts and stops are relative to the + strand
@@ -37,6 +37,8 @@ swap_if <- function(a, b, d, missing = NA) {
 swapped <- swap_if(infile$start, infile$end, infile$contig)
 
 # Extract all regions with overlapping bait sequences and putative NLRs
+
+contigs <- as.list(unique(infile$contig))
 
 bedfile <- data.frame(IRanges())
 
