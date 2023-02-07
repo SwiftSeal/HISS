@@ -10,12 +10,29 @@ args <- commandArgs(TRUE)
 input <- args[1]
 output <- args[2]
 flanking_region <- args[3]
+reference_headers <- args[4]
 
 # Read in input BLAST results
 
 infile <- read.csv(input, header = FALSE, sep = "\t")
 infile <- infile[, c(2, 9, 10)]
 colnames(infile) <- c("contig", "start", "end")
+
+# Check all input genes have at least one blast hit from the baits
+
+contig_names <- unique(infile$contig)
+targets_file <- read.csv(reference_headers, header = TRUE)
+input_headers <- unique(targets_file$gene)
+
+if (all(input_headers %in% contig_names)) {
+    print("All sequences have a bait hit")
+} else {
+    print("At least one of your sequences does not have a bait hit from blast.")
+    print("The workflow will fail if allowed to continue.")
+    print("The workflow will now be ended.")
+    print("Check the input sequences and remove those that have no bait hits")
+    quit(save = "no", status = 10)
+}
 
 # Ensure all starts and stops are relative to the + strand
 
@@ -30,12 +47,9 @@ swap_if <- function(a, b, d, missing = NA) {
 
 swapped <- swap_if(infile$start, infile$end, infile$contig)
 
-# Create list of all contigs in the file and make any modifications for
-# flanking regions
+# Extract all regions with overlapping bait sequences and putative NLRs
 
 contigs <- as.list(unique(infile$contig))
-
-# Extract all regions with overlapping bait sequences and putative NLRs
 
 bedfile <- data.frame(IRanges())
 
