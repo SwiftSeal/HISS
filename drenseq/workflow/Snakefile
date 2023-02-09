@@ -6,7 +6,7 @@ configfile: "config/config.yaml"
 samples=pd.read_table(config["samples"], header=0).set_index(["sample"], drop=False)
 
 if samples.duplicated(subset=["sample"]).any():
-    bad_samples = print(samples[samples.duplicated(subset = ["sample"])]["samples"].tolist())
+    bad_samples = print(samples[samples.duplicated(subset = ["sample"])]["sample"].tolist())
     sys.exit(f"Duplicate sample in samples file, check your inputs! Bad samples are: {bad_samples}")
 
 bed_dict = {}
