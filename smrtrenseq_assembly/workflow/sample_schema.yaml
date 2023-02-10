@@ -4,9 +4,9 @@ properties:
   sample:
     type: string
     description: Reference sample name
-  FRead:
+  Reads:
     type: string
-    description: Path to the F reads of sample RenSeq
+    description: Path to the reads of sample HiFi RenSeq
   RRead:
     type: string
     description: Path to the R reads of the sample RenSeq
