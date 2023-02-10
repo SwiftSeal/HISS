@@ -1,0 +1,21 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+description: Schema for the read scores dataset
+properties:
+  sample:
+    type: string
+    description: Diversity panel cultivar name
+  R1:
+    type: string
+    description: Path to the R1 reads of cultivar RenSeq
+  R2:
+    type: string
+    description: Path to the R2 reads of the cultivar RenSeq
+  score:
+    type: number
+    description: Phenotypic socre of the cultivar
+
+required:
+  - sample
+  - R1
+  - R2
+  - score
