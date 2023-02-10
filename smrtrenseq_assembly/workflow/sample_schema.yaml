@@ -10,5 +10,4 @@ properties:
 
 required:
   - sample
-  - FRead
-  - RRead
+  - Reads
