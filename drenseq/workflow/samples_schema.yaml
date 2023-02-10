@@ -4,9 +4,9 @@ properties:
   sample:
     type: string
     description: Diversity panel sample name
-  R1:
+  FRead:
     type: string
-    description: Path to the R1 reads of cultivar RenSeq
+    description: Path to the F reads of sample RenSeq
   R2:
     type: string
     description: Path to the R2 reads of the cultivar RenSeq
