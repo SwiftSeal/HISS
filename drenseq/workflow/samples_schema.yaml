@@ -13,6 +13,5 @@ properties:
 
 required:
   - sample
-  - R1
-  - R2
-  - score
+  - FRead
+  - RRead
