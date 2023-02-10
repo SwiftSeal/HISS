@@ -1,0 +1,13 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+description: Schema for the sample dataset
+properties:
+  sample:
+    type: string
+    description: Reference sample name
+  Reads:
+    type: string
+    description: Path to the reads of sample HiFi RenSeq
+
+required:
+  - sample
+  - Reads

@@ -12,7 +12,7 @@ properties:
     description: Path to the R2 reads of the cultivar RenSeq
   score:
     type: number
-    description: Phenotypic socre of the cultivar
+    description: Phenotypic score of the cultivar
 
 required:
   - sample
