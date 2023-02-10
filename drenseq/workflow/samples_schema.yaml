@@ -10,9 +10,6 @@ properties:
   RRead:
     type: string
     description: Path to the R reads of the sample RenSeq
-  score:
-    type: number
-    description: Phenotypic socre of the cultivar
 
 required:
   - sample
