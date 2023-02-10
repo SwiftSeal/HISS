@@ -1,0 +1,17 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+description: Schema for the samples dataset
+properties:
+  sample:
+    type: string
+    description: Diversity panel sample name
+  FRead:
+    type: string
+    description: Path to the F reads of sample RenSeq
+  RRead:
+    type: string
+    description: Path to the R reads of the sample RenSeq
+
+required:
+  - sample
+  - FRead
+  - RRead
