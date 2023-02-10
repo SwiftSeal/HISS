@@ -3,7 +3,7 @@ description: Schema for the sample dataset
 properties:
   sample:
     type: string
-    description: Diversity panel sample name
+    description: Reference sample name
   FRead:
     type: string
     description: Path to the F reads of sample RenSeq
