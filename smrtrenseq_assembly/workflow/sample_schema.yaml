@@ -1,5 +1,5 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
-description: Schema for the samples dataset
+description: Schema for the sample dataset
 properties:
   sample:
     type: string
