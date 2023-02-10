@@ -7,9 +7,6 @@ properties:
   Reads:
     type: string
     description: Path to the reads of sample HiFi RenSeq
-  RRead:
-    type: string
-    description: Path to the R reads of the sample RenSeq
 
 required:
   - sample
