@@ -3,7 +3,7 @@ description: Schema for the samples dataset
 properties:
   sample:
     type: string
-    description: Diversity panel cultivar name
+    description: Diversity panel sample name
   R1:
     type: string
     description: Path to the R1 reads of cultivar RenSeq
