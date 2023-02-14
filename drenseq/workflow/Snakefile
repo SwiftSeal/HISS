@@ -226,6 +226,7 @@ rule baits_mapping:
 rule baits_region:
     input:
         blast="baits_mapping/baits_blast.txt"
+        headers="resources/reference_headers.txt"
     params:
         flank=config["Flanking_region"]
     output:
@@ -237,7 +238,7 @@ rule baits_region:
     resources:
         mem_mb=4000
     shell:
-        "(Rscript workflow/script/RangeReduction.R {input.blast} {output} {params}) 2> {log}"
+        "(Rscript workflow/script/RangeReduction.R {input.blast} {output} {params.flank} {input.headers}) 2> {log}"
 
 
 rule nlr_annotator_baits:
