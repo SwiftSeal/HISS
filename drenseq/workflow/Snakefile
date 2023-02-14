@@ -229,7 +229,7 @@ rule baits_mapping:
 rule baits_region:
     input:
         blast="baits_mapping/baits_blast.txt"
-        headers="resources/reference_headers.txt"
+        headers="resources/reference_headers_contigs.txt"
     params:
         flank=config["Flanking_region"]
     output:
@@ -279,7 +279,7 @@ rule coverage_strict:
 
 rule per_gene_coverage:
     input:
-        referenceGenes="resources/reference_headers.txt",
+        referenceGenes="resources/reference_headers_nlrs.txt",
         sample_coverage="coverage/{sample}_coverage.txt"
     output:
         gene_coverage="coverage/{sample}_geneCoverage.txt"
@@ -307,7 +307,7 @@ rule combine_gene_coverage:
 
 rule combine_coverage_values:
     input:
-        gene_names="resources/reference_headers.txt",
+        gene_names="resources/reference_headers_nlrs.txt",
         coverage=expand("coverage/{sample}_coverageValues.txt", sample=samples["sample"])
     output:
         "coverage/all_coverage_values.txt"
