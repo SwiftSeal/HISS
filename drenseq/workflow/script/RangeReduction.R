@@ -11,6 +11,7 @@ input <- args[1]
 output <- args[2]
 flanking_region <- args[3]
 reference_headers <- args[4]
+reference_fasta <- args[5]
 
 # Read in input BLAST results
 
