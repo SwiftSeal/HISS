@@ -4,5 +4,4 @@ channels:
  - bioconda
 dependencies:
  - r-base=4.2.2
- - bioconductor-iranges=2.32.0
  - bioconductor-biostrings=2.66.0
