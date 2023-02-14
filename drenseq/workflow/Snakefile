@@ -41,10 +41,10 @@ rule all:
 
 rule extract_reference_headers:
     input:
-        bed=config["CDS_Bed"]
+        bed=config["CDS_Bed"],
         fasta=config["Reference_Fasta"]
     output:
-        nlrs="resources/reference_headers_nlrs.txt"
+        nlrs="resources/reference_headers_nlrs.txt",
         contigs="resources/reference_headers_contigs.txt"
     log:
         "logs/initial_grep/log.txt"
