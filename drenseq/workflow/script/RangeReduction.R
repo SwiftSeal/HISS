@@ -60,8 +60,9 @@ for (c in contigs) {
     blastrangeplus <- blastrange + flank
     finalregions <- IRanges(reduce(blastrangeplus))
     contigname <- rep(c, length(finalregions))
-    endregion <- finalregions@start + finalregions@width
-    extract <- data.frame(contigname, finalregions@start, endregion)
+    endregion <- finalregions@start + finalregions@width - 1
+    startregion <- finalregions@start - 1
+    extract <- data.frame(contigname, startregion, endregion)
     bedfile <- rbind(bedfile, extract)
     }
 
