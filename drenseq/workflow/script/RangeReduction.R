@@ -67,6 +67,10 @@ for (c in contigs) {
     if (startregion < 0) {
         startregion <- 0
     }
+    contig_length <- width(fasta[c])
+    if (endregion > contig_length) {
+        endregion <- contig_length
+    }
     extract <- data.frame(contigname, startregion, endregion)
     bedfile <- rbind(bedfile, extract)
     }
