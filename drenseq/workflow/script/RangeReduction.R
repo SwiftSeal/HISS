@@ -2,7 +2,7 @@
 
 # Import required libraries
 
-library(IRanges)
+library(Biostrings)
 
 # Parse CLI arguments
 
