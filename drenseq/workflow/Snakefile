@@ -41,16 +41,19 @@ rule all:
 
 rule extract_reference_headers:
     input:
-        config["CDS_Bed"]
+        bed=config["CDS_Bed"]
+        fasta=config["Reference_Fasta"]
     output:
-        "resources/reference_headers.txt"
+        nlrs="resources/reference_headers_nlrs.txt"
+        contigs="resources/reference_headers_contigs.txt"
     log:
         "logs/initial_grep/log.txt"
     resources:
         mem_mb=2000
     run:
         shell("""echo "gene" > {output}""")
-        shell("""(cat {input} | cut -f4 >> {output}) 2> {log}""")
+        shell("""(cat {input.bed} | cut -f4 >> {output.nlrs}) 2> {log}""")
+        shell("""cat {input.fasta} | grep '>' | sed 's/>//g' >> {output.contigs}) 2>> {log}""")
 
 
 rule trim_read_remove_adaptor:
