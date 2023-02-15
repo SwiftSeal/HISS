@@ -23,7 +23,7 @@ colnames(infile) <- c("contig", "start", "end")
 
 contig_names <- unique(infile$contig)
 targets_file <- read.csv(reference_headers, header = FALSE)
-input_headers <- unique(targets_file$gene)
+input_headers <- unique(targets_file$V1)
 fasta <- readDNAStringSet(reference_fasta)
 
 if (all(input_headers %in% contig_names)) {
