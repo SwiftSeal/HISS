@@ -39,7 +39,8 @@ convert_to_strand_positive <- function(start, end) {
   ends <- ifelse(start < end, end, start)
   return(list(starts, ends))
 }
-coordinates <- convert_to_strand_positive(blast_results$start, blast_results$end)
+coordinates <- convert_to_strand_positive(blast_results$start,
+blast_results$end)
 blast_results$start <- coordinates[[1]]
 blast_results$end <- coordinates[[2]]
 
@@ -63,5 +64,6 @@ for (c in contig_names) {
 
 # Write out bed file
 
-write.table(bed_file, output_path, sep = "\t", row.names = FALSE, col.names = FALSE,
+write.table(bed_file, output_path, sep = "\t", row.names = FALSE,
+col.names = FALSE,
 quote = FALSE)
