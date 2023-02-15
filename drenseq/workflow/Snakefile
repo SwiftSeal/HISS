@@ -41,16 +41,19 @@ rule all:
 
 rule extract_reference_headers:
     input:
-        config["CDS_Bed"]
+        bed=config["CDS_Bed"],
+        fasta=config["Reference_Fasta"]
     output:
-        "resources/reference_headers.txt"
+        nlrs="resources/reference_headers_nlrs.txt",
+        contigs="resources/reference_headers_contigs.txt"
     log:
         "logs/initial_grep/log.txt"
     resources:
         mem_mb=2000
     run:
         shell("""echo "gene" > {output}""")
-        shell("""(cat {input} | cut -f4 >> {output}) 2> {log}""")
+        shell("""(cat {input.bed} | cut -f4 >> {output.nlrs}) 2> {log}""")
+        shell("""(cat {input.fasta} | grep '>' | sed 's/>//g' >> {output.contigs}) 2>> {log}""")
 
 
 rule trim_read_remove_adaptor:
@@ -225,7 +228,9 @@ rule baits_mapping:
 
 rule baits_region:
     input:
-        blast="baits_mapping/baits_blast.txt"
+        blast="baits_mapping/baits_blast.txt",
+        headers="resources/reference_headers_contigs.txt",
+        fasta=config["Reference_Fasta"]
     params:
         flank=config["Flanking_region"]
     output:
@@ -237,7 +242,7 @@ rule baits_region:
     resources:
         mem_mb=4000
     shell:
-        "(Rscript workflow/script/RangeReduction.R {input.blast} {output} {params}) 2> {log}"
+        "(Rscript workflow/script/RangeReduction.R {input.blast} {output} {params.flank} {input.headers} {input.fasta}) 2> {log}"
 
 
 rule nlr_annotator_baits:
@@ -275,7 +280,7 @@ rule coverage_strict:
 
 rule per_gene_coverage:
     input:
-        referenceGenes="resources/reference_headers.txt",
+        referenceGenes="resources/reference_headers_nlrs.txt",
         sample_coverage="coverage/{sample}_coverage.txt"
     output:
         gene_coverage="coverage/{sample}_geneCoverage.txt"
@@ -303,7 +308,7 @@ rule combine_gene_coverage:
 
 rule combine_coverage_values:
     input:
-        gene_names="resources/reference_headers.txt",
+        gene_names="resources/reference_headers_nlrs.txt",
         coverage=expand("coverage/{sample}_coverageValues.txt", sample=samples["sample"])
     output:
         "coverage/all_coverage_values.txt"

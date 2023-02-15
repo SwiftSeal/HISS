@@ -1,71 +1,69 @@
 #!/usr/bin/env Rscript
 
 # Import required libraries
-
-library(IRanges)
+library(Biostrings)
 
 # Parse CLI arguments
-
 args <- commandArgs(TRUE)
-input <- args[1]
-output <- args[2]
-flanking_region <- args[3]
-reference_headers <- args[4]
+input_path <- args[1]
+output_path <- args[2]
+flanking_region <- as.numeric(args[3])
+reference_headers_path <- args[4]
+reference_fasta_path <- args[5]
 
 # Read in input BLAST results
-
-infile <- read.csv(input, header = FALSE, sep = "\t")
-infile <- infile[, c(2, 9, 10)]
-colnames(infile) <- c("contig", "start", "end")
+blast_results <- read.csv(input_path, header = FALSE, sep = "\t")
+blast_results <- blast_results[, c(2, 9, 10)]
+colnames(blast_results) <- c("contig", "start", "end")
 
 # Check all input genes have at least one blast hit from the baits
+contig_names <- unique(blast_results$contig)
 
-contig_names <- unique(infile$contig)
-targets_file <- read.csv(reference_headers, header = TRUE)
-input_headers <- unique(targets_file$gene)
+reference_headers <- read.csv(reference_headers_path, header = FALSE)
+input_headers <- unique(reference_headers$V1)
+fasta <- readDNAStringSet(reference_fasta)
 
 if (all(input_headers %in% contig_names)) {
     print("All sequences have a bait hit")
 } else {
-    print("At least one of your sequences does not have a bait hit from blast.")
-    print("The workflow will fail if allowed to continue.")
-    print("The workflow will now be ended.")
-    print("Check the input sequences and remove those that have no bait hits")
-    quit(save = "no", status = 10)
+    stop("At least one of your sequences does not have a bait hit from blast.\n
+    The workflow will fail if allowed to continue.\n
+    The workflow will now be ended.\n
+    Check the input sequences and remove those that have no bait hits")
 }
 
+
 # Ensure all starts and stops are relative to the + strand
-
-swap_if <- function(a, b, d, missing = NA) {
-    c <- a
-    end <- ifelse(b > a, b, a)
-    start <- ifelse(b <= a, b, c)
-    contig <- d
-    z <- data.frame(contig, start, end)
-    return(z)
-    }
-
-swapped <- swap_if(infile$start, infile$end, infile$contig)
+convert_to_strand_positive <- function(start, end) {
+  starts <- ifelse(start < end, start, end)
+  ends <- ifelse(start < end, end, start)
+  return(list(starts, ends))
+}
+coordinates <- convert_to_strand_positive(blast_results$start,
+blast_results$end)
+blast_results$start <- coordinates[[1]]
+blast_results$end <- coordinates[[2]]
 
 # Extract all regions with overlapping bait sequences and putative NLRs
+bed_file <- data.frame(IRanges())
 
-contigs <- as.list(unique(infile$contig))
-
-bedfile <- data.frame(IRanges())
-
-for (c in contigs) {
-    filtered <- swapped[swapped$contig == c, c(1, 2, 3)]
-    blastrange <- IRanges(start = filtered$start, end = filtered$end)
-    flank <- as.numeric(flanking_region)
-    blastrangeplus <- blastrange + flank
-    finalregions <- IRanges(reduce(blastrangeplus))
-    contigname <- rep(c, length(finalregions))
-    endregion <- finalregions@start + finalregions@width
-    extract <- data.frame(contigname, finalregions@start, endregion)
-    bedfile <- rbind(bedfile, extract)
+for (c in contig_names) {
+    filtered <- blast_results[blast_results$contig == c, ]
+    blast_range <- IRanges(start = filtered$start, end = filtered$end)
+    blast_range_plus <- blast_range + flanking_region
+    final_regions <- IRanges(reduce(blast_range_plus))
+    contig_name <- rep(c, length(final_regions))
+    end_region <- final_regions@start + final_regions@width - 1
+    start_region <- final_regions@start - 1
+    start_region <- ifelse(start_region < 0, 0, start_region)
+    contig_length <- width(fasta[c])
+    end_region <- ifelse(end_region > contig_length, contig_length, end_region)
+    extract <- data.frame(contig_name, start_region, end_region)
+    bed_file <- rbind(bed_file, extract)
     }
 
 # Write out bed file
 
-write.table(bedfile, output, sep = "\t", row.names = FALSE, col.names = FALSE,
+write.table(bed_file, output_path, sep = "\t", row.names = FALSE,
+col.names = FALSE,
 quote = FALSE)
