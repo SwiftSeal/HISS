@@ -1,17 +1,15 @@
 #!/usr/bin/env Rscript
 
 # Import required libraries
-
 library(Biostrings)
 
 # Parse CLI arguments
-
 args <- commandArgs(TRUE)
-input_path <- "testdata/baits_blast.txt"
-output_path <- "test_output.txt"
-flanking_region <- "200"
-reference_headers_path <- "testdata/reference_headers_contigs.txt"
-reference_fasta_path <- "testdata/Vitabella_candidates.fa"
+input_path <- args[1]
+output_path <- args[2]
+flanking_region <- as.numeric(args[3])
+reference_headers_path <- args[4]
+reference_fasta_path <- args[5]
 
 # Read in input BLAST results
 blast_results <- read.csv(input_path, header = FALSE, sep = "\t")
@@ -47,26 +45,24 @@ blast_results$end <- coordinates[[2]]
 
 # Extract all regions with overlapping bait sequences and putative NLRs
 contigs <- unique(blast_results$contig)
-bedfile <- data.frame(IRanges())
+bed_file <- data.frame(IRanges())
 
 for (c in contigs) {
-    filtered <- blast_results[blast_results$contig == c, c(1, 2, 3)]
-    blastrange <- IRanges(start = filtered$start, end = filtered$end)
-    flank <- as.numeric(flanking_region)
-    blastrangeplus <- blastrange + flank
-    finalregions <- IRanges(reduce(blastrangeplus))
-    contigname <- rep(c, length(finalregions))
-    endregion <- finalregions@start + finalregions@width - 1
-    startregion <- finalregions@start - 1
-    startregion <- ifelse(startregion < 0, 0, startregion)
+    filtered <- blast_results[blast_results$contig == c, ]
+    blast_range <- IRanges(start = filtered$start, end = filtered$end)
+    blast_range_plus <- blast_range + flanking_region
+    final_regions <- IRanges(reduce(blast_range_plus))
+    contig_name <- rep(c, length(final_regions))
+    end_region <- final_regions@start + final_regions@width - 1
+    start_region <- final_regions@start - 1
+    start_region <- ifelse(start_region < 0, 0, start_region)
     contig_length <- width(fasta[c])
-    endregion <- ifelse(endregion > contig_length, contig_length,
-    endregion)
-    extract <- data.frame(contigname, startregion, endregion)
-    bedfile <- rbind(bedfile, extract)
+    end_region <- ifelse(end_region > contig_length, contig_length, end_region)
+    extract <- data.frame(contig_name, start_region, end_region)
+    bed_file <- rbind(bed_file, extract)
     }
 
 # Write out bed file
 
-write.table(bedfile, output, sep = "\t", row.names = FALSE, col.names = FALSE,
+write.table(bed_file, output_path, sep = "\t", row.names = FALSE, col.names = FALSE,
 quote = FALSE)
