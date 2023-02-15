@@ -22,7 +22,7 @@ colnames(infile) <- c("contig", "start", "end")
 # Check all input genes have at least one blast hit from the baits
 
 contig_names <- unique(infile$contig)
-targets_file <- read.csv(reference_headers, header = TRUE)
+targets_file <- read.csv(reference_headers, header = FALSE)
 input_headers <- unique(targets_file$gene)
 fasta <- readDNAStringSet(reference_fasta)
 
