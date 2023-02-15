@@ -46,7 +46,7 @@ blast_results$start <- coordinates[[1]]
 blast_results$end <- coordinates[[2]]
 
 # Extract all regions with overlapping bait sequences and putative NLRs
-contigs <- as.list(unique(blast_results$contig)
+contigs <- unique(blast_results$contig)
 bedfile <- data.frame(IRanges())
 
 for (c in contigs) {
