@@ -64,11 +64,10 @@ for (c in contigs) {
     contigname <- rep(c, length(finalregions))
     endregion <- finalregions@start + finalregions@width - 1
     startregion <- finalregions@start - 1
-    ifelse(startregion < 0, startregion == 0, startregion)
+    startregion <- ifelse(startregion < 0, startregion == 0, startregion)
     contig_length <- width(fasta[c])
-    if (endregion > contig_length) {
-        endregion <- contig_length
-    }
+    endregion <- ifelse(endregion > contig_length, endregion == contig_length,
+    endregion)
     extract <- data.frame(contigname, startregion, endregion)
     bedfile <- rbind(bedfile, extract)
     }
