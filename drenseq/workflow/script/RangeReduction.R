@@ -21,7 +21,7 @@ contig_names <- unique(blast_results$contig)
 
 reference_headers <- read.csv(reference_headers_path, header = FALSE)
 input_headers <- unique(reference_headers$V1)
-fasta <- readDNAStringSet(reference_fasta)
+fasta <- readDNAStringSet(reference_fasta_path)
 
 if (all(input_headers %in% contig_names)) {
     print("All sequences have a bait hit")
