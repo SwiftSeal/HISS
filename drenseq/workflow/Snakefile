@@ -272,7 +272,7 @@ rule bait_blast_check:
     resources:
         mem_mb=4000
     shell:
-        """touch {output}
+        """truncate -s 0 {output} 2> {log}
         cat {input.headers} | tail -n +2 | while read nlr; do blast_hits=$(cat {input.bed} | grep "$nlr" | wc -l); if [ $blast_hits -eq 0 ]; then echo "ERROR: $nlr has no blast hits. Check baits_mapping/missing_genes.txt" >> {log}; echo "$nlr" >> {output}; fi; done
         missing_genes=$(cat {output} | wc -l)
         if [ $missing_genes -ne 0 ]; then exit; fi"""
