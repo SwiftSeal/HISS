@@ -275,12 +275,7 @@ rule bait_blast_check:
     shell:
         """truncate -s 0 {log.missed_genes_log} 2> {log.run_log}
         echo "truncate works"
-        cat {input.headers} | tail -n +2 | while read nlr; echo "loop started";do blast_hits=$(cat {input.bed} | grep "$nlr" | wc -l); echo "$blast_hits"; if [ $blast_hits -eq 0 ]; then echo "ERROR: $nlr has no blast hits. Check baits_mapping/missing_genes.txt" >> {log.run_log}; echo "$nlr" >> {log.missed_genes_log}; echo "check of gene done"; else; echo "$nlr" >> {output}; echo "else done"; fi; done
-        echo "loop done"
-        missing_genes=$(cat {log.missed_genes_log} | wc -l)
-        echo "variable set"
-        if [ $missing_genes -ne 0 ]; then exit; fi
-        echo 'exit if done'"""
+        cat {input.headers} | tail -n +2 | while read nlr; do echo "$nlr"; done"""
 
 
 rule coverage_strict:
