@@ -275,7 +275,7 @@ rule bait_blast_check:
     shell:
         """truncate -s 0 {log.missed_genes_log} 2> {log.run_log}
         echo "truncate works"
-        cat {input.headers} | tail -n +2 | while read nlr; do blast_hits=$(cat {input.bed} | grep "$nlr" | wc -l); if [ $blast_hits -eq 0 ]; then echo "ERROR: $nlr has no blast hits. Check baits_mapping/missing_genes.txt" >> {log.run_log}; echo "$nlr" >> {log.missed_genes_log}; fi; done
+        cat {input.headers} | tail -n +2 | while read nlr; do blast_hits=$(cat {input.bed} | grep "$nlr" | wc -l); if [ $blast_hits -eq 0 ]; then echo "ERROR: $nlr has no blast hits. Check baits_mapping/missing_genes.txt" >> {log.run_log}; echo "$nlr" >> {log.missed_genes_log}; else; echo "$nlr" >> {output}; fi; done
         echo "loop done"
         missing_genes=$(cat {log.missed_genes_log} | wc -l)
         echo "variable set"
@@ -288,7 +288,7 @@ rule coverage_strict:
         bam="mappings/{sample}_strict.bam",
         bed="baits_mapping/nlr_baits_regions.bed",
         bai="mappings/{sample}_strict.bam.bai",
-        missing_genes="baits_mapping/missing_genes.txt"
+        missing_genes="baits_mapping/passed_genes.txt"
     output:
         "coverage/{sample}_coverage.txt"
     conda:
