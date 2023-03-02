@@ -268,14 +268,27 @@ rule bait_blast_check:
     output:
         "baits_mapping/passed_genes.txt"
     log:
-        run_log="logs/bait_blast_check.log",
         missed_genes_log="baits_mapping/missing_genes.txt"
     resources:
         mem_mb=2000
-    shell:
-        """truncate -s 0 {log.missed_genes_log} 2> {log.run_log}
-        cat {input.headers} | tail -n +2 | while read nlr; do blast_hits=$(cat {input.bed} | grep "$nlr" | wc -l); if [ $blast_hits -eq 0 ]; then echo "you have a missing gene"; echo "ERROR: $nlr has no blast hits. Check baits_mapping/missing_genes.txt" >> {log.run_log}; echo "$nlr" >> {log.missed_genes_log}; fi; done"""
+    run:
+        bed_nlr = set()
 
+        with open(input.bed) as f:
+            for line in f:
+                bed_nlr.append(line.strip().split()[3])
+
+        with open(input.headers) as f:
+            next(f) # skip the header
+            for line in f:
+                nlr = line.strip()
+                if nlr not in bed_nlr:
+                    print(f"{nlr} not found in bed file", file=log.missed_genes_log)
+                    raise Exception("Baits not found in NLRs, check the log file (you fool)")
+
+        with open(output.passed_genes, "w") as f:
+            for nlr in bed_nlr:
+                print(nlr, file=f)
 
 rule coverage_strict:
     input:
