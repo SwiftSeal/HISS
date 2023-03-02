@@ -280,7 +280,7 @@ rule bait_blast_check:
         missing_genes=$(cat {log.missed_genes_log} | wc -l)
         echo "variable set"
         if [ $missing_genes -ne 0 ]; then exit; fi
-        echo "exit if done""""
+        echo 'exit if done'"""
 
 
 rule coverage_strict:
