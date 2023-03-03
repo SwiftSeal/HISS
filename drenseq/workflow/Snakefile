@@ -276,7 +276,7 @@ rule bait_blast_check:
 
         with open(input.bed) as f:
             for line in f:
-                bed_nlr.append(line.strip().split()[3])
+                bed_nlr.add(line.strip().split()[3])
 
         with open(input.headers) as f:
             next(f) # skip the header
