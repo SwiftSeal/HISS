@@ -283,8 +283,9 @@ rule bait_blast_check:
             for line in f:
                 nlr = line.strip()
                 if nlr not in bed_nlr:
-                    print("{nlr} not found in bed file", file=log.missed_genes_log)
-                    raise Exception("Baits not found in NLRs, check the log file (you fool)")
+                    with open(log.missed_genes_log, "w") as l:
+                        print("{nlr} not found in bed file", file=l)
+                        raise Exception("Baits not found in NLRs, check the log file")
 
         with open(output.passed_genes, "w") as f:
             for nlr in bed_nlr:
