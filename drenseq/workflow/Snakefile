@@ -90,7 +90,7 @@ rule bowtie_build:
     log:
         "logs/bowtie2/indexing.log"
     resources:
-        mem_mb=4000
+        mem_mb=2000
     shell:
         "(bowtie2-build {input} {input}) 2> {log}"
 
@@ -152,7 +152,7 @@ rule samtools_index_relaxed:
     log:
         "logs/samtools_index_relaxed/{sample}.log"
     resources:
-        mem_mb=4000
+        mem_mb=2000
     shell:
         "(samtools index {input} {output}) > {log}"
 
@@ -168,7 +168,7 @@ rule sambamba_filter:
     log:
         "logs/sambamba/{sample}.log"
     resources:
-        mem_mb=4000
+        mem_mb=2000
     shell:
         """(sambamba view --format=bam -l 9 --filter='[NM] == 0' -o {output} {input.bam}) > {log}"""
 
@@ -183,7 +183,7 @@ rule samtools_index_strict:
     log:
         "logs/samtools_index_strict/{sample}.log"
     resources:
-        mem_mb=4000
+        mem_mb=2000
     shell:
         "(samtools index {input} {output}) > {log}"
 
@@ -198,7 +198,7 @@ rule baits_mapping_db:
     log:
         "logs/baits_blast_db.log"
     resources:
-        mem_mb=4000
+        mem_mb=2000
     shell:
         """
         (makeblastdb -in {input.ref} -out "baits_mapping/baits_mapping_db" -dbtype nucl) 2> {log}
@@ -219,7 +219,7 @@ rule baits_mapping:
     log:
         "logs/baits_blast.log"
     resources:
-        mem_mb=4000
+        mem_mb=2000
     shell:
         """
         (blastn -db "baits_mapping/baits_mapping_db" -query {input.baits} -out {output} -perc_identity {params.identity} -qcov_hsp_perc {params.coverage} -evalue 1e-5 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen len qcovs qcovhsp' -num_threads 2) 2> {log}
@@ -240,7 +240,7 @@ rule baits_region:
     log:
         "logs/baits_regions_catching.log"
     resources:
-        mem_mb=4000
+        mem_mb=2000
     shell:
         "(Rscript workflow/script/RangeReduction.R {input.blast} {output} {params.flank} {input.headers} {input.fasta}) 2> {log}"
 
@@ -256,16 +256,48 @@ rule nlr_annotator_baits:
     log:
         "logs/nlr_annotator_regions_catching.log"
     resources:
-        mem_mb=4000
+        mem_mb=2000
     shell:
         "(bedtools intersect -a {input.nlr_annotator_region} -b {input.baits_region} > {output}) 2> {log}"
 
+
+rule bait_blast_check:
+    input:
+        bed="baits_mapping/nlr_baits_regions.bed",
+        headers="resources/reference_headers_nlrs.txt"
+    output:
+        "baits_mapping/passed_genes.txt"
+    log:
+        missed_genes_log="baits_mapping/missing_genes.txt"
+    resources:
+        mem_mb=2000
+    run:
+        bed_nlr = set()
+
+        with open(input.bed) as f:
+            for line in f:
+                bed_nlr.add(line.strip().split()[3])
+
+        with open(input.headers) as f:
+            next(f) # skip the header
+            for line in f:
+                nlr = line.strip()
+                if nlr not in bed_nlr:
+                    with open(log.missed_genes_log, "w") as l:
+                        string_to_write = nlr + " not found in bed file"
+                        print(string_to_write, file=l)
+                        raise Exception("Baits not found in NLRs, check the log file")
+
+        with open(output.passed_genes, "w") as f:
+            for nlr in bed_nlr:
+                print(nlr, file=f)
 
 rule coverage_strict:
     input:
         bam="mappings/{sample}_strict.bam",
         bed="baits_mapping/nlr_baits_regions.bed",
-        bai="mappings/{sample}_strict.bam.bai"
+        bai="mappings/{sample}_strict.bam.bai",
+        missing_genes="baits_mapping/passed_genes.txt"
     output:
         "coverage/{sample}_coverage.txt"
     conda:
