@@ -266,7 +266,7 @@ rule bait_blast_check:
         bed="baits_mapping/nlr_baits_regions.bed",
         headers="resources/reference_headers_nlrs.txt"
     output:
-        "baits_mapping/passed_genes.txt"
+        passed_genes="baits_mapping/passed_genes.txt"
     log:
         missed_genes_log="baits_mapping/missing_genes.txt"
     resources:
