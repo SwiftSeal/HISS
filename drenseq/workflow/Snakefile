@@ -51,8 +51,8 @@ rule extract_reference_headers:
     resources:
         mem_mb=2000
     run:
-        shell("""echo "gene" > {output}""")
-        shell("""(cat {input.bed} | cut -f4 > {output.nlrs}) 2> {log}""")
+        shell("""echo "gene" > {output.nlrs}""")
+        shell("""(cat {input.bed} | cut -f4 >> {output.nlrs}) 2> {log}""")
         shell("""(cat {input.fasta} | grep '>' | sed 's/>//g' > {output.contigs}) 2>> {log}""")
 
 
