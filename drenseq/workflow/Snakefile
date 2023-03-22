@@ -51,8 +51,8 @@ rule extract_reference_headers:
     resources:
         mem_mb=2000
     run:
-        shell("""echo "gene" > {output}""")
-        shell("""(cat {input.bed} | cut -f4 > {output.nlrs}) 2> {log}""")
+        shell("""echo "gene" > {output.nlrs}""")
+        shell("""(cat {input.bed} | cut -f4 >> {output.nlrs}) 2> {log}""")
         shell("""(cat {input.fasta} | grep '>' | sed 's/>//g' > {output.contigs}) 2>> {log}""")
 
 
@@ -266,7 +266,7 @@ rule bait_blast_check:
         bed="baits_mapping/nlr_baits_regions.bed",
         headers="resources/reference_headers_nlrs.txt"
     output:
-        "baits_mapping/passed_genes.txt"
+        passed_genes="baits_mapping/passed_genes.txt"
     log:
         missed_genes_log="baits_mapping/missing_genes.txt"
     resources:
