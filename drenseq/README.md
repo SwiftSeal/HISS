@@ -27,6 +27,11 @@ In development we have used 10 with success.
 
 A reference fasta file of your target genes.
 Ensure this contains regions outside the CDS too, this ensures alignments are performed correctly.
+Make sure the names of the fasta sequences match those in the bed file. Some assemblers add details in a space separated manner. Remove this additional text with the following command:
+
+```bash
+sed -i '/^>/ s/ .*//' path_to_fasta
+```
 
 #### CDS_Bed
 
