@@ -96,10 +96,12 @@ Box9["Create BAM file containing no mismatches with sambamba<br />(Tarasov <i>et
 Box8-->Box9
 Box10["Sort and index filtered BAM file with samtools<br />(Danecek <i>et al</i>., 2021)"]
 Box9-->Box10
-Box11["Extract regions from BAM file that are covered by RenSeq baits"]
+Box11["Map bait sequences to references with BLAST<br />(Altschu <i>et al</i>., 1990)"]
 Box10-->Box11
-Box12["Assess coverage of filtered BAM file across reference genes with bedtools<br />(Quinlan and Hall, 2010)"]
+Box12["Extract regions from BAM file that are covered by RenSeq baits with Biostrings in R<br />(Pagès <i> et al</i>., 2022; R Core Team, 2022)"]
 Box11-->Box12
-Box13["Assess per-gene coverage and combine to a single, transposed file"]
+Box13["Assess coverage of filtered BAM file across reference genes with bedtools<br />(Quinlan and Hall, 2010)"]
 Box12-->Box13
+Box14["Assess per-gene coverage and combine to a single, transposed file"]
+Box13-->Box14
 ```
