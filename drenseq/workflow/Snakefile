@@ -222,7 +222,7 @@ rule baits_mapping:
         mem_mb=2000
     shell:
         """
-        (blastn -db "baits_mapping/baits_mapping_db" -query {input.baits} -out {output} -perc_identity {params.identity} -qcov_hsp_perc {params.coverage} -evalue 1e-5 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen len qcovs qcovhsp' -num_threads 2) 2> {log}
+        (blastn -db "baits_mapping/baits_mapping_db" -query {input.baits} -out {output} -perc_identity {params.identity} -qcov_hsp_perc {params.coverage} -evalue 1e-5 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen len qcovs qcovhsp') 2> {log}
         """
 
 
