@@ -42,7 +42,7 @@ Results are contained within directories `assembly/`, `mapping/`, `NLR_Annotator
 `assembly/` contains the assembled contigs of each sample as well as summary statistics.
 `mapping/` contains read-mapping data for each sample.
 `NLR_Annotator/` contains the extracted NLRs for each sample.
-`NLR_coverage/` contains coverage data for eeach sample.
+`NLR_coverage/` contains coverage data for each sample.
 
 ## Graphical summary of workflow
 
