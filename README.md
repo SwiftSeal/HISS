@@ -22,7 +22,7 @@ There are a few things you need to set up prior to running the workflow with Sna
 
 1.  Install either Anaconda or Miniconda, Miniconda is more lightweight so we recommend this option. <https://docs.conda.io/en/latest/miniconda.html>
 
-    We also recommend installing the alternative dependency resolver mamba, it's the default for Snakemake and is far quicker than base conda <https://anaconda.org/conda-forge/mamba>
+    We also recommend installing the alternative dependency resolver mamba, it's the default for Snakemake and is far quicker than base conda <https://anaconda.org/conda-forge/mamba>. Please note some users have reported issues with mamba, if you experience these please try reverting to the default conda resolver.
 
 ```bash
 conda install mamba
@@ -114,6 +114,8 @@ Some rules have explicit memory limits set in the resources sections, you may ne
 For standalone mode, replace the number_of_cores with an integer value for the maximum number of threads Snakemake can use.
 
 You may be able to wrap the snakemake command into a shell script if your system allows submission of jobs from within jobs.
+
+Some users have reported that the default mamba frontend in snakemake can cause environments to fail to build. If you experience this, please add the --conda-frontend conda argument to your snakemake command.
 
 ```bash
 # Cluster mode
