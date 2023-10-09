@@ -28,7 +28,7 @@ def load_file(input: list):
         line = line.rstrip()
         split_line = line.split('\t')
         contig = split_line[0]
-        start = int(split_line[3]) - 1
+        start = int(split_line[3])
         end = split_line[4]
         gene_ID = split_line[1]
         score = 0
