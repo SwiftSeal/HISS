@@ -6,8 +6,6 @@ rule run_association:
 	    assembly=get_reference
     output:
         "results/{reference}_AgRenSeqResult.txt"
-    log:
-        "logs/{reference}_run_association.log"
     threads:
         1
     resources:
@@ -16,4 +14,4 @@ rule run_association:
     conda:
         "../envs/java.yaml"
     shell:
-        "java -jar ../utils/AgRenSeq_RunAssociation.jar -i {input.matrix} -n {input.nlr} -p {input.phenotype} -a {input.assembly} -o {output} 2> {log}"
+        "java -jar ../utils/AgRenSeq_RunAssociation.jar -i {input.matrix} -n {input.nlr} -p {input.phenotype} -a {input.assembly} -o {output}"

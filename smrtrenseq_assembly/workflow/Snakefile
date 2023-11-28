@@ -36,8 +36,6 @@ rule trim_reads:
     output:
         fq=temp("trimmed_reads/{sample}.fq"),
         intermediate=temp("trimmed_reads/{sample}_intermediate.fq")
-    log:
-        "logs/cutadapt/{sample}.log"
     threads:
         8
     conda:
@@ -45,8 +43,8 @@ rule trim_reads:
     resources:
         mem_mb=4000
     shell:
-        """(cutadapt -j {threads} -g ^{params.fiveprime} -o {output.intermediate} {input}) 2> {log}
-        (cutadapt -j {threads} -a {params.threeprime}$ -o {output.fq} {output.intermediate}) 2>> {log}"""
+        """cutadapt -j {threads} -g ^{params.fiveprime} -o {output.intermediate} {input}
+        cutadapt -j {threads} -a {params.threeprime}$ -o {output.fq} {output.intermediate}"""
 
 
 rule canu_assemble:
@@ -58,8 +56,6 @@ rule canu_assemble:
     output:
         assembly="assembly/{sample}/{sample}.contigs.fasta",
         report="assembly/{sample}/{sample}.report"
-    log:
-        "logs/assembly/{sample}_assembly.log"
     threads:
         8
     conda:
@@ -68,7 +64,7 @@ rule canu_assemble:
         mem_mb=10000,
         partition="medium"
     shell:
-        "(canu -d assembly/{wildcards.sample} -p {params.Prefix} -pacbio-hifi {input} useGrid=false genomeSize={params.Genome_Size} maxInputCoverage=10000) 2> {log}"
+        "canu -d assembly/{wildcards.sample} -p {params.Prefix} -pacbio-hifi {input} useGrid=false genomeSize={params.Genome_Size} maxInputCoverage=10000"
 
 
 rule summarise_assemblies:
@@ -76,14 +72,12 @@ rule summarise_assemblies:
         expand("assembly/{sample}/{sample}.contigs.fasta", sample=samples["sample"])
     output:
         "assembly/assembly_statistics.txt"
-    log:
-        "logs/assembly/stats.log"
     conda:
         "envs/seqfu.yaml"
     resources:
         mem_mb=2000
     shell:
-        "(seqfu stats -b {input} | sed 's/\.contigs//g' > {output}) 2> {log}"
+        "seqfu stats -b {input} | sed 's/\.contigs//g' > {output}"
 
 
 rule chop_sequences:
@@ -91,14 +85,12 @@ rule chop_sequences:
         "assembly/{sample}/{sample}.contigs.fasta"
     output:
         temp("NLR_Annotator/{sample}_chopped.fa")
-    log:
-        "logs/NLR_Annotator/{sample}_chop.log"
     conda:
         "envs/meme.yaml"
     resources:
         mem_mb=2000
     shell:
-        "(java -jar ../utils/ChopSequence.jar -i {input} -o {output}) 2> {log}"
+        "java -jar ../utils/ChopSequence.jar -i {input} -o {output}"
 
 
 rule NLR_parser:
@@ -106,8 +98,6 @@ rule NLR_parser:
         "NLR_Annotator/{sample}_chopped.fa"
     output:
         temp("NLR_Annotator/{sample}_nlr_parser.xml")
-    log:
-        "logs/NLR_Annotator/{sample}_parser.log"
     threads:
         4
     resources:
@@ -115,7 +105,7 @@ rule NLR_parser:
     conda:
         "envs/meme.yaml"
     shell:
-        "(java -jar ../utils/NLR-Parser3.jar -t {threads} -y $(which mast) -x ../utils/meme.xml -i {input} -c {output}) 2> {log}"
+        "java -jar ../utils/NLR-Parser3.jar -t {threads} -y $(which mast) -x ../utils/meme.xml -i {input} -c {output}"
 
 
 rule run_NLR_Annotator:
@@ -127,14 +117,12 @@ rule run_NLR_Annotator:
         fasta="NLR_Annotator/{sample}_NLR_Annotator.fa"
     params:
         flanking=config["flanking"]
-    log:
-        "logs/NLR_Annotator/{sample}_annotator.log"
     resources:
         mem_mb=6000
     conda:
         "envs/meme.yaml"
     shell:
-        "(java -jar ../utils/NLR-Annotator.jar -i {input.parser_xml} -o {output.text} -f {input.assembly} {output.fasta} {params.flanking}) 2> {log}"
+        "java -jar ../utils/NLR-Annotator.jar -i {input.parser_xml} -o {output.text} -f {input.assembly} {output.fasta} {params.flanking}"
 
 
 rule summarise_NLRs:
@@ -204,12 +192,8 @@ rule convert_nlrs_to_bed:
         "NLR_Annotator/{sample}_NLR_Annotator.txt"
     output:
         temp("NLR_Annotator/{sample}_NLR_Annotator.bed")
-    log:
-        "logs/nlr_coverage/{sample}_convert_to_bed.log"
-    resources:
-        mem_mb=2000
     shell:
-        "(python3 workflow/scripts/NLR_Annotator_to_bed.py --input {input} --output {output}) 2> {log}"
+        "python3 workflow/scripts/NLR_Annotator_to_bed.py --input {input} --output {output}"
 
 
 rule sort_nlr_bed:
@@ -217,12 +201,10 @@ rule sort_nlr_bed:
         "NLR_Annotator/{sample}_NLR_Annotator.bed"
     output:
         "NLR_Annotator/{sample}_NLR_Annotator_sorted.bed"
-    log:
-        "logs/nlr_coverage/{sample}_sortbed.log"
     resources:
         mem_mb=2000
     shell:
-        "(sort -k1,1V -k2,2n -k3,3n {input} > {output}) 2> {log}"
+        "sort -k1,1V -k2,2n -k3,3n {input} > {output}"
 
 
 rule map_hifi:
@@ -231,15 +213,13 @@ rule map_hifi:
         assembly="assembly/{sample}/{sample}.contigs.fasta"
     output:
         temp("mapping/{sample}_aligned.sam")
-    log:
-        "logs/nlr_coverage/{sample}_map_hifi.log"
     conda:
         "envs/minimap2.yaml"
     resources:
         partition="medium",
         mem_mb=4000
     shell:
-        "(minimap2 -x map-hifi -a -o {output} {input.assembly} {input.reads}) 2> {log}"
+        "minimap2 -x map-hifi -a -o {output} {input.assembly} {input.reads}"
 
 
 rule convert_sam_to_bam:
@@ -247,14 +227,12 @@ rule convert_sam_to_bam:
         "mapping/{sample}_aligned.sam"
     output:
         temp("mapping/{sample}_aligned.bam")
-    log:
-        "logs/nlr_coverage/{sample}_convert_to_bam.log"
     conda:
         "envs/samtools.yaml"
     resources:
         mem_mb=4000
     shell:
-        "(samtools view -F 256 {input} -b -o {output}) 2> {log}"
+        "samtools view -F 256 {input} -b -o {output}"
 
 
 rule sort_bam:
@@ -262,14 +240,12 @@ rule sort_bam:
         "mapping/{sample}_aligned.bam"
     output:
         "mapping/{sample}_aligned_sorted.bam"
-    log:
-        "logs/nlr_coverage/{sample}_sort_bam.log"
     conda:
         "envs/samtools.yaml"
     resources:
         mem_mb=4000
     shell:
-        "(samtools sort {input} > {output}) 2> {log}"
+        "samtools sort {input} > {output}"
 
 
 rule index_sorted_bam:
@@ -277,14 +253,12 @@ rule index_sorted_bam:
         "mapping/{sample}_aligned_sorted.bam"
     output:
         "mapping/{sample}_aligned_sorted.bam.bai"
-    log:
-        "logs/nlr_coverage/{sample}_index_sorted_bam.log"
     conda:
         "envs/samtools.yaml"
     resources:
         mem_mb=4000
     shell:
-        "(samtools index {input} {output}) > {log}"
+        "samtools index {input} {output}"
 
 
 rule calculate_coverage:
@@ -294,14 +268,12 @@ rule calculate_coverage:
         bed="NLR_Annotator/{sample}_NLR_Annotator_sorted.bed"
     output:
         "NLR_coverage/{sample}_NLR_coverage.txt"
-    log:
-        "logs/nlr_coverage/{sample}_calculate_coverage.log"
     conda:
         "envs/samtools.yaml"
     resources:
         mem_mb=4000
     shell:
-        "(samtools bedcov {input.bed} {input.bam} > {output}) 2> {log}"
+        "samtools bedcov {input.bed} {input.bam} > {output}"
 
 
 rule parse_coverage:
@@ -309,9 +281,7 @@ rule parse_coverage:
         "NLR_coverage/{sample}_NLR_coverage.txt"
     output:
         "NLR_coverage/{sample}_coverage_parsed.txt"
-    log:
-        "logs/nlr_coverage/{sample}_parse_coverage.log"
     resources:
         mem_mb=2000
     shell:
-        "(python workflow/scripts/parse_coverage.py --input {input} --output {output}) 2> {log}"
+        "python workflow/scripts/parse_coverage.py --input {input} --output {output}"

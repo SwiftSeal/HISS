@@ -3,8 +3,6 @@ rule matrix:
         "results/accessions.txt"
     output:
         temp("results/output_matrix.txt")
-    log:
-        "logs/jellyfish/matrix.log"
     threads:
         1
     resources:
@@ -13,4 +11,4 @@ rule matrix:
     conda:
         "../envs/java.yaml"
     shell:
-        "java -jar ../utils/AgRenSeq_CreatePresenceMatrix.jar -i {input} -o {output} -t 3 -n 10 2> {log}"
+        "java -jar ../utils/AgRenSeq_CreatePresenceMatrix.jar -i {input} -o {output} -t 3 -n 10"

@@ -46,14 +46,12 @@ rule extract_reference_headers:
     output:
         nlrs="resources/reference_headers_nlrs.txt",
         contigs="resources/reference_headers_contigs.txt"
-    log:
-        "logs/initial_grep/log.txt"
     resources:
         mem_mb=2000
     run:
         shell("""echo "gene" > {output.nlrs}""")
-        shell("""(cat {input.bed} | cut -f4 >> {output.nlrs}) 2> {log}""")
-        shell("""(cat {input.fasta} | grep '>' | sed 's/>//g' > {output.contigs}) 2>> {log}""")
+        shell("""cat {input.bed} | cut -f4 >> {output.nlrs}""")
+        shell("""cat {input.fasta} | grep '>' | sed 's/>//g' > {output.contigs}""")
 
 
 rule trim_read_remove_adaptor:
@@ -65,8 +63,6 @@ rule trim_read_remove_adaptor:
     output:
         trimF=temp("trimmed_reads/{sample}/R1.fq"),
         trimR=temp("trimmed_reads/{sample}/R2.fq")
-    log:
-        "logs/cutadapt/{sample}.log"
     threads:
         8
     resources:
@@ -77,7 +73,7 @@ rule trim_read_remove_adaptor:
         "cutadapt --cores {threads} --minimum-length 50 -q 20,20 -a "
         "file:{input.adaptor_1} -A file:{input.adaptor_2} -o "
         "{output.trimF} -p {output.trimR} {input.fastqF} "
-        "{input.fastqR} > {log}"
+        "{input.fastqR}"
 
 
 rule bowtie_build:
@@ -87,12 +83,10 @@ rule bowtie_build:
         index=multiext(config["Reference_Fasta"], ".1.bt2", ".2.bt2", ".3.bt2", ".4.bt2", ".rev.1.bt2", ".rev.2.bt2")
     conda:
         "envs/bowtie2_samtools.yaml"
-    log:
-        "logs/bowtie2/indexing.log"
     resources:
         mem_mb=2000
     shell:
-        "(bowtie2-build {input} {input}) 2> {log}"
+        "bowtie2-build {input} {input}}"
 
 
 rule bowtie_align:
@@ -114,14 +108,12 @@ rule bowtie_align:
         "envs/bowtie2_samtools.yaml"
     output:
         temp("tmp_mappings/{sample}.bam")
-    log:
-        "logs/bowtie2/{sample}.log"
     shell:
-        "(bowtie2 -x {input.ref} -1 {input.FRead} -2 {input.RRead} --rg-id "
+        "bowtie2 -x {input.ref} -1 {input.FRead} -2 {input.RRead} --rg-id "
         "{params.rg_id} --rg {params.rg} -p {threads} --score-min "
         "{params.score} --phred33 --fr --maxins 1000 --very-sensitive "
         "--no-unal --no-discordant -k {params.max_align} | samtools view --threads {threads} "
-        "-S -b > {output}) 2> {log}"
+        "-S -b > {output}"
 
 
 rule samtools_sort:
@@ -135,11 +127,8 @@ rule samtools_sort:
         "mappings/{sample}_sorted.bam"
     conda:
         "envs/bowtie2_samtools.yaml"
-    log:
-        "logs/samtools_sort/{sample}.log"
     shell:
-        "(samtools sort --threads {threads} -l 9 {input} -o {output}) "
-        "> {log}"
+        "samtools sort --threads {threads} -l 9 {input} -o {output}"
 
 
 rule samtools_index_relaxed:
@@ -149,12 +138,10 @@ rule samtools_index_relaxed:
         "mappings/{sample}_sorted.bam.bai"
     conda:
         "envs/bowtie2_samtools.yaml"
-    log:
-        "logs/samtools_index_relaxed/{sample}.log"
     resources:
         mem_mb=2000
     shell:
-        "(samtools index {input} {output}) > {log}"
+        "samtools index {input} {output}"
 
 
 rule sambamba_filter:
@@ -165,12 +152,10 @@ rule sambamba_filter:
         "mappings/{sample}_strict.bam"
     conda:
         "envs/sambamba.yaml"
-    log:
-        "logs/sambamba/{sample}.log"
     resources:
         mem_mb=2000
     shell:
-        """(sambamba view --format=bam -l 9 --filter='[NM] == 0' -o {output} {input.bam}) > {log}"""
+        """sambamba view --format=bam -l 9 --filter='[NM] == 0' -o {output} {input.bam}"""
 
 
 rule samtools_index_strict:
@@ -180,12 +165,10 @@ rule samtools_index_strict:
         "mappings/{sample}_strict.bam.bai"
     conda:
         "envs/bowtie2_samtools.yaml"
-    log:
-        "logs/samtools_index_strict/{sample}.log"
     resources:
         mem_mb=2000
     shell:
-        "(samtools index {input} {output}) > {log}"
+        "samtools index {input} {output}"
 
 
 rule baits_mapping_db:
@@ -195,13 +178,11 @@ rule baits_mapping_db:
         temp(multiext("baits_mapping/baits_mapping_db", ".ndb", ".nhr", ".nin", ".njs", ".not", ".nsq", ".ntf", ".nto"))
     conda:
         "envs/blast.yaml"
-    log:
-        "logs/baits_blast_db.log"
     resources:
         mem_mb=2000
     shell:
         """
-        (makeblastdb -in {input.ref} -out "baits_mapping/baits_mapping_db" -dbtype nucl) 2> {log}
+        makeblastdb -in {input.ref} -out "baits_mapping/baits_mapping_db" -dbtype nucl
         """
 
 
@@ -216,13 +197,11 @@ rule baits_mapping:
         coverage=config["BLAST_coverage"]
     conda:
         "envs/blast.yaml"
-    log:
-        "logs/baits_blast.log"
     resources:
         mem_mb=2000
     shell:
         """
-        (blastn -db "baits_mapping/baits_mapping_db" -query {input.baits} -out {output} -perc_identity {params.identity} -qcov_hsp_perc {params.coverage} -evalue 1e-5 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen len qcovs qcovhsp') 2> {log}
+        blastn -db "baits_mapping/baits_mapping_db" -query {input.baits} -out {output} -perc_identity {params.identity} -qcov_hsp_perc {params.coverage} -evalue 1e-5 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen len qcovs qcovhsp'
         """
 
 
@@ -237,12 +216,10 @@ rule baits_region:
         "baits_mapping/baits_regions.bed"
     conda:
         "envs/bait_mapping.yaml"
-    log:
-        "logs/baits_regions_catching.log"
     resources:
         mem_mb=2000
     shell:
-        "(Rscript workflow/script/RangeReduction.R {input.blast} {output} {params.flank} {input.headers} {input.fasta}) 2> {log}"
+        "Rscript workflow/script/RangeReduction.R {input.blast} {output} {params.flank} {input.headers} {input.fasta}"
 
 
 rule nlr_annotator_baits:
@@ -253,12 +230,10 @@ rule nlr_annotator_baits:
         "baits_mapping/nlr_baits_regions.bed"
     conda:
         "envs/bedtools.yaml"
-    log:
-        "logs/nlr_annotator_regions_catching.log"
     resources:
         mem_mb=2000
     shell:
-        "(bedtools intersect -a {input.nlr_annotator_region} -b {input.baits_region} > {output}) 2> {log}"
+        "bedtools intersect -a {input.nlr_annotator_region} -b {input.baits_region} > {output}"
 
 
 rule bait_blast_check:
@@ -266,9 +241,8 @@ rule bait_blast_check:
         bed="baits_mapping/nlr_baits_regions.bed",
         headers="resources/reference_headers_nlrs.txt"
     output:
-        passed_genes="baits_mapping/passed_genes.txt"
-    log:
-        missed_genes_log="baits_mapping/missing_genes.txt"
+        passed_genes="baits_mapping/passed_genes.txt",
+        missed_genes="baits_mapping/missed_genes.txt"
     resources:
         mem_mb=2000
     run:
@@ -283,10 +257,10 @@ rule bait_blast_check:
             for line in f:
                 nlr = line.strip()
                 if nlr not in bed_nlr:
-                    with open(log.missed_genes_log, "w") as l:
+                    with open(output.missed_genes, "w") as l:
                         string_to_write = nlr + " not found in bed file"
                         print(string_to_write, file=l)
-                        raise Exception("Baits not found in NLRs, check the log file")
+                        raise Exception("Baits not found in NLRs, check the missed genes file")
 
         with open(output.passed_genes, "w") as f:
             for nlr in bed_nlr:
@@ -302,12 +276,10 @@ rule coverage_strict:
         "coverage/{sample}_coverage.txt"
     conda:
         "envs/bedtools.yaml"
-    log:
-        "logs/bedtools/{sample}.log"
     resources:
         mem_mb=4000
     shell:
-        "(coverageBed -d -a {input.bed} -b {input.bam} > {output}) 2> {log}"
+        "coverageBed -d -a {input.bed} -b {input.bam} > {output}"
 
 
 rule per_gene_coverage:
@@ -316,12 +288,10 @@ rule per_gene_coverage:
         sample_coverage="coverage/{sample}_coverage.txt"
     output:
         gene_coverage="coverage/{sample}_geneCoverage.txt"
-    log:
-        "logs/coverage_gathering/{sample}_per_gene_coverage.log"
     resources:
         mem_mb=2000
     shell:
-        """(cat {input.referenceGenes} | tail -n +2 | while read gene; do numPosWithCoverage=`grep -w "$gene" {input.sample_coverage} | awk '$6>0' | wc -l`; numPosTotal=`grep -w "$gene" {input.sample_coverage} | wc -l`; if [ $numPosTotal -eq 0 ]; then echo "ERROR: gene $gene has CDS region of length zero. Check your input data (e.g. gene spelling in FASTA and CDS BED file) and retry.\nAborting pipeline run." > {log}; exit; fi; pctCov=`awk "BEGIN {{print ($numPosWithCoverage/$numPosTotal)*100 }}"`; echo -e "\n# covered positions for sample {wildcards.sample} in gene $gene: $numPosWithCoverage\n# CDS positions for gene $gene: $numPosTotal\npctCov: $pctCov" >> {log}; echo -e "$gene\t$pctCov" >> {output.gene_coverage}; done) 2>> {log}"""
+        """cat {input.referenceGenes} | tail -n +2 | while read gene; do numPosWithCoverage=`grep -w "$gene" {input.sample_coverage} | awk '$6>0' | wc -l`; numPosTotal=`grep -w "$gene" {input.sample_coverage} | wc -l`; if [ $numPosTotal -eq 0 ]; then echo "ERROR: gene $gene has CDS region of length zero. Check your input data (e.g. gene spelling in FASTA and CDS BED file) and retry.\nAborting pipeline run."; exit; fi; pctCov=`awk "BEGIN {{print ($numPosWithCoverage/$numPosTotal)*100 }}"`; echo -e "\n# covered positions for sample {wildcards.sample} in gene $gene: $numPosWithCoverage\n# CDS positions for gene $gene: $numPosTotal\npctCov: $pctCov"; echo -e "$gene\t$pctCov" >> {output.gene_coverage}; done"""
 
 
 rule combine_gene_coverage:
@@ -329,13 +299,11 @@ rule combine_gene_coverage:
         "coverage/{sample}_geneCoverage.txt"
     output:
         "coverage/{sample}_coverageValues.txt"
-    log:
-        "logs/coverage_gathering/{sample}_combine_gene_coverage.log"
     resources:
         mem_mb=2000
     run:
-        shell("(echo {wildcards.sample} > {output}) 2> {log}")
-        shell("(cat {input} | cut -f2 >> {output}) 2>> {log}")
+        shell("echo {wildcards.sample} > {output}")
+        shell("cat {input} | cut -f2 >> {output}")
 
 
 rule combine_coverage_values:
@@ -344,15 +312,13 @@ rule combine_coverage_values:
         coverage=expand("coverage/{sample}_coverageValues.txt", sample=samples["sample"])
     output:
         "coverage/all_coverage_values.txt"
-    log:
-        "logs/coverage_gathering/combine_coverage_values.log"
     params:
         ulimit=config["ulimit"]
     resources:
         mem_mb=2000
     shell:
         """ulimit -n {params.ulimit}
-        (paste {input.gene_names} {input.coverage} > {output}) 2> {log}"""
+        paste {input.gene_names} {input.coverage} > {output}"""
 
 
 rule transpose_combined_coverage:
@@ -360,8 +326,6 @@ rule transpose_combined_coverage:
         "coverage/all_coverage_values.txt"
     output:
         "coverage/all_coverage_values_transposed.txt"
-    log:
-        "logs/coverage_gathering/transposing.log"
     resources:
         mem_mb=2000
     run:
