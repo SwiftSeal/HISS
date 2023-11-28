@@ -51,4 +51,6 @@ rule plot:
         mem_mb=1000,
         partition="short"
     shell:
-        "Rscript --vanilla workflow/scripts/plot.R {input} {params.assoc_threshold} {wildcards.reference} {output.filtered} {output.plot}"
+        """
+        Rscript --vanilla workflow/scripts/plot.R {input} {params.assoc_threshold} {wildcards.reference} {output.filtered} {output.plot}
+        """

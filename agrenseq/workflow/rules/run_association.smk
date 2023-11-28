@@ -14,4 +14,6 @@ rule run_association:
     conda:
         "../envs/java.yaml"
     shell:
-        "java -jar ../utils/AgRenSeq_RunAssociation.jar -i {input.matrix} -n {input.nlr} -p {input.phenotype} -a {input.assembly} -o {output}"
+        """
+        java -jar ../utils/AgRenSeq_RunAssociation.jar -i {input.matrix} -n {input.nlr} -p {input.phenotype} -a {input.assembly} -o {output}
+        """

@@ -43,8 +43,10 @@ rule trim_reads:
     resources:
         mem_mb=4000
     shell:
-        """cutadapt -j {threads} -g ^{params.fiveprime} -o {output.intermediate} {input}
-        cutadapt -j {threads} -a {params.threeprime}$ -o {output.fq} {output.intermediate}"""
+        """
+        cutadapt -j {threads} -g ^{params.fiveprime} -o {output.intermediate} {input}
+        cutadapt -j {threads} -a {params.threeprime}$ -o {output.fq} {output.intermediate}
+        """
 
 
 rule canu_assemble:
@@ -64,7 +66,9 @@ rule canu_assemble:
         mem_mb=10000,
         partition="medium"
     shell:
-        "canu -d assembly/{wildcards.sample} -p {params.Prefix} -pacbio-hifi {input} useGrid=false genomeSize={params.Genome_Size} maxInputCoverage=10000"
+        """
+        canu -d assembly/{wildcards.sample} -p {params.Prefix} -pacbio-hifi {input} useGrid=false genomeSize={params.Genome_Size} maxInputCoverage=10000
+        """
 
 
 rule summarise_assemblies:
@@ -77,7 +81,9 @@ rule summarise_assemblies:
     resources:
         mem_mb=2000
     shell:
-        "seqfu stats -b {input} | sed 's/\.contigs//g' > {output}"
+        """
+        seqfu stats -b {input} | sed 's/\.contigs//g' > {output}
+        """
 
 
 rule chop_sequences:
@@ -90,7 +96,9 @@ rule chop_sequences:
     resources:
         mem_mb=2000
     shell:
-        "java -jar ../utils/ChopSequence.jar -i {input} -o {output}"
+        """
+        java -jar ../utils/ChopSequence.jar -i {input} -o {output}
+        """
 
 
 rule NLR_parser:
@@ -105,7 +113,9 @@ rule NLR_parser:
     conda:
         "envs/meme.yaml"
     shell:
-        "java -jar ../utils/NLR-Parser3.jar -t {threads} -y $(which mast) -x ../utils/meme.xml -i {input} -c {output}"
+        """
+        java -jar ../utils/NLR-Parser3.jar -t {threads} -y $(which mast) -x ../utils/meme.xml -i {input} -c {output}
+        """
 
 
 rule run_NLR_Annotator:
@@ -122,7 +132,9 @@ rule run_NLR_Annotator:
     conda:
         "envs/meme.yaml"
     shell:
-        "java -jar ../utils/NLR-Annotator.jar -i {input.parser_xml} -o {output.text} -f {input.assembly} {output.fasta} {params.flanking}"
+        """
+        java -jar ../utils/NLR-Annotator.jar -i {input.parser_xml} -o {output.text} -f {input.assembly} {output.fasta} {params.flanking}
+        """
 
 
 rule summarise_NLRs:
@@ -182,9 +194,11 @@ rule input_statistics:
     resources:
         mem_mb=2000
     shell:
-        """Reads=$(cat {input} | grep -m 1 'reads' | cut -f5 -d ' ')
+        """
+        Reads=$(cat {input} | grep -m 1 'reads' | cut -f5 -d ' ')
         Bases=$(cat {input} | grep -m 1 'bases' | cut -f5 -d ' ')
-        printf "{wildcards.sample}\t$Reads\t$Bases" > {output}"""
+        printf "{wildcards.sample}\t$Reads\t$Bases" > {output}
+        """
 
 
 rule convert_nlrs_to_bed:
@@ -193,7 +207,9 @@ rule convert_nlrs_to_bed:
     output:
         temp("NLR_Annotator/{sample}_NLR_Annotator.bed")
     shell:
-        "python3 workflow/scripts/NLR_Annotator_to_bed.py --input {input} --output {output}"
+        """
+        python3 workflow/scripts/NLR_Annotator_to_bed.py --input {input} --output {output}
+        """
 
 
 rule sort_nlr_bed:
@@ -204,7 +220,9 @@ rule sort_nlr_bed:
     resources:
         mem_mb=2000
     shell:
-        "sort -k1,1V -k2,2n -k3,3n {input} > {output}"
+        """
+        sort -k1,1V -k2,2n -k3,3n {input} > {output}
+        """
 
 
 rule map_hifi:
@@ -219,7 +237,9 @@ rule map_hifi:
         partition="medium",
         mem_mb=4000
     shell:
-        "minimap2 -x map-hifi -a -o {output} {input.assembly} {input.reads}"
+        """
+        minimap2 -x map-hifi -a -o {output} {input.assembly} {input.reads}
+        """
 
 
 rule convert_sam_to_bam:
@@ -232,7 +252,9 @@ rule convert_sam_to_bam:
     resources:
         mem_mb=4000
     shell:
-        "samtools view -F 256 {input} -b -o {output}"
+        """
+        samtools view -F 256 {input} -b -o {output}
+        """
 
 
 rule sort_bam:
@@ -245,7 +267,9 @@ rule sort_bam:
     resources:
         mem_mb=4000
     shell:
-        "samtools sort {input} > {output}"
+        """
+        samtools sort {input} > {output}
+        """
 
 
 rule index_sorted_bam:
@@ -258,7 +282,9 @@ rule index_sorted_bam:
     resources:
         mem_mb=4000
     shell:
-        "samtools index {input} {output}"
+        """
+        samtools index {input} {output}
+        """
 
 
 rule calculate_coverage:
@@ -273,7 +299,9 @@ rule calculate_coverage:
     resources:
         mem_mb=4000
     shell:
-        "samtools bedcov {input.bed} {input.bam} > {output}"
+        """
+        samtools bedcov {input.bed} {input.bam} > {output}
+        """
 
 
 rule parse_coverage:
@@ -284,4 +312,6 @@ rule parse_coverage:
     resources:
         mem_mb=2000
     shell:
-        "python workflow/scripts/parse_coverage.py --input {input} --output {output}"
+        """
+        python workflow/scripts/parse_coverage.py --input {input} --output {output}
+        """

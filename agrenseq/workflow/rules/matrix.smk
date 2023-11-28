@@ -11,4 +11,6 @@ rule matrix:
     conda:
         "../envs/java.yaml"
     shell:
-        "java -jar ../utils/AgRenSeq_CreatePresenceMatrix.jar -i {input} -o {output} -t 3 -n 10"
+        """
+        java -jar ../utils/AgRenSeq_CreatePresenceMatrix.jar -i {input} -o {output} -t 3 -n 10
+        """

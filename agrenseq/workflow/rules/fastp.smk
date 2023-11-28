@@ -13,4 +13,6 @@ rule fastp:
     conda:
         "../envs/fastp.yaml"
     shell:
-        "fastp -i {input}[0] -I {input}[1] -o {output.R1} -O {output.R2} -j {output.json} -h /dev/null"
+        """
+        fastp -i {input}[0] -I {input}[1] -o {output.R1} -O {output.R2} -j {output.json} -h /dev/null
+        """

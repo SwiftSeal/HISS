@@ -48,10 +48,12 @@ rule extract_reference_headers:
         contigs="resources/reference_headers_contigs.txt"
     resources:
         mem_mb=2000
-    run:
-        shell("""echo "gene" > {output.nlrs}""")
-        shell("""cat {input.bed} | cut -f4 >> {output.nlrs}""")
-        shell("""cat {input.fasta} | grep '>' | sed 's/>//g' > {output.contigs}""")
+    shell:
+        """
+        echo "gene" > {output.nlrs}
+        cat {input.bed} | cut -f4 >> {output.nlrs}
+        cat {input.fasta} | grep '>' | sed 's/>//g' > {output.contigs}
+        """
 
 
 rule trim_read_remove_adaptor:
@@ -70,10 +72,9 @@ rule trim_read_remove_adaptor:
     conda:
         "envs/cutadapt.yaml"
     shell:
-        "cutadapt --cores {threads} --minimum-length 50 -q 20,20 -a "
-        "file:{input.adaptor_1} -A file:{input.adaptor_2} -o "
-        "{output.trimF} -p {output.trimR} {input.fastqF} "
-        "{input.fastqR}"
+        """
+        cutadapt --cores {threads} --minimum-length 50 -q 20,20 -a file:{input.adaptor_1} -A file:{input.adaptor_2} -o {output.trimF} -p {output.trimR} {input.fastqF} {input.fastqR}
+        """
 
 
 rule bowtie_build:
@@ -86,7 +87,9 @@ rule bowtie_build:
     resources:
         mem_mb=2000
     shell:
-        "bowtie2-build {input} {input}}"
+        """
+        bowtie2-build {input} {input}}
+        """
 
 
 rule bowtie_align:
@@ -109,11 +112,9 @@ rule bowtie_align:
     output:
         temp("tmp_mappings/{sample}.bam")
     shell:
-        "bowtie2 -x {input.ref} -1 {input.FRead} -2 {input.RRead} --rg-id "
-        "{params.rg_id} --rg {params.rg} -p {threads} --score-min "
-        "{params.score} --phred33 --fr --maxins 1000 --very-sensitive "
-        "--no-unal --no-discordant -k {params.max_align} | samtools view --threads {threads} "
-        "-S -b > {output}"
+        """
+        bowtie2 -x {input.ref} -1 {input.FRead} -2 {input.RRead} --rg-id {params.rg_id} --rg {params.rg} -p {threads} --score-min {params.score} --phred33 --fr --maxins 1000 --very-sensitive --no-unal --no-discordant -k {params.max_align} | samtools view --threads {threads} -S -b > {output}
+        """
 
 
 rule samtools_sort:
@@ -128,7 +129,9 @@ rule samtools_sort:
     conda:
         "envs/bowtie2_samtools.yaml"
     shell:
-        "samtools sort --threads {threads} -l 9 {input} -o {output}"
+        """
+        samtools sort --threads {threads} -l 9 {input} -o {output}
+        """
 
 
 rule samtools_index_relaxed:
@@ -141,7 +144,9 @@ rule samtools_index_relaxed:
     resources:
         mem_mb=2000
     shell:
-        "samtools index {input} {output}"
+        """
+        samtools index {input} {output}
+        """
 
 
 rule sambamba_filter:
@@ -155,7 +160,9 @@ rule sambamba_filter:
     resources:
         mem_mb=2000
     shell:
-        """sambamba view --format=bam -l 9 --filter='[NM] == 0' -o {output} {input.bam}"""
+        """
+        sambamba view --format=bam -l 9 --filter='[NM] == 0' -o {output} {input.bam}
+        """
 
 
 rule samtools_index_strict:
@@ -168,7 +175,9 @@ rule samtools_index_strict:
     resources:
         mem_mb=2000
     shell:
-        "samtools index {input} {output}"
+        """
+        samtools index {input} {output}
+        """
 
 
 rule baits_mapping_db:
@@ -219,7 +228,9 @@ rule baits_region:
     resources:
         mem_mb=2000
     shell:
-        "Rscript workflow/script/RangeReduction.R {input.blast} {output} {params.flank} {input.headers} {input.fasta}"
+        """
+        Rscript workflow/script/RangeReduction.R {input.blast} {output} {params.flank} {input.headers} {input.fasta}
+        """
 
 
 rule nlr_annotator_baits:
@@ -233,7 +244,9 @@ rule nlr_annotator_baits:
     resources:
         mem_mb=2000
     shell:
-        "bedtools intersect -a {input.nlr_annotator_region} -b {input.baits_region} > {output}"
+        """
+        bedtools intersect -a {input.nlr_annotator_region} -b {input.baits_region} > {output}
+        """
 
 
 rule bait_blast_check:
@@ -279,7 +292,9 @@ rule coverage_strict:
     resources:
         mem_mb=4000
     shell:
-        "coverageBed -d -a {input.bed} -b {input.bam} > {output}"
+        """
+        coverageBed -d -a {input.bed} -b {input.bam} > {output}
+        """
 
 
 rule per_gene_coverage:
@@ -291,7 +306,9 @@ rule per_gene_coverage:
     resources:
         mem_mb=2000
     shell:
-        """cat {input.referenceGenes} | tail -n +2 | while read gene; do numPosWithCoverage=`grep -w "$gene" {input.sample_coverage} | awk '$6>0' | wc -l`; numPosTotal=`grep -w "$gene" {input.sample_coverage} | wc -l`; if [ $numPosTotal -eq 0 ]; then echo "ERROR: gene $gene has CDS region of length zero. Check your input data (e.g. gene spelling in FASTA and CDS BED file) and retry.\nAborting pipeline run."; exit; fi; pctCov=`awk "BEGIN {{print ($numPosWithCoverage/$numPosTotal)*100 }}"`; echo -e "\n# covered positions for sample {wildcards.sample} in gene $gene: $numPosWithCoverage\n# CDS positions for gene $gene: $numPosTotal\npctCov: $pctCov"; echo -e "$gene\t$pctCov" >> {output.gene_coverage}; done"""
+        """
+        cat {input.referenceGenes} | tail -n +2 | while read gene; do numPosWithCoverage=`grep -w "$gene" {input.sample_coverage} | awk '$6>0' | wc -l`; numPosTotal=`grep -w "$gene" {input.sample_coverage} | wc -l`; if [ $numPosTotal -eq 0 ]; then echo "ERROR: gene $gene has CDS region of length zero. Check your input data (e.g. gene spelling in FASTA and CDS BED file) and retry.\nAborting pipeline run."; exit; fi; pctCov=`awk "BEGIN {{print ($numPosWithCoverage/$numPosTotal)*100 }}"`; echo -e "\n# covered positions for sample {wildcards.sample} in gene $gene: $numPosWithCoverage\n# CDS positions for gene $gene: $numPosTotal\npctCov: $pctCov"; echo -e "$gene\t$pctCov" >> {output.gene_coverage}; done
+        """
 
 
 rule combine_gene_coverage:
@@ -301,9 +318,11 @@ rule combine_gene_coverage:
         "coverage/{sample}_coverageValues.txt"
     resources:
         mem_mb=2000
-    run:
-        shell("echo {wildcards.sample} > {output}")
-        shell("cat {input} | cut -f2 >> {output}")
+    shell:
+        """
+        echo {wildcards.sample} > {output}
+        cat {input} | cut -f2 >> {output}
+        """
 
 
 rule combine_coverage_values:
@@ -317,8 +336,10 @@ rule combine_coverage_values:
     resources:
         mem_mb=2000
     shell:
-        """ulimit -n {params.ulimit}
-        paste {input.gene_names} {input.coverage} > {output}"""
+        """
+        ulimit -n {params.ulimit}
+        paste {input.gene_names} {input.coverage} > {output}
+        """
 
 
 rule transpose_combined_coverage:
