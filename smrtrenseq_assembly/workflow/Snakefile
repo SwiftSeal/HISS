@@ -37,11 +37,11 @@ rule trim_reads:
         fq=temp("trimmed_reads/{sample}.fq"),
         intermediate=temp("trimmed_reads/{sample}_intermediate.fq")
     threads:
-        8
+        2
     conda:
         "envs/cutadapt.yaml"
     resources:
-        mem_mb=4000
+        mem_mb=1000
     shell:
         """
         cutadapt -j {threads} -g ^{params.fiveprime} -o {output.intermediate} {input}
@@ -79,7 +79,7 @@ rule summarise_assemblies:
     conda:
         "envs/seqfu.yaml"
     resources:
-        mem_mb=2000
+        mem_mb=1000
     shell:
         """
         seqfu stats -b {input} | sed 's/\.contigs//g' > {output}
@@ -94,7 +94,7 @@ rule chop_sequences:
     conda:
         "envs/meme.yaml"
     resources:
-        mem_mb=2000
+        mem_mb=1000
     shell:
         """
         java -jar ../utils/ChopSequence.jar -i {input} -o {output}
@@ -107,9 +107,9 @@ rule NLR_parser:
     output:
         temp("NLR_Annotator/{sample}_nlr_parser.xml")
     threads:
-        4
+        2
     resources:
-        mem_mb=6000
+        mem_mb=3000
     conda:
         "envs/meme.yaml"
     shell:
@@ -128,7 +128,7 @@ rule run_NLR_Annotator:
     params:
         flanking=config["flanking"]
     resources:
-        mem_mb=6000
+        mem_mb=1000
     conda:
         "envs/meme.yaml"
     shell:
@@ -143,7 +143,7 @@ rule summarise_NLRs:
     output:
         "NLR_Annotator/NLR_summary.txt"
     resources:
-        mem_mb=2000
+        mem_mb=1000
     run:
         with open(output[0], "w") as o:
             header_list = ["Sample", "NLR Contigs", "NLR Count", "Pseudogenous NLRs", "NLR Genes", "Complete NLRs", "Complete Pseudogenous NLRs"]
@@ -192,7 +192,7 @@ rule input_statistics:
     output:
         "assembly/{sample}_input_stats.txt"
     resources:
-        mem_mb=2000
+        mem_mb=1000
     shell:
         """
         Reads=$(cat {input} | grep -m 1 'reads' | cut -f5 -d ' ')
@@ -206,6 +206,8 @@ rule convert_nlrs_to_bed:
         "NLR_Annotator/{sample}_NLR_Annotator.txt"
     output:
         temp("NLR_Annotator/{sample}_NLR_Annotator.bed")
+    resources:
+        mem_mb=1000
     shell:
         """
         python3 workflow/scripts/NLR_Annotator_to_bed.py --input {input} --output {output}
@@ -218,7 +220,7 @@ rule sort_nlr_bed:
     output:
         "NLR_Annotator/{sample}_NLR_Annotator_sorted.bed"
     resources:
-        mem_mb=2000
+        mem_mb=1000
     shell:
         """
         sort -k1,1V -k2,2n -k3,3n {input} > {output}
@@ -231,6 +233,8 @@ rule map_hifi:
         assembly="assembly/{sample}/{sample}.contigs.fasta"
     output:
         temp("mapping/{sample}_aligned.sam")
+    threads:
+        2
     conda:
         "envs/minimap2.yaml"
     resources:
@@ -238,7 +242,7 @@ rule map_hifi:
         mem_mb=4000
     shell:
         """
-        minimap2 -x map-hifi -a -o {output} {input.assembly} {input.reads}
+        minimap2 -x map-hifi -t {threads} -a -o {output} {input.assembly} {input.reads}
         """
 
 
@@ -250,7 +254,7 @@ rule convert_sam_to_bam:
     conda:
         "envs/samtools.yaml"
     resources:
-        mem_mb=4000
+        mem_mb=1000
     shell:
         """
         samtools view -F 256 {input} -b -o {output}
@@ -265,7 +269,7 @@ rule sort_bam:
     conda:
         "envs/samtools.yaml"
     resources:
-        mem_mb=4000
+        mem_mb=2000
     shell:
         """
         samtools sort {input} > {output}
@@ -280,7 +284,7 @@ rule index_sorted_bam:
     conda:
         "envs/samtools.yaml"
     resources:
-        mem_mb=4000
+        mem_mb=1000
     shell:
         """
         samtools index {input} {output}
@@ -297,7 +301,7 @@ rule calculate_coverage:
     conda:
         "envs/samtools.yaml"
     resources:
-        mem_mb=4000
+        mem_mb=1000
     shell:
         """
         samtools bedcov {input.bed} {input.bam} > {output}
@@ -310,7 +314,7 @@ rule parse_coverage:
     output:
         "NLR_coverage/{sample}_coverage_parsed.txt"
     resources:
-        mem_mb=2000
+        mem_mb=1000
     shell:
         """
         python workflow/scripts/parse_coverage.py --input {input} --output {output}
