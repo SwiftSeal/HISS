@@ -6,10 +6,9 @@ rule fastp:
         R2=temp("results/fastp/{sample}.R2.fastq.gz"),
         json="results/fastp/{sample}.json"
     threads:
-        4
+        2
     resources:
-        mem_mb=4000,
-        partition="short"
+        mem_mb=3000
     conda:
         "../envs/fastp.yaml"
     shell:

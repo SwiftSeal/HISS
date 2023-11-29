@@ -4,13 +4,12 @@ rule nlr_parser:
     output:
         "results/{reference}_output.nlr.txt"
     threads:
-        4
+        2
     resources:
-        mem_mb=4000,
-        partition="short"
+        mem_mb=2000
     conda:
         "../envs/meme.yaml"
     shell:
         """
-        java -jar ../utils/NLR-Parser3.jar -t 4 -y $(which mast) -x ../utils/meme.xml -i {input} -o {output}
+        java -jar ../utils/NLR-Parser3.jar -t 2 -y $(which mast) -x ../utils/meme.xml -i {input} -o {output}
         """

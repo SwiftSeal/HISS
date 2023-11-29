@@ -4,10 +4,9 @@ rule matrix:
     output:
         temp("results/output_matrix.txt")
     threads:
-        1
+        2
     resources:
-        mem_mb=64000,
-        partition="short"
+        mem_mb=30000
     conda:
         "../envs/java.yaml"
     shell:

@@ -7,10 +7,9 @@ rule run_association:
     output:
         "results/{reference}_AgRenSeqResult.txt"
     threads:
-        1
+        2
     resources:
-        mem_mb=16000,
-        partition="short"
+        mem_mb=14000
     conda:
         "../envs/java.yaml"
     shell:

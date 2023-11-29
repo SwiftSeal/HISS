@@ -5,11 +5,8 @@ rule sizes:
         genome_size="results/genome_sizes.txt"
     conda:
         "../envs/plot.yaml"
-    threads:
-        1
     resources:
-        mem_mb=1000,
-        partition="short"
+        mem_mb=1000
     shell:
         """
         bioawk -c fastx '{{ print $name, length($seq) }}' {input.blast_genome} > {output.genome_size}
@@ -25,11 +22,8 @@ rule blast_plot:
         plot="images/{reference}_blast_plot.png"
     conda:
         "../envs/plot.yaml"
-    threads:
-        1
     resources:
-        mem_mb=1000,
-        partition="short"
+        mem_mb=1000
     shell:
         """
         Rscript --vanilla workflow/scripts/blast_plot.R {input.genome_size} {input.blast_result} {input.filtered} {wildcards.reference} {output.plot}
@@ -45,11 +39,8 @@ rule plot:
         assoc_threshold=config.get("assoc_threshold", 25),
     conda:
         "../envs/plot.yaml"
-    threads:
-        1
     resources:
-        mem_mb=1000,
-        partition="short"
+        mem_mb=1000
     shell:
         """
         Rscript --vanilla workflow/scripts/plot.R {input} {params.assoc_threshold} {wildcards.reference} {output.filtered} {output.plot}
