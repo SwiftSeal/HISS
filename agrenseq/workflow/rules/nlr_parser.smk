@@ -1,12 +1,12 @@
 rule nlr_parser:
     input:
-        assembly=get_reference
+        assembly = get_reference
     output:
         "results/{reference}_output.nlr.txt"
     threads:
         2
     resources:
-        mem_mb=2000
+        mem_mb = 2000
     conda:
         "../envs/meme.yaml"
     shell:

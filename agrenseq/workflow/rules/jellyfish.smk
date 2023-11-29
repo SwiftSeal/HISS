@@ -1,14 +1,14 @@
 rule jellyfish:
     input:
-        R1="results/fastp/{sample}.R1.fastq.gz",
-        R2="results/fastp/{sample}.R2.fastq.gz"
+        R1 = "results/fastp/{sample}.R1.fastq.gz",
+        R2 = "results/fastp/{sample}.R2.fastq.gz"
     output:
-        jf=temp("results/jellyfish/{sample}.jf"),
-        dump="results/jellyfish/{sample}.dump"
+        jf = temp("results/jellyfish/{sample}.jf"),
+        dump = "results/jellyfish/{sample}.dump"
     threads:
         2
     resources:
-        mem_mb=13000
+        mem_mb = 13000
     conda:
         "../envs/jellyfish.yaml"
     shell:

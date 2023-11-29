@@ -3,13 +3,13 @@ from snakemake.utils import validate
 
 configfile: "config/config.yaml"
 
-read_scores = pd.read_table(config["read_scores"], header=0).set_index(["sample"], drop=False)
+read_scores = pd.read_table(config["read_scores"], header = 0).set_index(["sample"], drop = False)
 validate(read_scores, "read_scores_schema.yaml")
 
-if read_scores.duplicated(subset=["sample"]).any():
+if read_scores.duplicated(subset = ["sample"]).any():
     sys.exit("Duplicate sample in read_scores file, check your inputs!")
 
-references = pd.read_table(config["references"], header=0).set_index(["reference"], drop=False)
+references = pd.read_table(config["references"], header = 0).set_index(["reference"], drop = False)
 validate(references, "references_schema.yaml")
 
 def get_reads(wildcards):
@@ -19,7 +19,7 @@ def get_reference(wildcards):
     return references["assembly"][wildcards.reference]
 
 if config["blast_plot"]:
-    blast_output = expand("images/{reference}_blast_plot.png", reference=references["reference"])
+    blast_output = expand("images/{reference}_blast_plot.png", reference = references["reference"])
 else:
     blast_output = list()
 
@@ -35,5 +35,5 @@ include: "rules/blast.smk"
 
 rule all:
     input:
-        expand("results/{reference}_filtered_contigs.txt", reference=references["reference"]),
+        expand("results/{reference}_filtered_contigs.txt", reference = references["reference"]),
         blast_output

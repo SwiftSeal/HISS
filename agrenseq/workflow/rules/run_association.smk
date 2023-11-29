@@ -1,15 +1,15 @@
 rule run_association:
     input:
-        matrix="results/output_matrix.txt",
-        phenotype="results/phenotype.txt",
-        nlr="results/{reference}_output.nlr.txt",
-	    assembly=get_reference
+        matrix = "results/output_matrix.txt",
+        phenotype = "results/phenotype.txt",
+        nlr = "results/{reference}_output.nlr.txt",
+	    assembly = get_reference
     output:
         "results/{reference}_AgRenSeqResult.txt"
     threads:
         2
     resources:
-        mem_mb=14000
+        mem_mb = 14000
     conda:
         "../envs/java.yaml"
     shell:

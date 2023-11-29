@@ -2,13 +2,13 @@ rule fastp:
     input:
         get_reads
     output:
-        R1=temp("results/fastp/{sample}.R1.fastq.gz"),
-        R2=temp("results/fastp/{sample}.R2.fastq.gz"),
-        json="results/fastp/{sample}.json"
+        R1 = temp("results/fastp/{sample}.R1.fastq.gz"),
+        R2 = temp("results/fastp/{sample}.R2.fastq.gz"),
+        json = "results/fastp/{sample}.json"
     threads:
         2
     resources:
-        mem_mb=3000
+        mem_mb = 3000
     conda:
         "../envs/fastp.yaml"
     shell:

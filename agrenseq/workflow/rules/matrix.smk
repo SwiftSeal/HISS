@@ -6,7 +6,7 @@ rule matrix:
     threads:
         2
     resources:
-        mem_mb=30000
+        mem_mb = 30000
     conda:
         "../envs/java.yaml"
     shell:

@@ -5,7 +5,7 @@ rule accessions:
     output:
         temp("results/accessions.txt")
     resources:
-        mem_mb=1000
+        mem_mb = 1000
     run:
         for f in input:
             with open(output[0], "a") as out:
