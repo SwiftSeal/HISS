@@ -11,5 +11,5 @@ rule nlr_parser:
         "../envs/meme.yaml"
     shell:
         """
-        java -jar ../utils/NLR-Parser3.jar -t 2 -y $(which mast) -x ../utils/meme.xml -i {input} -o {output}
+        java -jar ../utils/NLR-Parser3.jar -t {threads} -y $(which mast) -x ../utils/meme.xml -i {input} -o {output}
         """

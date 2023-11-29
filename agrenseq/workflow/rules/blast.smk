@@ -27,5 +27,5 @@ rule run_blast:
         partition = "medium"
     shell:
         """
-        blastn -query {input[0]} -db "results/blast/blast" -outfmt 6 -num_threads 8 | sort -k1,1 -k12,12nr -k11,11n | sort -u -k1,1 --merge > {output.blast_result}
+        blastn -query {input[0]} -db "results/blast/blast" -outfmt 6 -num_threads {threads} | sort -k1,1 -k12,12nr -k11,11n | sort -u -k1,1 --merge > {output.blast_result}
         """
