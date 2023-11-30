@@ -94,7 +94,7 @@ rule chop_sequences:
     conda:
         "envs/meme.yaml"
     resources:
-        mem_mb = 1000
+        mem_mb = 2000
     shell:
         """
         java -jar ../utils/ChopSequence.jar -i {input} -o {output}
@@ -128,7 +128,7 @@ rule run_NLR_Annotator:
     params:
         flanking = config["flanking"]
     resources:
-        mem_mb = 1000
+        mem_mb = 2000
     conda:
         "envs/meme.yaml"
     shell:
