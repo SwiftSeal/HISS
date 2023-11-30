@@ -88,7 +88,7 @@ rule bowtie_build:
         mem_mb = 1000
     shell:
         """
-        bowtie2-build {input} {input}}
+        bowtie2-build {input} {input}
         """
 
 
