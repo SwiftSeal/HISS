@@ -254,10 +254,11 @@ rule bait_blast_check:
         bed = "baits_mapping/nlr_baits_regions.bed",
         headers = "resources/reference_headers_nlrs.txt"
     output:
-        passed_genes = "baits_mapping/passed_genes.txt",
-        missed_genes = "baits_mapping/missed_genes.txt"
+        passed_genes = "baits_mapping/passed_genes.txt"
     resources:
         mem_mb = 1000
+    log:
+        missed_genes = "baits_mapping/missed_genes.txt"
     run:
         bed_nlr = set()
 
@@ -270,7 +271,7 @@ rule bait_blast_check:
             for line in f:
                 nlr = line.strip()
                 if nlr not in bed_nlr:
-                    with open(output.missed_genes, "w") as l:
+                    with open(log.missed_genes, "w") as l:
                         string_to_write = nlr + " not found in bed file"
                         print(string_to_write, file = l)
                         raise Exception("Baits not found in NLRs, check the missed genes file")
