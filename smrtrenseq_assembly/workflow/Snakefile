@@ -297,7 +297,7 @@ rule calculate_coverage:
         index = "mapping/{sample}_aligned_sorted.bam.bai",
         bed = "NLR_Annotator/{sample}_NLR_Annotator_sorted.bed"
     output:
-        "NLR_coverage/{sample}_NLR_coverage.txt"
+        temp("NLR_coverage/{sample}_NLR_coverage.txt")
     conda:
         "envs/samtools.yaml"
     resources:
