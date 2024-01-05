@@ -265,7 +265,7 @@ rule sort_bam:
     input:
         "mapping/{sample}_aligned.bam"
     output:
-        "mapping/{sample}_aligned_sorted.bam"
+        temp("mapping/{sample}_aligned_sorted.bam")
     conda:
         "envs/samtools.yaml"
     resources:
@@ -280,7 +280,7 @@ rule index_sorted_bam:
     input:
         "mapping/{sample}_aligned_sorted.bam"
     output:
-        "mapping/{sample}_aligned_sorted.bam.bai"
+        temp("mapping/{sample}_aligned_sorted.bam.bai")
     conda:
         "envs/samtools.yaml"
     resources:
@@ -297,7 +297,7 @@ rule calculate_coverage:
         index = "mapping/{sample}_aligned_sorted.bam.bai",
         bed = "NLR_Annotator/{sample}_NLR_Annotator_sorted.bed"
     output:
-        "NLR_coverage/{sample}_NLR_coverage.txt"
+        temp("NLR_coverage/{sample}_NLR_coverage.txt")
     conda:
         "envs/samtools.yaml"
     resources:

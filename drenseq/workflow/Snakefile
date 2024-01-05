@@ -125,7 +125,7 @@ rule samtools_sort:
     resources:
         mem_mb = 1000
     output:
-        "mappings/{sample}_sorted.bam"
+        temp("mappings/{sample}_sorted.bam")
     conda:
         "envs/bowtie2_samtools.yaml"
     shell:
@@ -138,7 +138,7 @@ rule samtools_index_relaxed:
     input:
         "mappings/{sample}_sorted.bam"
     output:
-        "mappings/{sample}_sorted.bam.bai"
+        temp("mappings/{sample}_sorted.bam.bai")
     conda:
         "envs/bowtie2_samtools.yaml"
     resources:
@@ -154,7 +154,7 @@ rule sambamba_filter:
         bam = "mappings/{sample}_sorted.bam",
         bai = "mappings/{sample}_sorted.bam.bai"
     output:
-        "mappings/{sample}_strict.bam"
+        temp("mappings/{sample}_strict.bam")
     conda:
         "envs/sambamba.yaml"
     resources:
@@ -169,7 +169,7 @@ rule samtools_index_strict:
     input:
         "mappings/{sample}_strict.bam"
     output:
-        "mappings/{sample}_strict.bam.bai"
+        temp("mappings/{sample}_strict.bam.bai")
     conda:
         "envs/bowtie2_samtools.yaml"
     resources:
