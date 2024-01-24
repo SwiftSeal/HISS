@@ -319,9 +319,11 @@ rule coverage_strict:
         "envs/bedtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/coverage_strict/{sample}.log"
     shell:
         """
-        coverageBed -d -a {input.bed} -b {input.bam} > {output}
+        coverageBed -d -a {input.bed} -b {input.bam} 1> {output} 2> {log}
         """
 
 
