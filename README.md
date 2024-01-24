@@ -120,7 +120,7 @@ In cluster mode you can force a rule to override the default queue by adding the
 
 ```
     resources:
-        partition="partition"
+        slurm_partition="partition"
 ```
 
 Some rules have explicit memory limits set in the resources sections, you may need to change these depending on your input files or your cluster specification.
