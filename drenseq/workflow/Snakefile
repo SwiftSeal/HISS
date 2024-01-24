@@ -265,9 +265,11 @@ rule nlr_annotator_baits:
         "envs/bedtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/nlr_annotator_baits/nlr_annotator_baits.log"
     shell:
         """
-        bedtools intersect -a {input.nlr_annotator_region} -b {input.baits_region} > {output}
+        bedtools intersect -a {input.nlr_annotator_region} -b {input.baits_region} 1> {output} 2> {log}
         """
 
 
