@@ -88,7 +88,7 @@ Any errors or warnings will be given as red text if your terminal emulator suppo
 
 1.  Perform a basic dry run of your workflow
 
-For cluster mode, replace /path/to/your/cluster/profile with the directory where your cluster specification you made above is. Also replace name_of_installed_executor with the executor you have installed above. You may also wish to set default resources, such as default partitions. This is done with the --default-resources option. See the Snakemake documentation for more details on specific schedulers
+For cluster mode, replace /path/to/your/cluster/profile with the directory where your cluster specification you made above is. Also replace name_of_installed_executor with the executor you have installed above. You may also wish to set default resources, such as default partitions. This is done with the --default-resources option. See the Snakemake documentation for more details on specific schedulers.
 
 For standalone mode, replace the number_of_cores with an integer value for the maximum number of threads Snakemake can use.
 
@@ -115,7 +115,7 @@ If everything passed above, you are ready to run your analysis.
 Keep in mind your Snakemake process MUST keep running whilst all your jobs run, for this reason if you are remote accessing a cluster system we recommend using a terminal multiplexer such as GNU Screen or tmux to keep your session active even if your connection goes down.
 The Snakemake process must also be able to run job submissions (such as sbatch in SLURM) and query job status (such as sacct in SLURM), some cluster implementations will allow this within a scheduled job, others will not, please test your system first or contact your local admin.
 
-For cluster mode, replace /path/to/your/cluster/profile with the directory where your cluster specification you made above is.
+For cluster mode, replace /path/to/your/cluster/profile with the directory where your cluster specification you made above is. Also replace name_of_installed_executor with the executor you have installed above. You may also wish to set default resources, such as default partitions. This is done with the --default-resources option. See the Snakemake documentation for more details on specific schedulers.
 In cluster mode you can force a rule to override the default queue by adding the below to your rule.
 
 ```
@@ -133,7 +133,7 @@ Some users have reported that the default mamba frontend in snakemake can cause 
 
 ```bash
 # Cluster mode
-snakemake --profile /path/to/your/cluster/profile
+snakemake --executor name_of_installed_executor --profile /path/to/your/cluster/profile
 
 # Standalone mode (not recommended for large sample counts)
 snakemake --use-conda --cores number_of_cores
