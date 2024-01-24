@@ -49,9 +49,12 @@ mamba install snakemake
 # If using only base conda
 conda install snakemake
 ```
-3.  If running in a cluster environment, create a profile
+
+3.  If running in a cluster environment, install the executor and create a profile
 
 Snakemake is able to leverage your clusters job scheduler to submit and monitor the jobs it runs. This can be done manually, but many profiles are already available at <https://github.com/Snakemake-Profiles>. These require cookiecutter to be installed as described below. Ensure that your created profile defaults to use conda to leverage the conda yamls provided by the workflow. Ensure you also set a sensible maximum number of simultaneous jobs. The specific value will depend on your clusters capacity.
+
+As of Snakemake v8.0, you also need to install the executor for your job scheduler, you can find these at <https://snakemake.github.io/snakemake-plugin-catalog/index.html>. The test environment also had the snakemake-executor-plugin-cluster-generic installed alongside a specific plugin for the job scheduler.
 
 ```bash
 # Using mamba
@@ -62,9 +65,11 @@ mamba install cookiecutter
 # Using base conda
 
 conda install cookiecutter
+
+# Then follow the instructions for the relevant executors and profiles
 ```
 
-**NOTE: this Snakefile has some rules with explicitly specified queue names tailored for the cluster system it is devloped on.
+**NOTE: these Snakefiles have some rules with explicitly specified queue names tailored for the cluster system it was developed on.
 You will likely need to change this for optimal resource usage and to comply with your local queue policies.**
 
 ### Recommended - Run checks that your configuration is correct
