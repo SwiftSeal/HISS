@@ -42,10 +42,12 @@ rule trim_reads:
         "envs/cutadapt.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/trim_reads/{sample}.log"
     shell:
         """
-        cutadapt -j {threads} -g ^{params.fiveprime} -o {output.intermediate} {input}
-        cutadapt -j {threads} -a {params.threeprime}$ -o {output.fq} {output.intermediate}
+        cutadapt -j {threads} -g ^{params.fiveprime} -o {output.intermediate} {input} 2> {log}
+        cutadapt -j {threads} -a {params.threeprime}$ -o {output.fq} {output.intermediate} 2>> {log}
         """
 
 
