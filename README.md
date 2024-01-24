@@ -22,7 +22,7 @@ There are a few things you need to set up prior to running the workflow with Sna
 
 1.  Install either Anaconda or Miniconda, Miniconda is more lightweight so we recommend this option. <https://docs.conda.io/en/latest/miniconda.html>
 
-    We also recommend installing the alternative dependency resolver mamba, it's the default for Snakemake and is far quicker than base conda <https://anaconda.org/conda-forge/mamba>. Please note some users have reported issues with mamba, if you experience these please try reverting to the default conda resolver.
+    We also recommend installing the alternative dependency resolver mamba, it's the default for Snakemake and is far quicker than base conda <https://anaconda.org/conda-forge/mamba>. Please note some users have reported issues with mamba, if you experience these please try reverting to the base conda resolver. You can force the workflow to use the base resolver with the --conda-frontend conda option.
 
 ```bash
 conda install mamba
