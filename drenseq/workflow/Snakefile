@@ -282,8 +282,11 @@ rule bait_blast_check:
     resources:
         mem_mb = 1000
     log:
-        missed_genes = "baits_mapping/missed_genes.txt"
+        missed_genes = "baits_mapping/missed_genes.txt",
+        stderr = "logs/bait_blast_check/bait_blast_check.log"
     run:
+        import logging
+        logging.basicConfig(filename={log.stderr}, encoding='utf-8', level=logging.DEBUG)
         bed_nlr = set()
 
         with open(input.bed) as f:
