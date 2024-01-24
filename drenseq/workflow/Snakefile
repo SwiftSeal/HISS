@@ -385,6 +385,10 @@ rule transpose_combined_coverage:
         "coverage/all_coverage_values_transposed.txt"
     resources:
         mem_mb = 1000
+    log:
+        "logs/transpose_combined_coverage/transpose_combined_coverage.log"
     run:
+        import logging
+        logging.basicConfig(filename={log}, encoding='utf-8', level=logging.DEBUG)
         df = pd.read_table(input[0], header = None)
         df.T.to_csv(output[0], sep = "\t", header = False, index = False)
