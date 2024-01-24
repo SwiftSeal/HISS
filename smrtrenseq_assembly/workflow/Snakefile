@@ -313,9 +313,11 @@ rule index_sorted_bam:
         "envs/samtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/index_sorted_bam/{sample}.log"
     shell:
         """
-        samtools index {input} {output}
+        samtools index {input} {output} 2> {log}
         """
 
 
