@@ -9,7 +9,9 @@ rule nlr_parser:
         mem_mb = 2000
     conda:
         "../envs/meme.yaml"
+    log:
+        "logs/nlr_parser/{reference}.log"
     shell:
         """
-        java -jar ../utils/NLR-Parser3.jar -t {threads} -y $(which mast) -x ../utils/meme.xml -i {input} -o {output}
+        java -jar ../utils/NLR-Parser3.jar -t {threads} -y $(which mast) -x ../utils/meme.xml -i {input} -o {output} 2> {log}
         """
