@@ -181,7 +181,7 @@ rule summarise_NLRs:
             for line in lines:
                 count += 1
                 line = line.rstrip()
-                split_line = line.split('\t')
+                split_line = line.split(r'\t')
                 nlr_type = split_line[2]
                 contig = split_line[0]
                 contig_set.add(contig)
