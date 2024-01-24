@@ -48,11 +48,13 @@ rule extract_reference_headers:
         contigs = "resources/reference_headers_contigs.txt"
     resources:
         mem_mb = 1000
+    log:
+        "logs/extract_reference_headers/extract_reference_headers.log"
     shell:
         """
-        echo "gene" > {output.nlrs}
-        cat {input.bed} | cut -f4 >> {output.nlrs}
-        cat {input.fasta} | grep '>' | sed 's/>//g' > {output.contigs}
+        echo "gene" 1> {output.nlrs} 2> {log}
+        cat {input.bed} | cut -f4 1>> {output.nlrs} 2>> {log}
+        cat {input.fasta} | grep '>' | sed 's/>//g' 1> {output.contigs} 2>> {log}
         """
 
 
