@@ -88,13 +88,13 @@ Any errors or warnings will be given as red text if your terminal emulator suppo
 
 1.  Perform a basic dry run of your workflow
 
-For cluster mode, replace /path/to/your/cluster/profile with the directory where your cluster specification you made above is.
+For cluster mode, replace /path/to/your/cluster/profile with the directory where your cluster specification you made above is. Also replace name_of_installed_executor with the executor you have installed above. You may also wish to set default resources, such as default partitions. This is done with the --default-resources option. See the Snakemake documentation for more details on specific schedulers
 
 For standalone mode, replace the number_of_cores with an integer value for the maximum number of threads Snakemake can use.
 
 ```bash
 # Cluster mode
-snakemake --dry-run --profile /path/to/your/cluster/profile
+snakemake --dry-run --executor name_of_installed_executor --profile /path/to/your/cluster/profile
 
 # Standalone mode (not recommended for large sample counts)
 snakemake --dry-run --cores number_of_cores
