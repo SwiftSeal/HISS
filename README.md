@@ -72,6 +72,15 @@ conda install cookiecutter
 **NOTE: these Snakefiles have some rules with explicitly specified queue names tailored for the cluster system it was developed on.
 You will likely need to change this for optimal resource usage and to comply with your local queue policies.**
 
+You may also need to modify your profile, the test environment utilised slurm and required the following changes to the slurm profile to provide compatability with snakemake v8.0 and above
+
+```
+cluster: "slurm-submit.py" changed to cluster-generic-submit-cmd: "slurm-submit.py"
+cluster-cancel: "scancel" changed to cluster-generic-cancel-cmd: "scancel"
+cluster-status: "slurm-status.py" changed to cluster-generic-status-cmd: "slurm-status.py"
+cluster-sidecar: "slurm-sidecar.py" changed to cluster-generic-sidecar-cmd; "slurm-sidecar.py"
+```
+
 ### Recommended - Run checks that your configuration is correct
 
 Snakemake has inbuilt methods to do dry-runs and report the jobs it will run, it can also produce a graphical representation of its dependency graph, though the usefulness of this will decrease as your sample number increases.
