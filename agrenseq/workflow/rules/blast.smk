@@ -7,9 +7,11 @@ rule blast_db:
         "../envs/blast.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/blast_db/makeblastdb.log"
     shell:
         """
-        makeblastdb -in {input.subject} -dbtype nucl -out "results/blast/blast"
+        makeblastdb -in {input.subject} -dbtype nucl -out "results/blast/blast" 2> {log}
         """
 
 rule run_blast:
