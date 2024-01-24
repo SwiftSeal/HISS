@@ -65,11 +65,13 @@ rule canu_assemble:
     conda:
         "envs/canu.yaml"
     resources:
-        mem_mb = 10000,
-        partition = "medium"
+        mem_mb = 36000,
+        slurm_partition = "long"
+    log:
+        "logs/canu_assemble/{sample}.log"
     shell:
         """
-        canu -d assembly/{wildcards.sample} -p {params.Prefix} -pacbio-hifi {input} useGrid=false genomeSize={params.Genome_Size} maxInputCoverage=10000
+        canu -d assembly/{wildcards.sample} -p {params.Prefix} -pacbio-hifi {input} useGrid=false genomeSize={params.Genome_Size} maxInputCoverage=20000 batMemory=32g 2> {log}
         """
 
 
