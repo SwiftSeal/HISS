@@ -332,9 +332,11 @@ rule calculate_coverage:
         "envs/samtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/calculate_coverage/{sample}.log"
     shell:
         """
-        samtools bedcov {input.bed} {input.bam} > {output}
+        samtools bedcov {input.bed} {input.bam} 1> {output} 2> {log}
         """
 
 
