@@ -156,7 +156,11 @@ rule summarise_NLRs:
         "NLR_Annotator/NLR_summary.txt"
     resources:
         mem_mb = 1000
+    log:
+        "logs/summarise_NLRs/summarise_NLRs.log"
     run:
+        import logging
+        logging.basicConfig(filename={log}, encoding='utf-8', level=logging.DEBUG)
         with open(output[0], "w") as o:
             header_list = ["Sample", "NLR Contigs", "NLR Count", "Pseudogenous NLRs", "NLR Genes", "Complete NLRs", "Complete Pseudogenous NLRs"]
             header_string = "\t".join(header_list)
