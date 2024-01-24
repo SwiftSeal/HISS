@@ -247,9 +247,11 @@ rule baits_region:
         "envs/bait_mapping.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/baits_region/baits_region.log"
     shell:
         """
-        Rscript workflow/script/RangeReduction.R {input.blast} {output} {params.flank} {input.headers} {input.fasta}
+        Rscript workflow/script/RangeReduction.R {input.blast} {output} {params.flank} {input.headers} {input.fasta} 2> {log}
         """
 
 
