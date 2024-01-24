@@ -45,7 +45,9 @@ rule plot:
         "../envs/plot.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/plot/{reference}.log"
     shell:
         """
-        Rscript --vanilla workflow/scripts/plot.R {input} {params.assoc_threshold} {wildcards.reference} {output.filtered} {output.plot}
+        Rscript --vanilla workflow/scripts/plot.R {input} {params.assoc_threshold} {wildcards.reference} {output.filtered} {output.plot} 2> {log}
         """
