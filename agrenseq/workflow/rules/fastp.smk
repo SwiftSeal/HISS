@@ -11,7 +11,9 @@ rule fastp:
         mem_mb = 3000
     conda:
         "../envs/fastp.yaml"
+    log:
+        "logs/fastp/{sample}.log"
     shell:
         """
-        fastp -i {input}[0] -I {input}[1] -o {output.R1} -O {output.R2} -j {output.json} -h /dev/null
+        fastp -i {input}[0] -I {input}[1] -o {output.R1} -O {output.R2} -j {output.json} -h /dev/null 2> {log}
         """
