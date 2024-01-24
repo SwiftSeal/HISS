@@ -101,9 +101,11 @@ rule chop_sequences:
         "envs/meme.yaml"
     resources:
         mem_mb = 2000
+    log:
+        "logs/chop_sequences/{sample}.log"
     shell:
         """
-        java -jar ../utils/ChopSequence.jar -i {input} -o {output}
+        java -jar ../utils/ChopSequence.jar -i {input} -o {output} 2> {log}
         """
 
 
