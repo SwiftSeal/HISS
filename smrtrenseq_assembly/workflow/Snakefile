@@ -226,9 +226,11 @@ rule convert_nlrs_to_bed:
         temp("NLR_Annotator/{sample}_NLR_Annotator.bed")
     resources:
         mem_mb = 1000
+    log:
+        "logs/convert_nlrs_to_bed/{sample}.log"
     shell:
         """
-        python3 workflow/scripts/NLR_Annotator_to_bed.py --input {input} --output {output}
+        python3 workflow/scripts/NLR_Annotator_to_bed.py --input {input} --output {output} 2> {log}
         """
 
 
