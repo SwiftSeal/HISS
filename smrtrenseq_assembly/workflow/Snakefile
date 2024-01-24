@@ -84,9 +84,11 @@ rule summarise_assemblies:
         "envs/seqfu.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/summarise_assemblies/summarise_assemblies.log"
     shell:
         """
-        seqfu stats -b {input} | sed 's/\.contigs//g' > {output}
+        seqfu stats -b {input} | sed 's/\.contigs//g' 1> {output} 2> {log}
         """
 
 
