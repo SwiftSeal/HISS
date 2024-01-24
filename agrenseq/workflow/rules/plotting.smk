@@ -7,9 +7,11 @@ rule sizes:
         "../envs/plot.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/sizes/sizes.log"
     shell:
         """
-        bioawk -c fastx '{{ print $name, length($seq) }}' {input.blast_genome} > {output.genome_size}
+        bioawk -c fastx '{{ print $name, length($seq) }}' {input.blast_genome} 1> {output.genome_size} 2> {log}
         """
 
 rule blast_plot:
