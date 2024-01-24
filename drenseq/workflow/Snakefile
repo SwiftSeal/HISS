@@ -171,9 +171,11 @@ rule sambamba_filter:
         "envs/sambamba.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/sambamba_filter/{sample}.log"
     shell:
         """
-        sambamba view --format=bam -l 9 --filter='[NM] == 0' -o {output} {input.bam}
+        sambamba view --format=bam -l 9 --filter='[NM] == 0' -o {output} {input.bam} 2> {log}
         """
 
 
