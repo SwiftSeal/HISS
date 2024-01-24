@@ -260,8 +260,10 @@ rule map_hifi:
     conda:
         "envs/minimap2.yaml"
     resources:
-        partition = "medium",
+        slurm_partition = "medium",
         mem_mb = 4000
+    log:
+        "logs/map_hifi/{sample}.log"
     shell:
         """
         minimap2 -x map-hifi -t {threads} -a -o {output} {input.assembly} {input.reads}
