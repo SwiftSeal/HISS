@@ -296,9 +296,11 @@ rule sort_bam:
         "envs/samtools.yaml"
     resources:
         mem_mb = 2000
+    log:
+        "logs/sort_bam/{sample}.log"
     shell:
         """
-        samtools sort {input} > {output}
+        samtools sort {input} 1> {output} 2> {log}
         """
 
 
