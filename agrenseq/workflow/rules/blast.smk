@@ -27,6 +27,8 @@ rule run_blast:
     resources:
         mem_mb = 4000,
         slurm_partition = "medium"
+    log:
+        "logs/run_blast/blastn.log"
     shell:
         """
         blastn -query {input[0]} -db "results/blast/blast" -outfmt 6 -num_threads {threads} | sort -k1,1 -k12,12nr -k11,11n | sort -u -k1,1 --merge 1> {output.blast_result} 2> {log}
