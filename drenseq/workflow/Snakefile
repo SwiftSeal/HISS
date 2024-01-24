@@ -73,9 +73,11 @@ rule trim_read_remove_adaptor:
         mem_mb = 2000
     conda:
         "envs/cutadapt.yaml"
+    log:
+        "logs/trim_read_remove_adaptor/{sample}.log"
     shell:
         """
-        cutadapt --cores {threads} --minimum-length 50 -q 20,20 -a file:{input.adaptor_1} -A file:{input.adaptor_2} -o {output.trimF} -p {output.trimR} {input.fastqF} {input.fastqR}
+        cutadapt --cores {threads} --minimum-length 50 -q 20,20 -a file:{input.adaptor_1} -A file:{input.adaptor_2} -o {output.trimF} -p {output.trimR} {input.fastqF} {input.fastqR} 2> {log}
         """
 
 
