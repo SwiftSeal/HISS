@@ -339,7 +339,7 @@ rule per_gene_coverage:
         "logs/per_gene_coverage/{sample}.log"
     shell:
         """
-        cat {input.referenceGenes} | tail -n +2 | while read gene; do numPosWithCoverage=`grep -w "$gene" {input.sample_coverage} | awk '$6>0' | wc -l` 2> {log}; numPosTotal=`grep -w "$gene" {input.sample_coverage} | wc -l` 2>> {log}; if [ $numPosTotal -eq 0 ]; then echo "ERROR: gene $gene has CDS region of length zero. Check your input data (e.g. gene spelling in FASTA and CDS BED file) and retry.\nAborting pipeline run." >> {log}; exit; fi; pctCov=`awk "BEGIN {{print ($numPosWithCoverage/$numPosTotal)*100 }}"` 2>> {log}; echo -e "\n# covered positions for sample {wildcards.sample} in gene $gene: $numPosWithCoverage\n# CDS positions for gene $gene: $numPosTotal\npctCov: $pctCov" 2>> {log}; echo -e "$gene\t$pctCov" >> {output.gene_coverage} 2>> {log}; done
+        cat {input.referenceGenes} | tail -n +2 | while read gene; do numPosWithCoverage=`grep -w "$gene" {input.sample_coverage} | awk '$6>0' | wc -l` 2> {log}; numPosTotal=`grep -w "$gene" {input.sample_coverage} | wc -l` 2>> {log}; if [ $numPosTotal -eq 0 ]; then echo "ERROR: gene $gene has CDS region of length zero. Check your input data (e.g. gene spelling in FASTA and CDS BED file) and retry.\nAborting pipeline run." >> {log}; exit; fi; pctCov=`awk "BEGIN {{print ($numPosWithCoverage/$numPosTotal)*100 }}"` 2>> {log}; echo -e "\n# covered positions for sample {wildcards.sample} in gene $gene: $numPosWithCoverage\n# CDS positions for gene $gene: $numPosTotal\npctCov: $pctCov" 2>> {log}; echo -e "$gene\t$pctCov" 1>> {output.gene_coverage} 2>> {log}; done
         """
 
 
@@ -350,10 +350,12 @@ rule combine_gene_coverage:
         "coverage/{sample}_coverageValues.txt"
     resources:
         mem_mb = 1000
+    log:
+        "logs/combine_gene_coverage/{sample}.log"
     shell:
         """
-        echo {wildcards.sample} > {output}
-        cat {input} | cut -f2 >> {output}
+        echo {wildcards.sample} 1> {output} 2> {log}
+        cat {input} | cut -f2 1>> {output} 2>> {log}
         """
 
 
