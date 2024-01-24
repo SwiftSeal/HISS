@@ -117,9 +117,11 @@ rule bowtie_align:
         "envs/bowtie2_samtools.yaml"
     output:
         temp("tmp_mappings/{sample}.bam")
+    log:
+        "logs/bowtie_align/{sample}.log"
     shell:
         """
-        bowtie2 -x {input.ref} -1 {input.FRead} -2 {input.RRead} --rg-id {params.rg_id} --rg {params.rg} -p {threads} --score-min {params.score} --phred33 --fr --maxins 1000 --very-sensitive --no-unal --no-discordant -k {params.max_align} | samtools view --threads {threads} -S -b > {output}
+        bowtie2 -x {input.ref} -1 {input.FRead} -2 {input.RRead} --rg-id {params.rg_id} --rg {params.rg} -p {threads} --score-min {params.score} --phred33 --fr --maxins 1000 --very-sensitive --no-unal --no-discordant -k {params.max_align} | samtools view --threads {threads} -S -b 1> {output} 2> {log}
         """
 
 
