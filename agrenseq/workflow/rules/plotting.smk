@@ -26,9 +26,11 @@ rule blast_plot:
         "../envs/plot.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/blast_plot/{reference}.log"
     shell:
         """
-        Rscript --vanilla workflow/scripts/blast_plot.R {input.genome_size} {input.blast_result} {input.filtered} {wildcards.reference} {output.plot}
+        Rscript --vanilla workflow/scripts/blast_plot.R {input.genome_size} {input.blast_result} {input.filtered} {wildcards.reference} {output.plot} 2> {log}
         """
 
 rule plot:
