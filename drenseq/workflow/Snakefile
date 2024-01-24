@@ -153,9 +153,11 @@ rule samtools_index_relaxed:
         "envs/bowtie2_samtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/samtools_index_relaxed/{sample}.log"
     shell:
         """
-        samtools index {input} {output}
+        samtools index {input} {output} 2> {log}
         """
 
 
