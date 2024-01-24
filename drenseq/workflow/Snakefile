@@ -90,9 +90,11 @@ rule bowtie_build:
         "envs/bowtie2_samtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/bowtie_build/bowtie_build.log"
     shell:
         """
-        bowtie2-build {input} {input}
+        bowtie2-build {input} {input} 2> {log}
         """
 
 
