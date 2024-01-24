@@ -279,9 +279,11 @@ rule convert_sam_to_bam:
         "envs/samtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/convert_sam_to_bam/{sample}.log"
     shell:
         """
-        samtools view -F 256 {input} -b -o {output}
+        samtools view -F 256 {input} -b -o {output} 2> {log}
         """
 
 
