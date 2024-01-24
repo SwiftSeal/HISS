@@ -369,10 +369,12 @@ rule combine_coverage_values:
         ulimit = config["ulimit"]
     resources:
         mem_mb = 1000
+    log:
+        "logs/combine_coverage_values/combine_coverage_values.log"
     shell:
         """
-        ulimit -n {params.ulimit}
-        paste {input.gene_names} {input.coverage} > {output}
+        ulimit -n {params.ulimit} 2> {log}
+        paste {input.gene_names} {input.coverage} 1> {output} 2>> {log}
         """
 
 
