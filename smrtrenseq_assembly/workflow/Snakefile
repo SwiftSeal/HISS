@@ -141,9 +141,11 @@ rule run_NLR_Annotator:
         mem_mb = 2000
     conda:
         "envs/meme.yaml"
+    log:
+        "logs/run_NLR_Annotator/{sample}.log"
     shell:
         """
-        java -jar ../utils/NLR-Annotator.jar -i {input.parser_xml} -o {output.text} -f {input.assembly} {output.fasta} {params.flanking}
+        java -jar ../utils/NLR-Annotator.jar -i {input.parser_xml} -o {output.text} -f {input.assembly} {output.fasta} {params.flanking} 2> {log}
         """
 
 
