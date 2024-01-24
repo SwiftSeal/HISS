@@ -136,9 +136,11 @@ rule samtools_sort:
         temp("mappings/{sample}_sorted.bam")
     conda:
         "envs/bowtie2_samtools.yaml"
+    log:
+        "logs/samtools_sort/{sample}.log"
     shell:
         """
-        samtools sort --threads {threads} -l 9 {input} -o {output}
+        samtools sort --threads {threads} -l 9 {input} -o {output} 2> {log}
         """
 
 
