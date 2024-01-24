@@ -347,7 +347,9 @@ rule parse_coverage:
         "NLR_coverage/{sample}_coverage_parsed.txt"
     resources:
         mem_mb = 1000
+    log:
+        "logs/parse_coverage/{sample}.log"
     shell:
         """
-        python workflow/scripts/parse_coverage.py --input {input} --output {output}
+        python workflow/scripts/parse_coverage.py --input {input} --output {output} 2> {log}
         """
