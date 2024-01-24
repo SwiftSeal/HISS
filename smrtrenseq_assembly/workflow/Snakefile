@@ -209,11 +209,13 @@ rule input_statistics:
         "assembly/{sample}_input_stats.txt"
     resources:
         mem_mb = 1000
+    log:
+        "logs/input_statistics/{sample}.log"
     shell:
         """
-        Reads=$(cat {input} | grep -m 1 'reads' | cut -f5 -d ' ')
-        Bases=$(cat {input} | grep -m 1 'bases' | cut -f5 -d ' ')
-        printf "{wildcards.sample}\t$Reads\t$Bases" > {output}
+        Reads=$(cat {input} | grep -m 1 'reads' | cut -f5 -d ' ') 2> {log}
+        Bases=$(cat {input} | grep -m 1 'bases' | cut -f5 -d ' ') 2>> {log}
+        printf "{wildcards.sample}\t$Reads\t$Bases" 1> {output} 2>> {log}
         """
 
 
