@@ -205,9 +205,11 @@ rule baits_mapping_db:
         "envs/blast.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/baits_mapping_db/baits_mapping_db.log"
     shell:
         """
-        makeblastdb -in {input.ref} -out "baits_mapping/baits_mapping_db" -dbtype nucl
+        makeblastdb -in {input.ref} -out "baits_mapping/baits_mapping_db" -dbtype nucl 2> {log}
         """
 
 
