@@ -286,7 +286,7 @@ rule bait_blast_check:
         stderr = "logs/bait_blast_check/bait_blast_check.log"
     run:
         import logging
-        logging.basicConfig(filename={log.stderr}, encoding='utf-8', level=logging.DEBUG)
+        logging.basicConfig(filename=log.stderr, encoding='utf-8', level=logging.DEBUG)
         bed_nlr = set()
 
         with open(input.bed) as f:
@@ -389,6 +389,6 @@ rule transpose_combined_coverage:
         "logs/transpose_combined_coverage/transpose_combined_coverage.log"
     run:
         import logging
-        logging.basicConfig(filename={log}, encoding='utf-8', level=logging.DEBUG)
+        logging.basicConfig(filename=log, encoding='utf-8', level=logging.DEBUG)
         df = pd.read_table(input[0], header = None)
         df.T.to_csv(output[0], sep = "\t", header = False, index = False)
