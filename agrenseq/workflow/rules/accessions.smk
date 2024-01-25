@@ -7,7 +7,7 @@ rule accessions:
     resources:
         mem_mb = 1000
     log:
-        "logs/accessions/{sample}.log"
+        "logs/accessions/accessions.log"
     run:
         import logging
         logging.basicConfig(filename=str(log), encoding='utf-8', level=logging.DEBUG)
