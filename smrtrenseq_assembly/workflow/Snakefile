@@ -88,7 +88,7 @@ rule summarise_assemblies:
         "logs/summarise_assemblies/summarise_assemblies.log"
     shell:
         """
-        seqfu stats -b {input} | sed 's/\.contigs//g' 1> {output} 2> {log}
+        seqfu stats -b {input} | sed 's/\\.contigs//g' 1> {output} 2> {log}
         """
 
 
