@@ -10,7 +10,7 @@ rule accessions:
         "logs/accessions/{sample}.log"
     run:
         import logging
-        logging.basicConfig(filename=log, encoding='utf-8', level=logging.DEBUG)
+        logging.basicConfig(filename=str(log), encoding='utf-8', level=logging.DEBUG)
         for f in input:
             with open(output[0], "a") as out:
                 out.write(f"{Path(f).stem}\t{f}\n")
