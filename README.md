@@ -72,7 +72,7 @@ conda install cookiecutter
 **NOTE: these Snakefiles have some rules with explicitly specified queue names tailored for the cluster system it was developed on.
 You will likely need to change this for optimal resource usage and to comply with your local queue policies.**
 
-You may also need to modify your profile, the test environment utilised slurm and required the following changes to the slurm profile to provide compatability with snakemake v8.0 and above
+You may also need to modify your profile, the test environment utilised slurm and required the following changes to the config.yaml file of the slurm profile to provide compatability with snakemake v8.0 and above
 
 ```
 cluster: "slurm-submit.py" changed to cluster-generic-submit-cmd: "slurm-submit.py"
