@@ -11,8 +11,10 @@ rule jellyfish:
         mem_mb = 13000
     conda:
         "../envs/jellyfish.yaml"
+    log:
+        "logs/jellyfish/{sample}.log"
     shell:
         """
-        zcat {input.R1} {input.R2} | jellyfish count /dev/fd/0 -C -m 51 -s 1G -t {threads} -o {output.jf}
-        jellyfish dump -L 10 -ct {output.jf} > {output.dump}
+        zcat {input.R1} {input.R2} | jellyfish count /dev/fd/0 -C -m 51 -s 1G -t {threads} -o {output.jf} 2> {log}
+        jellyfish dump -L 10 -ct {output.jf} 1> {output.dump} 2>> {log}
         """

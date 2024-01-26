@@ -9,7 +9,9 @@ rule matrix:
         mem_mb = 30000
     conda:
         "../envs/java.yaml"
+    log:
+        "logs/matrix/create_presence_matrix.log"
     shell:
         """
-        java -jar ../utils/AgRenSeq_CreatePresenceMatrix.jar -i {input} -o {output} -t 3 -n 10
+        java -jar ../utils/AgRenSeq_CreatePresenceMatrix.jar -i {input} -o {output} -t 3 -n 10 2> {log}
         """

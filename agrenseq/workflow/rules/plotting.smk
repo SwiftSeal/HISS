@@ -7,9 +7,11 @@ rule sizes:
         "../envs/plot.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/sizes/sizes.log"
     shell:
         """
-        bioawk -c fastx '{{ print $name, length($seq) }}' {input.blast_genome} > {output.genome_size}
+        bioawk -c fastx '{{ print $name, length($seq) }}' {input.blast_genome} 1> {output.genome_size} 2> {log}
         """
 
 rule blast_plot:
@@ -24,9 +26,11 @@ rule blast_plot:
         "../envs/plot.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/blast_plot/{reference}.log"
     shell:
         """
-        Rscript --vanilla workflow/scripts/blast_plot.R {input.genome_size} {input.blast_result} {input.filtered} {wildcards.reference} {output.plot}
+        Rscript --vanilla workflow/scripts/blast_plot.R {input.genome_size} {input.blast_result} {input.filtered} {wildcards.reference} {output.plot} 2> {log}
         """
 
 rule plot:
@@ -41,7 +45,9 @@ rule plot:
         "../envs/plot.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/plot/{reference}.log"
     shell:
         """
-        Rscript --vanilla workflow/scripts/plot.R {input} {params.assoc_threshold} {wildcards.reference} {output.filtered} {output.plot}
+        Rscript --vanilla workflow/scripts/plot.R {input} {params.assoc_threshold} {wildcards.reference} {output.filtered} {output.plot} 2> {log}
         """

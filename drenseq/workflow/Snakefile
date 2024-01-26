@@ -48,11 +48,13 @@ rule extract_reference_headers:
         contigs = "resources/reference_headers_contigs.txt"
     resources:
         mem_mb = 1000
+    log:
+        "logs/extract_reference_headers/extract_reference_headers.log"
     shell:
         """
-        echo "gene" > {output.nlrs}
-        cat {input.bed} | cut -f4 >> {output.nlrs}
-        cat {input.fasta} | grep '>' | sed 's/>//g' > {output.contigs}
+        echo "gene" 1> {output.nlrs} 2> {log}
+        cat {input.bed} | cut -f4 1>> {output.nlrs} 2>> {log}
+        cat {input.fasta} | grep '>' | sed 's/>//g' 1> {output.contigs} 2>> {log}
         """
 
 
@@ -71,9 +73,11 @@ rule trim_read_remove_adaptor:
         mem_mb = 2000
     conda:
         "envs/cutadapt.yaml"
+    log:
+        "logs/trim_read_remove_adaptor/{sample}.log"
     shell:
         """
-        cutadapt --cores {threads} --minimum-length 50 -q 20,20 -a file:{input.adaptor_1} -A file:{input.adaptor_2} -o {output.trimF} -p {output.trimR} {input.fastqF} {input.fastqR}
+        cutadapt --cores {threads} --minimum-length 50 -q 20,20 -a file:{input.adaptor_1} -A file:{input.adaptor_2} -o {output.trimF} -p {output.trimR} {input.fastqF} {input.fastqR} 2> {log}
         """
 
 
@@ -86,9 +90,11 @@ rule bowtie_build:
         "envs/bowtie2_samtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/bowtie_build/bowtie_build.log"
     shell:
         """
-        bowtie2-build {input} {input}
+        bowtie2-build {input} {input} 2> {log}
         """
 
 
@@ -111,9 +117,11 @@ rule bowtie_align:
         "envs/bowtie2_samtools.yaml"
     output:
         temp("tmp_mappings/{sample}.bam")
+    log:
+        "logs/bowtie_align/{sample}.log"
     shell:
         """
-        bowtie2 -x {input.ref} -1 {input.FRead} -2 {input.RRead} --rg-id {params.rg_id} --rg {params.rg} -p {threads} --score-min {params.score} --phred33 --fr --maxins 1000 --very-sensitive --no-unal --no-discordant -k {params.max_align} | samtools view --threads {threads} -S -b > {output}
+        bowtie2 -x {input.ref} -1 {input.FRead} -2 {input.RRead} --rg-id {params.rg_id} --rg {params.rg} -p {threads} --score-min {params.score} --phred33 --fr --maxins 1000 --very-sensitive --no-unal --no-discordant -k {params.max_align} | samtools view --threads {threads} -S -b 1> {output} 2> {log}
         """
 
 
@@ -128,9 +136,11 @@ rule samtools_sort:
         temp("mappings/{sample}_sorted.bam")
     conda:
         "envs/bowtie2_samtools.yaml"
+    log:
+        "logs/samtools_sort/{sample}.log"
     shell:
         """
-        samtools sort --threads {threads} -l 9 {input} -o {output}
+        samtools sort --threads {threads} -l 9 {input} -o {output} 2> {log}
         """
 
 
@@ -143,9 +153,11 @@ rule samtools_index_relaxed:
         "envs/bowtie2_samtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/samtools_index_relaxed/{sample}.log"
     shell:
         """
-        samtools index {input} {output}
+        samtools index {input} {output} 2> {log}
         """
 
 
@@ -159,9 +171,11 @@ rule sambamba_filter:
         "envs/sambamba.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/sambamba_filter/{sample}.log"
     shell:
         """
-        sambamba view --format=bam -l 9 --filter='[NM] == 0' -o {output} {input.bam}
+        sambamba view --format=bam -l 9 --filter='[NM] == 0' -o {output} {input.bam} 2> {log}
         """
 
 
@@ -174,9 +188,11 @@ rule samtools_index_strict:
         "envs/bowtie2_samtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/samtools_index_strict/{sample}.log"
     shell:
         """
-        samtools index {input} {output}
+        samtools index {input} {output} 2> {log}
         """
 
 
@@ -189,9 +205,11 @@ rule baits_mapping_db:
         "envs/blast.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/baits_mapping_db/baits_mapping_db.log"
     shell:
         """
-        makeblastdb -in {input.ref} -out "baits_mapping/baits_mapping_db" -dbtype nucl
+        makeblastdb -in {input.ref} -out "baits_mapping/baits_mapping_db" -dbtype nucl 2> {log}
         """
 
 
@@ -208,9 +226,11 @@ rule baits_mapping:
         "envs/blast.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/baits_mapping/baits_mapping.log"
     shell:
         """
-        blastn -db "baits_mapping/baits_mapping_db" -query {input.baits} -out {output} -perc_identity {params.identity} -qcov_hsp_perc {params.coverage} -evalue 1e-5 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen len qcovs qcovhsp'
+        blastn -db "baits_mapping/baits_mapping_db" -query {input.baits} -out {output} -perc_identity {params.identity} -qcov_hsp_perc {params.coverage} -evalue 1e-5 -outfmt '6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore qlen len qcovs qcovhsp' 2> {log}
         """
 
 
@@ -227,9 +247,11 @@ rule baits_region:
         "envs/bait_mapping.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/baits_region/baits_region.log"
     shell:
         """
-        Rscript workflow/script/RangeReduction.R {input.blast} {output} {params.flank} {input.headers} {input.fasta}
+        Rscript workflow/script/RangeReduction.R {input.blast} {output} {params.flank} {input.headers} {input.fasta} 2> {log}
         """
 
 
@@ -243,9 +265,11 @@ rule nlr_annotator_baits:
         "envs/bedtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/nlr_annotator_baits/nlr_annotator_baits.log"
     shell:
         """
-        bedtools intersect -a {input.nlr_annotator_region} -b {input.baits_region} > {output}
+        bedtools intersect -a {input.nlr_annotator_region} -b {input.baits_region} 1> {output} 2> {log}
         """
 
 
@@ -258,8 +282,11 @@ rule bait_blast_check:
     resources:
         mem_mb = 1000
     log:
-        missed_genes = "baits_mapping/missed_genes.txt"
+        missed_genes = "baits_mapping/missed_genes.txt",
+        stderr = "logs/bait_blast_check/bait_blast_check.log"
     run:
+        import logging
+        logging.basicConfig(filename=str(log.stderr), encoding='utf-8', level=logging.DEBUG)
         bed_nlr = set()
 
         with open(input.bed) as f:
@@ -292,9 +319,11 @@ rule coverage_strict:
         "envs/bedtools.yaml"
     resources:
         mem_mb = 1000
+    log:
+        "logs/coverage_strict/{sample}.log"
     shell:
         """
-        coverageBed -d -a {input.bed} -b {input.bam} > {output}
+        coverageBed -d -a {input.bed} -b {input.bam} 1> {output} 2> {log}
         """
 
 
@@ -306,9 +335,11 @@ rule per_gene_coverage:
         gene_coverage = "coverage/{sample}_geneCoverage.txt"
     resources:
         mem_mb = 1000
+    log:
+        "logs/per_gene_coverage/{sample}.log"
     shell:
         """
-        cat {input.referenceGenes} | tail -n +2 | while read gene; do numPosWithCoverage=`grep -w "$gene" {input.sample_coverage} | awk '$6>0' | wc -l`; numPosTotal=`grep -w "$gene" {input.sample_coverage} | wc -l`; if [ $numPosTotal -eq 0 ]; then echo "ERROR: gene $gene has CDS region of length zero. Check your input data (e.g. gene spelling in FASTA and CDS BED file) and retry.\nAborting pipeline run."; exit; fi; pctCov=`awk "BEGIN {{print ($numPosWithCoverage/$numPosTotal)*100 }}"`; echo -e "\n# covered positions for sample {wildcards.sample} in gene $gene: $numPosWithCoverage\n# CDS positions for gene $gene: $numPosTotal\npctCov: $pctCov"; echo -e "$gene\t$pctCov" >> {output.gene_coverage}; done
+        cat {input.referenceGenes} | tail -n +2 | while read gene; do numPosWithCoverage=`grep -w "$gene" {input.sample_coverage} | awk '$6>0' | wc -l` 2> {log}; numPosTotal=`grep -w "$gene" {input.sample_coverage} | wc -l` 2>> {log}; if [ $numPosTotal -eq 0 ]; then echo "ERROR: gene $gene has CDS region of length zero. Check your input data (e.g. gene spelling in FASTA and CDS BED file) and retry.\nAborting pipeline run." >> {log}; exit; fi; pctCov=`awk "BEGIN {{print ($numPosWithCoverage/$numPosTotal)*100 }}"` 2>> {log}; echo -e "\n# covered positions for sample {wildcards.sample} in gene $gene: $numPosWithCoverage\n# CDS positions for gene $gene: $numPosTotal\npctCov: $pctCov" 2>> {log}; echo -e "$gene\t$pctCov" 1>> {output.gene_coverage} 2>> {log}; done
         """
 
 
@@ -319,10 +350,12 @@ rule combine_gene_coverage:
         "coverage/{sample}_coverageValues.txt"
     resources:
         mem_mb = 1000
+    log:
+        "logs/combine_gene_coverage/{sample}.log"
     shell:
         """
-        echo {wildcards.sample} > {output}
-        cat {input} | cut -f2 >> {output}
+        echo {wildcards.sample} 1> {output} 2> {log}
+        cat {input} | cut -f2 1>> {output} 2>> {log}
         """
 
 
@@ -336,10 +369,12 @@ rule combine_coverage_values:
         ulimit = config["ulimit"]
     resources:
         mem_mb = 1000
+    log:
+        "logs/combine_coverage_values/combine_coverage_values.log"
     shell:
         """
-        ulimit -n {params.ulimit}
-        paste {input.gene_names} {input.coverage} > {output}
+        ulimit -n {params.ulimit} 2> {log}
+        paste {input.gene_names} {input.coverage} 1> {output} 2>> {log}
         """
 
 
@@ -350,6 +385,10 @@ rule transpose_combined_coverage:
         "coverage/all_coverage_values_transposed.txt"
     resources:
         mem_mb = 1000
+    log:
+        "logs/transpose_combined_coverage/transpose_combined_coverage.log"
     run:
+        import logging
+        logging.basicConfig(filename=str(log), encoding='utf-8', level=logging.DEBUG)
         df = pd.read_table(input[0], header = None)
         df.T.to_csv(output[0], sep = "\t", header = False, index = False)
