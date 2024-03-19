@@ -67,11 +67,9 @@ rule canu_assemble:
     resources:
         mem_mb = 36000,
         slurm_partition = "long"
-    log:
-        "logs/canu_assemble/{sample}.log"
     shell:
         """
-        canu -d assembly/{wildcards.sample} -p {params.Prefix} -pacbio-hifi {input} useGrid=false genomeSize={params.Genome_Size} maxInputCoverage=20000 batMemory=32g 2> {log}
+        canu -d assembly/{wildcards.sample} -p {params.Prefix} -pacbio-hifi {input} useGrid=false genomeSize={params.Genome_Size} maxInputCoverage=20000 batMemory=32g
         """
 
 
