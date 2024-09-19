@@ -1,3 +1,7 @@
+**NOTE: This repository should be considered archive and will no longer be developed**
+**Instead, use a reimplementation of HISS in Nextflow**
+[nfHISS](https://github.com/Hutton-Potato-Genetics/nfHISS)
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/HISSlogo_light.png">
   <img alt="Logo" src="assets/HISSlogo_dark.png">
